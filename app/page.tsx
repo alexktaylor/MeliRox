@@ -5,10 +5,29 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 const U = "/uploads/";
 const F = "/uploads/drive-download-20260714T181149Z-1-001/";
 const PHONE = "+573045502154";
+const PREVIEW_SECONDS = 50;
+const BAR_COUNT = 36;
 const CSS = (o: CSSProperties) => o;
 
 function wa(msg: string) {
   return "https://wa.me/573045502154?text=" + encodeURIComponent(msg);
+}
+
+function PlayIcon({ size = 16, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden="true" style={{ display: "block", marginLeft: size * 0.08 }}>
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  );
+}
+
+function PauseIcon({ size = 16, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden="true" style={{ display: "block" }}>
+      <rect x="6" y="5" width="4" height="14" rx="1" />
+      <rect x="14" y="5" width="4" height="14" rx="1" />
+    </svg>
+  );
 }
 
 type Cat = {
@@ -312,9 +331,21 @@ export default function Home() {
   const [lb, setLb] = useState<{ src: string; alt: string } | null>(null);
   const [liveMode, setLiveMode] = useState("voz");
   const [vw, setVw] = useState(1200);
-  const [scPast, setScPast] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const barRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const srcRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => {});
+  }, []);
 
   useEffect(() => {
     let l: string | null = null;
@@ -324,13 +355,9 @@ export default function Home() {
     if (l === "en" || l === "es") setLang(l);
     setVw(window.innerWidth);
     const onR = () => setVw(window.innerWidth);
-    const onS = () => setScPast(window.scrollY > window.innerHeight * 0.7);
-    onS();
     window.addEventListener("resize", onR);
-    window.addEventListener("scroll", onS, { passive: true });
     return () => {
       window.removeEventListener("resize", onR);
-      window.removeEventListener("scroll", onS);
     };
   }, []);
 
@@ -355,6 +382,11 @@ export default function Home() {
       ? "Hi, I would like to talk about a possible artistic collaboration with Meli Rox."
       : "Hola, quisiera conversar sobre una posible colaboración artística con Meli Rox."
   );
+  const waNotify = wa(
+    isEn
+      ? "Hi! Let me know when Meli Rox’s new song is released."
+      : "¡Hola! Quiero que me avisen cuando salga la nueva canción de Meli Rox."
+  );
 
   const activeCat = CATS.find((c) => c.id === cat) || CATS[0];
   const lms = liveModeDefs(isEn);
@@ -362,11 +394,10 @@ export default function Home() {
 
   const galleryItems = GAL.filter((g) => filter === "all" || g.cat === filter);
 
-  const bars = Array.from({ length: 36 }, (_, i) => ({
-    key: i,
-    h: Math.round(12 + 38 * Math.abs(Math.sin(i * 0.7) * Math.cos(i * 0.23))),
-    d: +((i * 0.07) % 1.1).toFixed(2),
-  }));
+  // Resting waveform shown when idle (bars react to the real song while playing)
+  const restHeights = Array.from({ length: BAR_COUNT }, (_, i) =>
+    Math.round(8 + 30 * Math.abs(Math.sin(i * 0.7) * Math.cos(i * 0.23)))
+  );
 
   const mixCaption =
     mix < 35
@@ -375,9 +406,28 @@ export default function Home() {
       ? t("Eléctrica, audaz, imparable.", "Electric, fearless, unstoppable.")
       : t("Dos lados. Una sola artista.", "Two sides. One artist.");
 
-  const pillWrap = isMobile ? "nowrap" : "wrap";
-  const pillOx = isMobile ? "auto" : "visible";
-  const progLabel = playing || prog > 0 ? Math.round(prog * 100) + "%" : "0:00";
+  const pillWrap = "wrap";
+  const pillOx = "visible";
+  const fmt = (s: number) => "0:" + String(Math.round(s)).padStart(2, "0");
+  const progLabel = fmt(prog * PREVIEW_SECONDS) + " / " + fmt(PREVIEW_SECONDS);
+
+  const setupAudioGraph = () => {
+    if (audioCtxRef.current || !audioRef.current) return;
+    const Ctx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 128;
+    analyser.smoothingTimeConstant = 0.8;
+    const src = ctx.createMediaElementSource(audioRef.current);
+    src.connect(analyser);
+    analyser.connect(ctx.destination);
+    audioCtxRef.current = ctx;
+    analyserRef.current = analyser;
+    srcRef.current = src;
+  };
 
   const toggleAudio = () => {
     const a = audioRef.current;
@@ -386,10 +436,54 @@ export default function Home() {
       a.pause();
       setPlaying(false);
     } else {
+      setupAudioGraph();
+      audioCtxRef.current?.resume();
       a.play();
       setPlaying(true);
     }
   };
+
+  // Drive the bars from the song's live frequency data while it plays
+  useEffect(() => {
+    if (!playing) {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      barRefs.current.forEach((el, i) => {
+        if (el) el.style.height = (restHeights[i] ?? 12) + "px";
+      });
+      return;
+    }
+    const analyser = analyserRef.current;
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    const usable = Math.floor(analyser.frequencyBinCount * 0.72);
+    const animate = () => {
+      analyser.getByteFrequencyData(data);
+      const n = barRefs.current.length;
+      for (let i = 0; i < n; i++) {
+        const el = barRefs.current[i];
+        if (!el) continue;
+        const bin = Math.min(usable - 1, Math.floor((i / n) * usable));
+        const v = data[bin] / 255;
+        el.style.height = (6 + v * 46).toFixed(1) + "px";
+      }
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    rafRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing]);
+
+  // Close the audio context on unmount
+  useEffect(() => {
+    return () => {
+      if (audioCtxRef.current) audioCtxRef.current.close();
+    };
+  }, []);
 
   const pillStyle = (on: boolean): CSSProperties =>
     CSS({
@@ -422,6 +516,17 @@ export default function Home() {
     borderBottom: "1px solid rgba(212,180,122,.14)",
   };
 
+  const langToggle = (
+    <div style={{ display: "flex", gap: "2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".08em", flex: "0 0 auto" }}>
+      <button onClick={() => chooseLang("es")} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 8px", color: isEn ? "#a99a7c" : "#ecd9ac", borderBottom: "1px solid " + (isEn ? "transparent" : "#d4b47a") }}>ES</button>
+      <button onClick={() => chooseLang("en")} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 8px", color: isEn ? "#ecd9ac" : "#a99a7c", borderBottom: "1px solid " + (isEn ? "#d4b47a" : "transparent") }}>EN</button>
+    </div>
+  );
+
+  const burger = (
+    <button onClick={() => setMenuOpen((v) => !v)} aria-label="Menú" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", background: "none", border: "1px solid rgba(212,180,122,.4)", borderRadius: "50%", color: "#ecd9ac", fontSize: "16px", cursor: "pointer", flex: "0 0 auto" }}>{menuOpen ? "✕" : "☰"}</button>
+  );
+
   return (
     <>
       {/* NAV */}
@@ -434,8 +539,9 @@ export default function Home() {
           zIndex: 50,
           display: "flex",
           alignItems: "center",
-          gap: "22px",
-          padding: "16px clamp(16px, 4vw, 48px)",
+          justifyContent: "space-between",
+          gap: "18px",
+          padding: isMobile ? "12px clamp(20px, 6vw, 48px)" : "16px clamp(16px, 4vw, 48px)",
           background: "rgba(11,10,8,.82)",
           backdropFilter: "blur(14px)",
           borderBottom: "1px solid rgba(212,180,122,.14)",
@@ -443,36 +549,40 @@ export default function Home() {
       >
         <a href="#inicio" style={{ display: "flex", alignItems: "center", textDecoration: "none", flex: "0 0 auto" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ height: "78px", width: "auto", margin: "-20px 0 -20px -14px" }} />
+          <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ height: isMobile ? "88px" : "78px", width: "auto", margin: isMobile ? "-24px 0 -24px -14px" : "-20px 0 -20px -14px" }} />
         </a>
-        <div
-          style={CSS({
-            display: isMobile ? "none" : "flex",
-            alignItems: "center",
-            gap: "clamp(14px, 2.4vw, 30px)",
-            flex: "1 1 auto",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            fontSize: "13.5px",
-            fontWeight: 500,
-            letterSpacing: ".06em",
-          })}
-        >
-          <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
-          <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
-          <a href="#experiencias" style={navLink}>{t("Experiencias", "Experiences")}</a>
-          <a href="#historia" style={navLink}>Meli Rox</a>
-          <a href="#galeria" style={navLink}>{t("Galería", "Gallery")}</a>
-          <a href="#contacto" style={navLink}>{t("Contacto", "Contact")}</a>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: "0 0 auto" }}>
-          <div style={{ display: "flex", gap: "2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".08em" }}>
-            <button onClick={() => chooseLang("es")} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 8px", color: isEn ? "#a99a7c" : "#ecd9ac", borderBottom: "1px solid " + (isEn ? "transparent" : "#d4b47a") }}>ES</button>
-            <button onClick={() => chooseLang("en")} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 8px", color: isEn ? "#ecd9ac" : "#a99a7c", borderBottom: "1px solid " + (isEn ? "#d4b47a" : "transparent") }}>EN</button>
+        {isMobile ? (
+          langToggle
+        ) : (
+          <div
+            style={CSS({
+              display: "flex",
+              alignItems: "center",
+              gap: "clamp(14px, 2.4vw, 30px)",
+              flex: "1 1 auto",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              fontSize: "13.5px",
+              fontWeight: 500,
+              letterSpacing: ".06em",
+            })}
+          >
+            <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
+            <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
+            <a href="#experiencias" style={navLink}>{t("Experiencias", "Experiences")}</a>
+            <a href="#historia" style={navLink}>Meli Rox</a>
+            <a href="#galeria" style={navLink}>{t("Galería", "Gallery")}</a>
+            <a href="#contacto" style={navLink}>{t("Contacto", "Contact")}</a>
           </div>
-          <a href={waMain} target="_blank" style={CSS({ textDecoration: "none", display: isMobile ? "none" : "inline-block", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 18px", borderRadius: "999px", whiteSpace: "nowrap", flex: "0 1 auto" })}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
-          <button onClick={() => setMenuOpen((v) => !v)} aria-label="Menú" style={CSS({ display: isMobile ? "flex" : "none", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", background: "none", border: "1px solid rgba(212,180,122,.4)", borderRadius: "50%", color: "#ecd9ac", fontSize: "16px", cursor: "pointer" })}>{menuOpen ? "✕" : "☰"}</button>
-        </div>
+        )}
+        {isMobile ? (
+          burger
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: "0 0 auto" }}>
+            {langToggle}
+            <a href={waMain} target="_blank" style={{ textDecoration: "none", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 18px", borderRadius: "999px", whiteSpace: "nowrap" }}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
+          </div>
+        )}
       </nav>
 
       {/* MOBILE MENU */}
@@ -489,25 +599,26 @@ export default function Home() {
       )}
 
       {/* HERO */}
-      <header id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", background: "#080706" }}>
+      <header id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: isMobile ? "flex-end" : "center", overflow: "hidden", background: "#080706" }}>
         <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={U + "IMG_5220.JPG.jpeg"} alt="Meli Rox — pista de luces doradas y escenario" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 22%" : "30% 30%", animation: "mrKb 26s ease-in-out infinite alternate", filter: "sepia(.12) saturate(.9) brightness(.82) contrast(1.05)" }} />
+          <video ref={heroVideoRef} src="/Vids/hero.mp4" poster="/Vids/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(8,7,6,.92) 0%, rgba(8,7,6,.68) 34%, rgba(8,7,6,.12) 62%, rgba(8,7,6,.42) 100%)" }} />
-          <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "34%", background: "linear-gradient(180deg, transparent, rgba(8,7,6,.9))" }} />
+          <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: isMobile ? "68%" : "34%", background: isMobile ? "linear-gradient(180deg, transparent 0%, rgba(8,7,6,.28) 34%, rgba(8,7,6,.62) 58%, rgba(8,7,6,.88) 80%, rgba(8,7,6,.97) 100%)" : "linear-gradient(180deg, transparent, rgba(8,7,6,.9))" }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 45% 45% at 22% 62%, rgba(212,164,90,.1), transparent 70%)" }} />
         </div>
-        <div style={{ position: "relative", width: "min(1240px, 100%)", margin: "0 auto", padding: "clamp(96px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(48px, 8vh, 80px)" }}>
+        <div style={{ position: "relative", width: "min(1240px, 100%)", margin: "0 auto", padding: isMobile ? "0 clamp(20px, 5vw, 48px) clamp(52px, 9vh, 96px)" : "clamp(96px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(48px, 8vh, 80px)" }}>
           <div style={{ maxWidth: "580px" }}>
-            <div style={{ height: "52px", width: "1px", margin: "0 0 8px", background: "linear-gradient(180deg, transparent, #e8cf9e)", animation: "mrPulse 3.5s ease-in-out infinite" }} />
-            <div style={{ width: "min(310px, 62vw)", overflow: "visible" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
-            </div>
+            <div style={{ height: isMobile ? "40px" : "52px", width: "1px", margin: "0 0 8px", background: "linear-gradient(180deg, transparent, #e8cf9e)", animation: "mrPulse 3.5s ease-in-out infinite" }} />
+            {!isMobile && (
+              <div style={{ width: "min(310px, 62vw)", overflow: "visible" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
+              </div>
+            )}
             <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: ".32em", textTransform: "uppercase", color: "#e3d5b0" }}>
               {t("Cantautora · Violinista · Artista en vivo", "Singer-songwriter · Violinist · Live artist")}
             </div>
-            <p style={CSS({ margin: "20px 0 0", maxWidth: "480px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(21px, 2.8vw, 30px)", lineHeight: 1.35, color: "#f3ead6", textWrap: "pretty" })}>
+            <p style={CSS({ margin: "20px 0 0", maxWidth: "480px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(21px, 2.8vw, 30px)", lineHeight: 1.35, color: "#f3ead6", textWrap: "balance" })}>
               {t("Donde la elegancia clásica se encuentra con la energía moderna.", "Where classical elegance meets modern energy.")}
             </p>
             <div style={{ marginTop: "32px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -515,15 +626,11 @@ export default function Home() {
               <a href="#envivo" style={{ textDecoration: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#ecd9ac", border: "1px solid rgba(232,207,158,.6)", padding: "17px 32px", borderRadius: "999px", background: "rgba(8,7,6,.4)", backdropFilter: "blur(4px)" }}>{t("Verla en vivo", "See her live")}</a>
             </div>
           </div>
-          <div style={{ position: "absolute", right: "20px", bottom: "20px", display: "flex", alignItems: "center", gap: "11px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "#d9c9a4", opacity: 0.85 }}>
-            <div style={{ width: "34px", height: "34px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.55)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "#ecd9ac" }}>▶</div>
-            <span>Hero video · 00:08</span>
-          </div>
         </div>
       </header>
 
       {/* STATEMENT */}
-      <section style={{ position: "relative", padding: "clamp(72px, 11vw, 130px) clamp(20px, 5vw, 48px)", textAlign: "center", background: "linear-gradient(180deg, #0b0a08, #14100a 55%, #0b0a08)" }}>
+      <section style={{ position: "relative", padding: "clamp(46px, 9vw, 130px) clamp(20px, 5vw, 48px)", textAlign: "center", background: "linear-gradient(180deg, #0b0a08, #14100a 55%, #0b0a08)" }}>
         <div style={{ maxWidth: "880px", margin: "0 auto" }}>
           <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(36px, 6vw, 68px)", lineHeight: 1.1, color: "#f4edda", textWrap: "pretty" })}>
             {isEn ? (<>Not just a singer.<br />Not just a violinist.</>) : (<>No es solo una cantante.<br />No es solo una violinista.</>)}
@@ -536,7 +643,7 @@ export default function Home() {
       </section>
 
       {/* MELI / ROX */}
-      <section style={{ position: "relative", padding: "0 clamp(20px, 5vw, 48px) clamp(72px, 10vw, 120px)", background: "#0b0a08" }}>
+      <section style={{ position: "relative", padding: "0 clamp(20px, 5vw, 48px) clamp(46px, 8vw, 120px)", background: "#0b0a08" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "20px", marginBottom: "20px" }}>
             <div>
@@ -599,7 +706,7 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={activeLive.img} alt={activeLive.cap} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.85))" }} />
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", fontSize: "24px", pointerEvents: "none" }}>▶</div>
+            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", pointerEvents: "none" }}><PlayIcon size={28} color="#ecd9ac" /></div>
             <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
             <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{activeLive.name}</div>
@@ -616,7 +723,7 @@ export default function Home() {
       </section>
 
       {/* EXPERIENCIAS */}
-      <section id="experiencias" style={{ position: "relative", padding: "clamp(64px, 9vw, 110px) clamp(20px, 5vw, 48px)", background: activeCat.tone, transition: "background 1s" }}>
+      <section id="experiencias" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: activeCat.tone, transition: "background 1s" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Experiencias", "Experiences")}</div>
           <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "760px", textWrap: "pretty" })}>{t("Cada ocasión merece su propia energía.", "Every occasion deserves its own energy.")}</h2>
@@ -633,7 +740,7 @@ export default function Home() {
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.75))" }} />
               {activeCat.vid && (
                 <div style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "9px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "8px 12px", borderRadius: "999px", pointerEvents: "none" }}>
-                  <span style={{ fontSize: "9px", color: "#ecd9ac" }}>▶</span><span>Video · 00:15</span>
+                  <PlayIcon size={11} color="#ecd9ac" /><span>Video · 00:15</span>
                 </div>
               )}
               <div style={{ position: "absolute", left: "18px", bottom: "16px", right: "18px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
@@ -657,7 +764,7 @@ export default function Home() {
       </section>
 
       {/* LOGROS */}
-      <section style={{ position: "relative", padding: "clamp(64px, 9vw, 110px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+      <section style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(32px, 4.8vw, 58px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "800px", textWrap: "pretty" })}>
             {isEn ? (<>Born in Medellín. <em style={{ color: "#e8cf9e" }}>Heard beyond borders.</em></>) : (<>Nacida en Medellín. <em style={{ color: "#e8cf9e" }}>Escuchada más allá de las fronteras.</em></>)}
@@ -700,7 +807,7 @@ export default function Home() {
       </section>
 
       {/* MUSICA */}
-      <section id="musica" style={{ position: "relative", padding: "clamp(64px, 9vw, 110px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(138,106,63,.14), transparent 60%), #0a0908", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+      <section id="musica" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(138,106,63,.14), transparent 60%), #0a0908", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Música original", "Original music")}</div>
           <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda", maxWidth: "700px", lineHeight: 1.12, textWrap: "pretty" })}>{t("De las cuerdas a las frecuencias.", "From strings to frequencies.")}</h2>
@@ -756,7 +863,7 @@ export default function Home() {
       </section>
 
       {/* AUDIO TEASER */}
-      <section style={{ position: "relative", overflow: "hidden", padding: "clamp(80px, 11vw, 150px) clamp(20px, 5vw, 48px)", background: "#0a0807" }}>
+      <section style={{ position: "relative", overflow: "hidden", padding: "clamp(48px, 9vw, 150px) clamp(20px, 5vw, 48px)", background: "#0a0807" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={F + "DVR_0523.jpg"} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 24%", opacity: 0.5, filter: "sepia(.4) saturate(.7) brightness(.7)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,7,.8), rgba(10,8,7,.35) 40%, rgba(10,8,7,.92))" }} />
@@ -765,11 +872,11 @@ export default function Home() {
           <h2 style={CSS({ margin: "16px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(36px, 5.6vw, 64px)", lineHeight: 1.1, color: "#f7f1e0", textWrap: "pretty", textShadow: "0 2px 24px rgba(0,0,0,.7)" })}>{t("El sonido original de Meli Rox.", "The original sound of Meli Rox.")}</h2>
           <div style={{ margin: "clamp(36px, 5vw, 52px) auto 0", maxWidth: "600px", background: "rgba(10,8,7,.55)", border: "1px solid rgba(212,180,122,.28)", borderRadius: "6px", padding: "clamp(22px, 3.4vw, 34px)", backdropFilter: "blur(8px)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "22px" }}>
-              <button onClick={toggleAudio} aria-label="Escuchar adelanto" style={{ flex: "0 0 auto", width: "76px", height: "76px", borderRadius: "50%", cursor: "pointer", background: GOLD, border: "none", color: "#171208", fontSize: "20px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 36px rgba(232,207,158,.3)" }}>{playing ? "❚❚" : "▶"}</button>
+              <button onClick={toggleAudio} aria-label={playing ? "Pausar adelanto" : "Escuchar adelanto"} style={{ flex: "0 0 auto", width: "76px", height: "76px", borderRadius: "50%", cursor: "pointer", background: GOLD, border: "none", color: "#171208", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 36px rgba(232,207,158,.3)" }}>{playing ? <PauseIcon size={24} color="#171208" /> : <PlayIcon size={24} color="#171208" />}</button>
               <div style={{ flex: "1 1 auto" }}>
                 <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "2px", height: "52px" }}>
-                  {bars.map((b) => (
-                    <div key={b.key} style={{ flex: "1 1 auto", height: b.h + "px", background: "linear-gradient(180deg, #f1e2ba, #a07c46)", transformOrigin: "bottom", animation: `mrWave 1.1s ease-in-out ${b.d}s infinite alternate`, animationPlayState: playing ? "running" : "paused" }} />
+                  {restHeights.map((h, i) => (
+                    <div key={i} ref={(el) => { barRefs.current[i] = el; }} style={{ flex: "1 1 auto", height: h + "px", background: "linear-gradient(180deg, #f1e2ba, #a07c46)", borderRadius: "1px", transition: "height .08s linear" }} />
                   ))}
                 </div>
                 <div style={{ position: "relative", height: "2px", background: "rgba(212,180,122,.3)", marginTop: "12px", borderRadius: "2px" }}>
@@ -783,33 +890,33 @@ export default function Home() {
             </div>
             <div style={CSS({ marginTop: "24px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(19px, 2.4vw, 25px)", color: "#f3ead6", lineHeight: 1.5, textWrap: "pretty" })}>{t("Canciones, colaboraciones y una identidad que existe más allá del escenario.", "Songs, collaborations and an identity that exists beyond the stage.")}</div>
             <div style={{ marginTop: "18px", display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Mejor con audífonos", "Best with headphones")}</span>
-              <a href="https://open.spotify.com/artist/0Me2xPijWmN9C9P2Vs5IGP" target="_blank" style={{ textDecoration: "none", fontSize: "13px", fontWeight: 600, letterSpacing: ".08em", color: "#ecd9ac", borderBottom: "1px solid rgba(212,180,122,.5)", paddingBottom: "3px" }}>{t("Escuchar en Spotify ↗", "Listen on Spotify ↗")}</a>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Nueva canción · muy pronto", "New song · coming soon")}</span>
+              <a href={waNotify} target="_blank" style={{ textDecoration: "none", fontSize: "13px", fontWeight: 600, letterSpacing: ".08em", color: "#ecd9ac", borderBottom: "1px solid rgba(212,180,122,.5)", paddingBottom: "3px" }}>{t("Avísame cuando salga ↗", "Notify me when it drops ↗")}</a>
             </div>
-            <audio ref={audioRef} src={U + "audio_preview-1784054734635.mp3"} preload="none" onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setProg(a.currentTime / a.duration); }} onEnded={() => { setPlaying(false); setProg(0); }} style={{ display: "none" }} />
+            <audio ref={audioRef} src={U + "audio_preview-1784054734635.mp3"} preload="none" onTimeUpdate={(e) => { const a = e.currentTarget; const cur = a.currentTime; setProg(Math.min(cur / PREVIEW_SECONDS, 1)); if (cur >= PREVIEW_SECONDS) { a.pause(); a.currentTime = 0; setPlaying(false); setProg(0); } }} onEnded={() => { setPlaying(false); setProg(0); }} style={{ display: "none" }} />
           </div>
         </div>
       </section>
 
       {/* HISTORIA */}
-      <section id="historia" style={{ position: "relative", padding: "clamp(64px, 9vw, 110px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #110e09 50%, #0b0a08)" }}>
+      <section id="historia" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #110e09 50%, #0b0a08)" }}>
         <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c", textAlign: "center" }}>{t("La historia", "The story")}</div>
           <h2 style={{ margin: "12px 0 0", textAlign: "center", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda", lineHeight: 1.12 }}>
             {isEn ? (<>Viola. Voice. Violin. <em style={{ color: "#e8cf9e" }}>Meli Rox.</em></>) : (<>Viola. Voz. Violín. <em style={{ color: "#e8cf9e" }}>Meli Rox.</em></>)}
           </h2>
-          <div style={CSS({ position: "relative", marginTop: "clamp(40px, 6vw, 64px)", display: isMobile ? "flex" : "block", gap: "16px", overflowX: (isMobile ? "auto" : "visible") as CSSProperties["overflowX"], scrollSnapType: isMobile ? "x mandatory" : "none", paddingBottom: isMobile ? "14px" : "0" })}>
+          <div style={{ position: "relative", marginTop: isMobile ? "28px" : "clamp(40px, 6vw, 64px)" }}>
             <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "1px", background: "linear-gradient(180deg, transparent, rgba(232,207,158,.55) 12%, rgba(232,207,158,.55) 88%, transparent)", display: isMobile ? "none" : "block" }} />
             {CHAPTERS.map((c) => (
-              <div key={c.num} style={CSS({ position: "relative", display: "flex", gap: isMobile ? "16px" : "clamp(24px, 5vw, 60px)", alignItems: "center", flexDirection: (isMobile ? "column" : c.dir) as CSSProperties["flexDirection"], padding: isMobile ? "0" : "clamp(22px, 3.4vw, 40px) 0", flexWrap: "wrap", flex: "0 0 auto", minWidth: isMobile ? "82vw" : "100%", maxWidth: "100%", scrollSnapAlign: "start" })}>
+              <div key={c.num} style={CSS({ position: "relative", display: "flex", gap: isMobile ? "16px" : "clamp(24px, 5vw, 60px)", alignItems: isMobile ? "stretch" : "center", flexDirection: (isMobile ? "column" : c.dir) as CSSProperties["flexDirection"], padding: isMobile ? "0 0 30px" : "clamp(22px, 3.4vw, 40px) 0", flexWrap: "wrap", width: "100%", maxWidth: "100%" })}>
                 <div style={{ position: "absolute", left: "50%", transform: "translate(-50%, 0)", width: "9px", height: "9px", borderRadius: "50%", background: "#e8cf9e", boxShadow: "0 0 16px rgba(232,207,158,.8)", display: isMobile ? "none" : "block" }} />
-                <div style={{ flex: "1 1 300px", minWidth: isMobile ? "0" : "260px", width: "100%" }}>
+                <div style={{ flex: isMobile ? "0 0 auto" : "1 1 300px", minWidth: isMobile ? "0" : "260px", width: "100%" }}>
                   <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", height: "clamp(200px, 30vw, 320px)" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={c.img} alt={t(c.tEs, c.tEn)} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: c.pos, filter: "saturate(.85) brightness(.88)" }} />
                   </div>
                 </div>
-                <div style={{ flex: "1 1 300px", minWidth: isMobile ? "0" : "260px" }}>
+                <div style={{ flex: isMobile ? "0 0 auto" : "1 1 300px", minWidth: isMobile ? "0" : "260px", width: isMobile ? "100%" : undefined }}>
                   <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px", color: "#d4b47a" }}>{c.num}</div>
                   <div style={{ marginTop: "10px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 3vw, 34px)", fontWeight: 500, color: "#f2ecdf" }}>{t(c.tEs, c.tEn)}</div>
                   <p style={CSS({ margin: "12px 0 0", fontWeight: 300, fontSize: "16px", lineHeight: 1.75, color: "#cabfa5", maxWidth: "400px", textWrap: "pretty" })}>{t(c.xEs, c.xEn)}</p>
@@ -824,7 +931,7 @@ export default function Home() {
       </section>
 
       {/* GALERIA */}
-      <section id="galeria" style={{ position: "relative", padding: "clamp(64px, 9vw, 110px) 0 clamp(48px, 6vw, 72px)", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+      <section id="galeria" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) 0 clamp(48px, 6vw, 72px)", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px)", display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "20px", flexWrap: "wrap" }}>
           <h2 style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda" }}>{t("Galería", "Gallery")}</h2>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -848,7 +955,7 @@ export default function Home() {
                   {g.vid && (
                     <>
                       <div style={{ position: "absolute", inset: 0, background: "rgba(8,7,6,.28)", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                        <div style={{ width: "54px", height: "54px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.8)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(3px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", fontSize: "15px" }}>▶</div>
+                        <div style={{ width: "54px", height: "54px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.8)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(3px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac" }}><PlayIcon size={18} color="#ecd9ac" /></div>
                       </div>
                       <div style={{ position: "absolute", right: "10px", bottom: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".14em", color: "#eee3c2", background: "rgba(8,7,6,.65)", padding: "5px 8px", borderRadius: "3px", pointerEvents: "none" }}>{g.vid}</div>
                     </>
@@ -863,7 +970,7 @@ export default function Home() {
       </section>
 
       {/* SIGUE LA ENERGIA */}
-      <section style={{ position: "relative", padding: "clamp(56px, 8vw, 96px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #100d09)" }}>
+      <section style={{ position: "relative", padding: "clamp(40px, 7vw, 96px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #100d09)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h2 style={{ margin: "0 0 clamp(26px, 3.4vw, 40px)", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(30px, 4vw, 48px)", color: "#f4edda" }}>{t("Sigue la energía", "Follow the energy")}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "14px" }}>
@@ -888,7 +995,7 @@ export default function Home() {
       </section>
 
       {/* CONTACTO */}
-      <section id="contacto" style={{ position: "relative", overflow: "hidden", padding: "clamp(90px, 13vw, 170px) clamp(20px, 5vw, 48px)", background: "#080706" }}>
+      <section id="contacto" style={{ position: "relative", overflow: "hidden", padding: "clamp(52px, 10vw, 170px) clamp(20px, 5vw, 48px)", background: "#080706" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={F + "DVR_0490.jpg"} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
@@ -933,14 +1040,6 @@ export default function Home() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={lb.src} alt={lb.alt} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)" }} />
           <button onClick={() => setLb(null)} aria-label="Cerrar" style={{ position: "absolute", top: "18px", right: "22px", width: "46px", height: "46px", borderRadius: "50%", background: "rgba(212,180,122,.12)", border: "1px solid rgba(212,180,122,.4)", color: "#ecd9ac", fontSize: "20px", cursor: "pointer" }}>×</button>
-        </div>
-      )}
-
-      {/* MOBILE BOTTOM BAR */}
-      {isMobile && scPast && !menuOpen && (
-        <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 70, display: "flex", gap: "10px", padding: "11px 16px calc(11px + env(safe-area-inset-bottom))", background: "rgba(8,7,6,.94)", backdropFilter: "blur(12px)", borderTop: "1px solid rgba(212,180,122,.25)" }}>
-          <a href={waMain} target="_blank" style={{ flex: "1 1 auto", textAlign: "center", textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "15px 18px", borderRadius: "999px" }}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
-          <a href={"tel:" + PHONE} style={{ flex: "0 0 auto", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", fontSize: "13px", fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "#ecd9ac", border: "1px solid rgba(212,180,122,.5)", padding: "0 20px", borderRadius: "999px", minHeight: "48px" }}>{t("Llamar", "Call")}</a>
         </div>
       )}
 

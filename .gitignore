@@ -9,3 +9,6 @@ next-env.d.ts
 
 # Claude Design handoff bundle (source mockups + full-res originals) — kept local, not deployed
 /app/meli-rox-artist-website
+
+# Original uncompressed hero video (compressed hero.mp4 is committed instead)
+/public/Vids/IMG_0741.mp4
