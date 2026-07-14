@@ -560,7 +560,14 @@ export default function Home() {
   const lms = liveModeDefs(isEn);
   const activeLive = lms.find((m) => m.id === liveMode) || lms[0];
 
-  const galleryItems = GAL.filter((g) => filter === "all" || g.cat === filter);
+  const galleryFiltered = GAL.filter((g) => filter === "all" || g.cat === filter);
+  const galleryVids = galleryFiltered.filter((g) => g.videoSrc);
+  const galleryPics = galleryFiltered.filter((g) => !g.videoSrc);
+  const galleryItems: Gal[] = [];
+  for (let i = 0; i < Math.max(galleryVids.length, galleryPics.length); i++) {
+    if (galleryVids[i]) galleryItems.push(galleryVids[i]);
+    if (galleryPics[i]) galleryItems.push(galleryPics[i]);
+  }
 
   // Resting waveform shown when idle (bars react to the real song while playing)
   const restHeights = Array.from({ length: BAR_COUNT }, (_, i) =>
