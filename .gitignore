@@ -6,3 +6,6 @@
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Design handoff bundle (source mockups + full-res originals) — kept local, not deployed
+/app/meli-rox-artist-website
