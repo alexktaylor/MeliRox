@@ -193,7 +193,8 @@ const CATS: Cat[] = [
     es: "Bodas",
     en: "Weddings",
     img: F + "IMG_1922.JPG",
-    pos: "50% 30%",
+    vidSrc: "/Vids/bodas.mp4",
+    pos: "50% 28%",
     tone: "linear-gradient(180deg, #0b0a08, #171008 50%, #0b0a08)",
     tEs: "Música que acompaña los momentos que nunca se repiten.",
     tEn: "Music for the moments that never repeat.",
@@ -231,7 +232,8 @@ const CATS: Cat[] = [
     es: "Eventos privados",
     en: "Private events",
     img: F + "IMG_6812.JPG",
-    pos: "50% 15%",
+    vidSrc: "/Vids/privados.mp4",
+    pos: "50% 33%",
     tone: "linear-gradient(180deg, #0b0a08, #12100c 50%, #0b0a08)",
     tEs: "Música diseñada a la medida del momento.",
     tEn: "Music designed around the moment.",
@@ -249,7 +251,8 @@ const CATS: Cat[] = [
     es: "Eventos corporativos",
     en: "Corporate events",
     img: U + "corporate-5250.jpg",
-    pos: "50% 40%",
+    vidSrc: "/Vids/corporate.mp4",
+    pos: "50% 47%",
     tone: "linear-gradient(180deg, #0b0a08, #100f0c 50%, #0b0a08)",
     tEs: "Impacto visual con producción profesional.",
     tEn: "Visual impact with professional production.",
@@ -267,7 +270,8 @@ const CATS: Cat[] = [
     es: "Conciertos y festivales",
     en: "Concerts & festivals",
     img: F + "IMG_2501.jpg",
-    pos: "50% 25%",
+    vidSrc: "/Vids/conciertos.mp4",
+    pos: "50% 55%",
     vid: true,
     tone: "linear-gradient(180deg, #0b0a08, #0e1010 50%, #0b0a08)",
     tEs: "Música original para grandes escenarios.",
@@ -283,13 +287,14 @@ const CATS: Cat[] = [
   },
 ];
 
-function liveModeDefs(isEn: boolean) {
+function liveModeDefs(isEn: boolean): { id: string; name: string; img: string; pos: string; cap: string; vidSrc?: string }[] {
   return [
     {
       id: "voz",
       name: isEn ? "Live vocals" : "Voz en vivo",
       img: F + "IMG_2482.jpg",
-      pos: "50% 18%",
+      vidSrc: "/Vids/voz.mp4",
+      pos: "50% 30%",
       cap: isEn
         ? "A voice that fills the stage — festivals, events and full productions."
         : "Una voz que llena el escenario — festivales, eventos y producciones completas.",
@@ -298,19 +303,31 @@ function liveModeDefs(isEn: boolean) {
       id: "violin",
       name: isEn ? "Electric violin" : "Violín eléctrico",
       img: F + "IMG_2501.jpg",
-      pos: "50% 22%",
+      vidSrc: "/Vids/violin.mp4",
+      pos: "50% 28%",
       cap: isEn
         ? "Classical expression inside modern, electronic energy."
         : "La expresión clásica dentro de la energía electrónica moderna.",
     },
     {
       id: "banda",
-      name: isEn ? "Band, DJs & collaborations" : "Banda, DJs y colaboraciones",
+      name: isEn ? "Band & DJs" : "Banda y DJs",
       img: F + "party.jpg",
-      pos: "50% 30%",
+      vidSrc: "/Vids/paradise.mp4",
+      pos: "50% 42%",
       cap: isEn
-        ? "Formats with live musicians, DJs and guest artists."
-        : "Formatos con músicos en vivo, DJs y artistas invitados.",
+        ? "Live musicians and DJs on stage."
+        : "Músicos en vivo y DJs en tarima.",
+    },
+    {
+      id: "colab",
+      name: isEn ? "Collaborations" : "Colaboraciones",
+      img: F + "party.jpg",
+      vidSrc: "/Vids/colab.mp4",
+      pos: "50% 40%",
+      cap: isEn
+        ? "Sessions with DJs, producers and guest artists."
+        : "Sesiones con DJs, productores y artistas invitados.",
     },
   ];
 }
@@ -425,25 +442,37 @@ type Gal = {
   en: string;
   h: number;
   vid?: string;
-  slot?: string;
+  videoSrc?: string;
 };
 
+const P = "/Vids/posters/";
+
 const GAL: Gal[] = [
-  { src: F + "IMG_2471.jpg", cat: "live", es: "Festival", en: "Festival", h: 440, vid: "00:18", slot: "galeria-envivo-festival" },
+  // Videos (poster = src, plays in lightbox)
+  { src: P + "conciertos.jpg", videoSrc: "/Vids/conciertos.mp4", cat: "live", es: "Festival", en: "Festival", h: 440, vid: "0:35" },
+  { src: P + "voz.jpg", videoSrc: "/Vids/voz.mp4", cat: "live", es: "Voz en vivo", en: "Live vocals", h: 380, vid: "0:47" },
+  { src: P + "violin.jpg", videoSrc: "/Vids/violin.mp4", cat: "live", es: "Violín eléctrico", en: "Electric violin", h: 340, vid: "0:20" },
+  { src: P + "bodas.jpg", videoSrc: "/Vids/bodas.mp4", cat: "bodas", es: "Bodas", en: "Weddings", h: 400, vid: "0:30" },
+  { src: P + "corporate.jpg", videoSrc: "/Vids/corporate.mp4", cat: "ev", es: "Corporativo", en: "Corporate", h: 380, vid: "0:34" },
+  { src: P + "quince.jpg", videoSrc: "/Vids/quince.mp4", cat: "ev", es: "Fiesta de 15", en: "Quinceañera", h: 360, vid: "0:24" },
+  { src: P + "privados.jpg", videoSrc: "/Vids/privados.mp4", cat: "ev", es: "Evento privado", en: "Private event", h: 400, vid: "0:30" },
+  { src: P + "paradise.jpg", videoSrc: "/Vids/paradise.mp4", cat: "live", es: "En vivo", en: "Live", h: 340, vid: "0:28" },
+  { src: P + "banda.jpg", videoSrc: "/Vids/banda.mp4", cat: "live", es: "Banda", en: "Band", h: 360, vid: "0:35" },
+  { src: P + "colab.jpg", videoSrc: "/Vids/colab.mp4", cat: "live", es: "Colaboración", en: "Collaboration", h: 300, vid: "0:38" },
+  // Photos
   { src: F + "wedding.jpg", cat: "bodas", es: "Bodas", en: "Weddings", h: 400 },
   { src: F + "DSC08415.jpg", cat: "live", es: "En vivo", en: "Live", h: 340 },
   { src: F + "DVR_0449.jpg", cat: "ses", es: "Sesión", en: "Session", h: 380 },
   { src: F + "IMG_2482.jpg", cat: "live", es: "En vivo", en: "Live", h: 300 },
-  { src: F + "Meli%20Rox%20wedding.jpeg", cat: "bodas", es: "Bodas", en: "Weddings", h: 360, vid: "00:20", slot: "galeria-boda-ceremonia" },
   { src: U + "IMG_5220.JPG.jpeg", cat: "ev", es: "Eventos", en: "Events", h: 420 },
   { src: F + "DVR_0367.jpg", cat: "ses", es: "Sesión", en: "Session", h: 300 },
   { src: F + "IMG_1922.JPG", cat: "bodas", es: "Bodas", en: "Weddings", h: 380 },
-  { src: F + "IMG_2501.jpg", cat: "live", es: "Festival", en: "Festival", h: 340, vid: "00:22", slot: "galeria-violin-festival" },
+  { src: F + "IMG_2501.jpg", cat: "live", es: "Festival", en: "Festival", h: 340 },
   { src: F + "DVR_0490.jpg", cat: "ses", es: "Sesión", en: "Session", h: 320 },
   { src: F + "wedding1.jpg", cat: "bodas", es: "Bodas", en: "Weddings", h: 360 },
   { src: F + "IMG_6812.JPG", cat: "ev", es: "Eventos", en: "Events", h: 300 },
   { src: F + "DSC08345.jpg", cat: "ses", es: "Sesión", en: "Session", h: 400 },
-  { src: F + "party.jpg", cat: "live", es: "En vivo", en: "Live", h: 320, vid: "00:12", slot: "galeria-banda-show" },
+  { src: F + "party.jpg", cat: "live", es: "En vivo", en: "Live", h: 320 },
   { src: F + "Meli%20violin%20(1).jpeg", cat: "live", es: "Club", en: "Club", h: 340 },
   { src: F + "DVR_0523.jpg", cat: "ses", es: "Sesión", en: "Session", h: 300 },
 ];
@@ -467,7 +496,7 @@ export default function Home() {
   const [prog, setProg] = useState(0);
   const [filter, setFilter] = useState("all");
   const [openRel, setOpenRel] = useState<string | null>(null);
-  const [lb, setLb] = useState<{ src: string; alt: string } | null>(null);
+  const [lb, setLb] = useState<{ src?: string; videoSrc?: string; alt: string } | null>(null);
   const [liveMode, setLiveMode] = useState("voz");
   const [vw, setVw] = useState(1200);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -804,10 +833,10 @@ export default function Home() {
           </div>
           <div style={{ position: "relative", height: "clamp(400px, 64vh, 660px)", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.18)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={F + "wedding.jpg"} alt="Meli — cálida, íntima, emocional" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", filter: "sepia(.26) saturate(.82) brightness(.96)", transform: `scale(${1 + mix * 0.0006})`, transition: "transform .6s" }} />
+            <img src={F + "wedding.jpg"} alt="Meli — cálida, íntima, emocional" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 20%" : "50% 30%", filter: "sepia(.26) saturate(.82) brightness(.96)", transform: `scale(${1 + mix * 0.0006})`, transition: "transform .6s" }} />
             <div style={{ position: "absolute", inset: 0, opacity: mix / 100, transition: "opacity .7s ease" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={F + "DSC08415.jpg"} alt="Rox — eléctrica, audaz, imparable" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 14%", filter: "saturate(1.08) brightness(.95) contrast(1.06)" }} />
+              <img src={F + "DSC08415.jpg"} alt="Rox — eléctrica, audaz, imparable" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 14%" : "50% 24%", filter: "saturate(1.08) brightness(.95) contrast(1.06)" }} />
             </div>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(11,10,8,.55), transparent 40%)", pointerEvents: "none" }} />
             <div style={{ position: "absolute", left: 0, right: 0, bottom: "20px", textAlign: "center", pointerEvents: "none" }}>
@@ -847,12 +876,20 @@ export default function Home() {
             ))}
           </div>
           <div style={{ position: "relative", marginTop: "18px", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", height: "clamp(320px, 52vw, 620px)" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={activeLive.img} alt={activeLive.cap} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.85))" }} />
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", pointerEvents: "none" }}><PlayIcon size={28} color="#ecd9ac" /></div>
-            <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
-            <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
+            {activeLive.vidSrc ? (
+              <CategoryVideo key={liveMode} src={activeLive.vidSrc} pos={activeLive.pos} />
+            ) : (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={activeLive.img} alt={activeLive.cap} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
+            )}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.85))", pointerEvents: "none" }} />
+            {!activeLive.vidSrc && (
+              <>
+                <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", pointerEvents: "none" }}><PlayIcon size={28} color="#ecd9ac" /></div>
+                <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
+              </>
+            )}
+            <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px", pointerEvents: "none" }}>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{activeLive.name}</div>
               <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 32px)", color: "#f7f1e0", lineHeight: 1.2, textShadow: "0 1px 12px rgba(0,0,0,.8)" }}>{activeLive.cap}</div>
             </div>
@@ -1102,7 +1139,7 @@ export default function Home() {
               const alt = "Meli Rox — " + t(g.es, g.en);
               const h = isMobile ? Math.round(g.h * 0.72) : g.h;
               return (
-                <figure key={g.src} onClick={() => setLb({ src: g.src, alt })} style={{ margin: 0, position: "relative", flex: "0 0 auto", overflow: "hidden", borderRadius: "3px", border: "1px solid rgba(212,180,122,.16)", cursor: "zoom-in", scrollSnapAlign: "start" }}>
+                <figure key={g.src} onClick={() => setLb(g.videoSrc ? { videoSrc: g.videoSrc, alt } : { src: g.src, alt })} style={{ margin: 0, position: "relative", flex: "0 0 auto", overflow: "hidden", borderRadius: "3px", border: "1px solid rgba(212,180,122,.16)", cursor: g.videoSrc ? "pointer" : "zoom-in", scrollSnapAlign: "start" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={g.src} alt={alt} loading="lazy" style={{ display: "block", height: h + "px", width: "auto", maxWidth: "80vw", objectFit: "cover", filter: "saturate(.88) brightness(.9)", transition: "transform .8s, filter .5s" }} />
                   {g.vid && (
@@ -1146,7 +1183,7 @@ export default function Home() {
           <div style={{ marginTop: "clamp(24px, 3.4vw, 36px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "14px" }}>
             {[
               { href: "https://open.spotify.com/artist/0Me2xPijWmN9C9P2Vs5IGP", img: F + "DVR_0449.jpg", pos: "50% 30%", label: "Spotify", title: t("Escucha su música", "Hear her music"), handle: "Meli Rox →" },
-              { href: "https://www.youtube.com/@meliroxmusic", img: F + "IMG_2482.jpg", pos: "50% 15%", label: "YouTube", title: t("Videos y presentaciones", "Videos & performances"), handle: "@meliroxmusic →" },
+              { href: "https://www.youtube.com/@meliroxmusic", img: F + "IMG_2513.jpg", pos: "50% 18%", label: "YouTube", title: t("Videos y presentaciones", "Videos & performances"), handle: "@meliroxmusic →" },
             ].map((s) => (
               <a key={s.label} href={s.href} target="_blank" style={{ position: "relative", display: "block", textDecoration: "none", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.22)", height: "200px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1200,8 +1237,12 @@ export default function Home() {
       {/* LIGHTBOX */}
       {lb && (
         <div onClick={() => setLb(null)} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(8,7,6,.96)", display: "flex", alignItems: "center", justifyContent: "center", padding: "clamp(16px, 4vw, 48px)", cursor: "zoom-out" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={lb.src} alt={lb.alt} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)" }} />
+          {lb.videoSrc ? (
+            <video src={lb.videoSrc} controls autoPlay playsInline onClick={(e) => e.stopPropagation()} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)", background: "#000" }} />
+          ) : (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={lb.src} alt={lb.alt} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)" }} />
+          )}
           <button onClick={() => setLb(null)} aria-label="Cerrar" style={{ position: "absolute", top: "18px", right: "22px", width: "46px", height: "46px", borderRadius: "50%", background: "rgba(212,180,122,.12)", border: "1px solid rgba(212,180,122,.4)", color: "#ecd9ac", fontSize: "20px", cursor: "pointer" }}>×</button>
         </div>
       )}
