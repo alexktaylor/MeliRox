@@ -1125,13 +1125,11 @@ export default function Home() {
       {/* SIGUE LA ENERGIA */}
       <section style={{ position: "relative", padding: "clamp(40px, 7vw, 96px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #100d09)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Sigue la energía", "Follow the energy")}</div>
-
           {/* Instagram profile header */}
-          <div style={{ marginTop: "14px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-            <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ flex: "0 0 auto", width: "62px", height: "62px", borderRadius: "50%", padding: "2px", background: "linear-gradient(135deg, #ecd9ac, #b98f4e)", display: "block" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+            <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ flex: "0 0 auto", width: "64px", height: "64px", borderRadius: "50%", display: "block", overflow: "hidden" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={F + "DVR_0454.jpg"} alt="Meli Rox" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover", objectPosition: "50% 18%", border: "2px solid #0b0a08" }} />
+              <img src={U + "MeliIGThumb.jpg"} alt="Meli Rox" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
             </a>
             <div style={{ flex: "1 1 auto", minWidth: "160px" }}>
               <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "7px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 3.4vw, 34px)", color: "#f4edda", lineHeight: 1 }}>@meliroxoficial{/* eslint-disable-next-line @next/next/no-img-element */}<img src={U + "Instagramtickv3.png"} alt="Verificado" style={{ width: "0.66em", height: "0.66em", display: "inline-block" }} /></a>
@@ -1188,12 +1186,6 @@ export default function Home() {
                 <a href="mailto:meliroxmusic@gmail.com" style={{ fontSize: "14px", fontWeight: 500, color: "#ddd2b8", textDecoration: "none", borderBottom: "1px solid rgba(212,180,122,.4)", paddingBottom: "2px" }}>meliroxmusic@gmail.com</a>
               </div>
             </div>
-          </div>
-          <div style={{ marginTop: "36px", display: "flex", gap: "26px", justifyContent: "center", flexWrap: "wrap", fontSize: "13.5px", fontWeight: 500, letterSpacing: ".1em", textTransform: "uppercase" }}>
-            <a href={"tel:" + PHONE} style={{ color: "#ddd2b8", textDecoration: "none" }}>+57 304 550 2154</a>
-            <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ color: "#ddd2b8", textDecoration: "none" }}>Instagram</a>
-            <a href="https://open.spotify.com/artist/0Me2xPijWmN9C9P2Vs5IGP" target="_blank" style={{ color: "#ddd2b8", textDecoration: "none" }}>Spotify</a>
-            <a href="https://www.youtube.com/@meliroxmusic" target="_blank" style={{ color: "#ddd2b8", textDecoration: "none" }}>YouTube</a>
           </div>
         </div>
       </section>
