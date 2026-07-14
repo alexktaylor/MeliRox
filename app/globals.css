@@ -1,4 +1,5 @@
 html { scroll-behavior: smooth; }
+html, body { overflow-x: hidden; }
 body {
   margin: 0;
   background: #0b0a08;
@@ -6,6 +7,7 @@ body {
   font-family: 'Manrope', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+.hero-fold { min-height: 100vh; min-height: 100svh; }
 a { color: #d4b47a; }
 a:hover { color: #ecd9ac; }
 ::selection { background: rgba(212,180,122,.35); color: #fff; }

@@ -12,3 +12,5 @@ next-env.d.ts
 
 # Original uncompressed hero video (compressed hero.mp4 is committed instead)
 /public/Vids/IMG_0741.mp4
+/public/Vids/IMG_8516.MOV
+/public/uploads/*.HEIC

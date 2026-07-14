@@ -30,6 +30,142 @@ function PauseIcon({ size = 16, color = "currentColor" }: { size?: number; color
   );
 }
 
+function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onActivate?: () => void }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    const v = ref.current;
+    if (v) {
+      v.muted = true;
+      v.play().catch(() => {});
+    }
+  }, [src]);
+  const activate = () => {
+    const v = ref.current;
+    if (!v || active) return;
+    v.muted = false;
+    v.currentTime = 0;
+    setActive(true);
+    onActivate?.();
+    v.play().catch(() => {});
+  };
+  return (
+    <>
+      <video ref={ref} src={src} autoPlay playsInline preload="auto" loop={!active} controls={active} onClick={activate} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: pos, filter: "saturate(.95) brightness(.9)", cursor: active ? "default" : "pointer" }} />
+      {!active && (
+        <div onClick={activate} style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "8px", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", border: "1px solid rgba(232,207,158,.55)", borderRadius: "999px", padding: "9px 14px", color: "#ecd9ac", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer", zIndex: 3 }}>
+          <svg width={13} height={13} viewBox="0 0 24 24" fill="#ecd9ac" aria-hidden="true"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z" /></svg>
+          <span>Toca para escuchar</span>
+        </div>
+      )}
+    </>
+  );
+}
+
+// Latest Instagram posts/reels to feature (official embed). Paste permalinks like
+// "https://www.instagram.com/reel/XXXXXXXXXXX/" — the section shows a big CTA until filled.
+const IG_POSTS: string[] = [
+  "https://www.instagram.com/p/DaQ9Q-NJ0E1/",
+  "https://www.instagram.com/p/DaHPE5LBjpj/",
+  "https://www.instagram.com/p/DZn3RTQJTAF/",
+  "https://www.instagram.com/p/DZJNvHfpFxn/",
+  "https://www.instagram.com/p/DY-8aVxJKla/",
+];
+
+// How much of the Instagram embed's bottom chrome (View more / like-comment-share / add-comment) to crop off.
+const IG_FOOTER_CROP = 172;
+const IG_NATURAL_W = 326; // Instagram's enforced minimum embed width
+
+function InstagramEmbeds({ urls, isMobile, vw }: { urls: string[]; isMobile: boolean; vw: number }) {
+  const wrapRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const outerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Desktop: scale every embed down so all fit one row. Mobile: full-size swipe slider.
+  const N = urls.length;
+  const gap = 14;
+  const avail = Math.min(1560, vw - 60);
+  // Mobile: shrink so the next reel peeks (signals scroll). Desktop: scale so all fit one row.
+  const scale = isMobile
+    ? Math.min(1, (vw * 0.8) / IG_NATURAL_W)
+    : Math.max(0.5, Math.min(1, (avail - (N - 1) * gap) / (N * IG_NATURAL_W)));
+  const itemW = Math.round(IG_NATURAL_W * scale);
+
+  useEffect(() => {
+    const w = window as unknown as { instgrm?: { embeds?: { process?: () => void } } };
+    const process = () => {
+      try {
+        w.instgrm?.embeds?.process?.();
+      } catch {}
+    };
+    if (w.instgrm) {
+      process();
+    } else {
+      const existing = document.getElementById("ig-embed-script") as HTMLScriptElement | null;
+      if (existing) {
+        existing.addEventListener("load", process);
+      } else {
+        const s = document.createElement("script");
+        s.id = "ig-embed-script";
+        s.src = "https://www.instagram.com/embed.js";
+        s.async = true;
+        s.onload = process;
+        document.body.appendChild(s);
+      }
+    }
+
+    // Crop each embed's footer once it becomes an iframe. Keep polling so late-rendering
+    // embeds are all handled (not just the first ones).
+    const observers: ResizeObserver[] = [];
+    const handled = new Set<number>();
+    const applyCrop = (i: number) => {
+      const wrap = wrapRefs.current[i];
+      const outer = outerRefs.current[i];
+      if (!wrap || !outer) return;
+      const iframe = wrap.querySelector("iframe") as HTMLIFrameElement | null;
+      if (!iframe) return false;
+      const apply = () => {
+        const h = iframe.offsetHeight;
+        if (h > IG_FOOTER_CROP + 120) {
+          const ch = h - IG_FOOTER_CROP;
+          wrap.style.height = ch + "px";
+          outer.style.height = Math.round(ch * scale) + "px";
+        }
+      };
+      apply();
+      const ro = new ResizeObserver(apply);
+      ro.observe(iframe);
+      observers.push(ro);
+      return true;
+    };
+    const poll = setInterval(() => {
+      urls.forEach((_, i) => {
+        if (!handled.has(i) && applyCrop(i)) handled.add(i);
+      });
+      if (handled.size >= urls.length) clearInterval(poll);
+    }, 250);
+    const stop = setTimeout(() => clearInterval(poll), 10000);
+    return () => {
+      clearInterval(poll);
+      clearTimeout(stop);
+      observers.forEach((o) => o.disconnect());
+    };
+  }, [urls, isMobile, vw, scale]);
+
+  return (
+    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: isMobile ? "x mandatory" : "none", padding: "2px 0 14px", scrollbarWidth: "thin", scrollbarColor: "rgba(212,180,122,.4) transparent" }}>
+      <div style={{ display: "flex", gap: gap + "px", width: "max-content", margin: isMobile ? 0 : "0 auto", alignItems: "flex-start", justifyContent: isMobile ? "flex-start" : "center" }}>
+        {urls.map((u, i) => (
+          <div key={u} ref={(el) => { outerRefs.current[i] = el; }} style={{ flex: "0 0 auto", width: itemW + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
+            <div ref={(el) => { wrapRefs.current[i] = el; }} style={{ width: IG_NATURAL_W + "px", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", transform: `scale(${scale})`, transformOrigin: "top left" }}>
+              <blockquote className="instagram-media" data-instgrm-permalink={u} data-instgrm-version="14" style={{ background: "#0a0908", border: 0, margin: 0, width: "100%", minWidth: 0 }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 type Cat = {
   id: string;
   es: string;
@@ -37,6 +173,7 @@ type Cat = {
   img: string;
   pos: string;
   vid?: boolean;
+  vidSrc?: string;
   tone: string;
   tEs: string;
   tEn: string;
@@ -76,6 +213,7 @@ const CATS: Cat[] = [
     img: F + "DSC09018.jpg",
     pos: "50% 18%",
     vid: true,
+    vidSrc: "/Vids/quince.mp4",
     tone: "linear-gradient(180deg, #0b0a08, #14120a 50%, #0b0a08)",
     tEs: "Una entrada que nadie va a olvidar.",
     tEn: "An entrance no one will forget.",
@@ -110,8 +248,8 @@ const CATS: Cat[] = [
     id: "corporativos",
     es: "Eventos corporativos",
     en: "Corporate events",
-    img: U + "IMG_5220.JPG.jpeg",
-    pos: "50% 28%",
+    img: U + "corporate-5250.jpg",
+    pos: "50% 40%",
     tone: "linear-gradient(180deg, #0b0a08, #100f0c 50%, #0b0a08)",
     tEs: "Impacto visual con producción profesional.",
     tEn: "Visual impact with professional production.",
@@ -261,7 +399,7 @@ const CHAPTERS = [
   {
     num: "03",
     img: F + "Meli%20violin%20(1).jpeg",
-    pos: "50% 25%",
+    pos: "50% 48%",
     dir: "row",
     tEs: "La transformación",
     tEn: "The transformation",
@@ -323,6 +461,7 @@ const GOLD = "linear-gradient(135deg, #ecd9ac, #b98f4e)";
 export default function Home() {
   const [lang, setLang] = useState<"es" | "en" | null>(null);
   const [cat, setCat] = useState("bodas");
+  const [vidSound, setVidSound] = useState(false);
   const [mix, setMix] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [prog, setProg] = useState(0);
@@ -485,6 +624,11 @@ export default function Home() {
     };
   }, []);
 
+  // Reset category-video sound state when switching categories
+  useEffect(() => {
+    setVidSound(false);
+  }, [cat]);
+
   const pillStyle = (on: boolean): CSSProperties =>
     CSS({
       cursor: "pointer",
@@ -599,7 +743,7 @@ export default function Home() {
       )}
 
       {/* HERO */}
-      <header id="inicio" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: isMobile ? "flex-end" : "center", overflow: "hidden", background: "#080706" }}>
+      <header id="inicio" className="hero-fold" style={{ position: "relative", display: "flex", alignItems: isMobile ? "flex-end" : "center", overflow: "hidden", background: "#080706" }}>
         <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
           <video ref={heroVideoRef} src="/Vids/hero.mp4" poster="/Vids/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(8,7,6,.92) 0%, rgba(8,7,6,.68) 34%, rgba(8,7,6,.12) 62%, rgba(8,7,6,.42) 100%)" }} />
@@ -728,26 +872,35 @@ export default function Home() {
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Experiencias", "Experiences")}</div>
           <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "760px", textWrap: "pretty" })}>{t("Cada ocasión merece su propia energía.", "Every occasion deserves its own energy.")}</h2>
           <p style={CSS({ margin: "18px 0 0", maxWidth: "640px", fontWeight: 300, fontSize: "16.5px", lineHeight: 1.75, color: "#cabfa5", textWrap: "pretty" })}>{t("Desde momentos íntimos hasta grandes escenarios, cada presentación se diseña alrededor de la emoción, el espacio y las personas que la vivirán.", "From intimate moments to grand stages, every performance is designed around the emotion, the space and the people who will live it.")}</p>
-          <div style={CSS({ marginTop: "clamp(30px, 4vw, 44px)", display: "flex", gap: "10px", flexWrap: pillWrap as CSSProperties["flexWrap"], overflowX: pillOx as CSSProperties["overflowX"], paddingBottom: "4px" })}>
-            {CATS.map((c) => (
-              <button key={c.id} onClick={() => setCat(c.id)} style={pillStyle(c.id === cat)}>{t(c.es, c.en)}</button>
-            ))}
+          <div style={CSS({ marginTop: "clamp(30px, 4vw, 44px)", display: isMobile ? "grid" : "flex", gridTemplateColumns: isMobile ? "1fr 1fr" : undefined, gap: "10px", flexWrap: "wrap", paddingBottom: "4px" })}>
+            {CATS.map((c, i) => {
+              const lastOdd = isMobile && i === CATS.length - 1 && CATS.length % 2 === 1;
+              return (
+                <button key={c.id} onClick={() => setCat(c.id)} style={{ ...pillStyle(c.id === cat), padding: isMobile ? "13px 10px" : "14px 24px", whiteSpace: isMobile ? "normal" : "nowrap", ...(lastOdd ? { gridColumn: "1 / -1" } : {}) }}>{t(c.es, c.en)}</button>
+              );
+            })}
           </div>
           <div style={{ marginTop: "26px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "clamp(24px, 4vw, 52px)", alignItems: "stretch" }}>
             <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.18)", minHeight: "clamp(340px, 52vh, 520px)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={activeCat.img} alt={t(activeCat.es, activeCat.en)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeCat.pos, filter: "saturate(.92) brightness(.9)", transition: "opacity .5s" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.75))" }} />
-              {activeCat.vid && (
+              {activeCat.vidSrc ? (
+                <CategoryVideo key={activeCat.id} src={activeCat.vidSrc} pos={activeCat.pos} onActivate={() => setVidSound(true)} />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={activeCat.img} alt={t(activeCat.es, activeCat.en)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeCat.pos, filter: "saturate(.92) brightness(.9)", transition: "opacity .5s" }} />
+              )}
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.75))", pointerEvents: "none" }} />
+              {activeCat.vid && !activeCat.vidSrc && (
                 <div style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "9px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "8px 12px", borderRadius: "999px", pointerEvents: "none" }}>
                   <PlayIcon size={11} color="#ecd9ac" /><span>Video · 00:15</span>
                 </div>
               )}
-              <div style={{ position: "absolute", left: "18px", bottom: "16px", right: "18px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                {(isEn ? activeCat.chEn : activeCat.chEs).map((ch) => (
-                  <span key={ch} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px", backdropFilter: "blur(4px)" }}>{ch}</span>
-                ))}
-              </div>
+              {!vidSound && (
+                <div style={{ position: "absolute", left: "18px", bottom: "16px", right: "18px", display: "flex", gap: "10px", flexWrap: "wrap", pointerEvents: "none" }}>
+                  {(isEn ? activeCat.chEn : activeCat.chEs).map((ch) => (
+                    <span key={ch} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px", backdropFilter: "blur(4px)" }}>{ch}</span>
+                  ))}
+                </div>
+              )}
             </div>
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(4px, 2vw, 16px) 0" }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(34px, 4.8vw, 56px)", lineHeight: 1.02, color: "#f4edda" }}>{t(activeCat.es, activeCat.en)}</div>
@@ -972,21 +1125,39 @@ export default function Home() {
       {/* SIGUE LA ENERGIA */}
       <section style={{ position: "relative", padding: "clamp(40px, 7vw, 96px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #100d09)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <h2 style={{ margin: "0 0 clamp(26px, 3.4vw, 40px)", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(30px, 4vw, 48px)", color: "#f4edda" }}>{t("Sigue la energía", "Follow the energy")}</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "14px" }}>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Sigue la energía", "Follow the energy")}</div>
+
+          {/* Instagram profile header */}
+          <div style={{ marginTop: "14px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+            <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ flex: "0 0 auto", width: "62px", height: "62px", borderRadius: "50%", padding: "2px", background: "linear-gradient(135deg, #ecd9ac, #b98f4e)", display: "block" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={F + "DVR_0454.jpg"} alt="Meli Rox" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover", objectPosition: "50% 18%", border: "2px solid #0b0a08" }} />
+            </a>
+            <div style={{ flex: "1 1 auto", minWidth: "160px" }}>
+              <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "7px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 3.4vw, 34px)", color: "#f4edda", lineHeight: 1 }}>@meliroxoficial{/* eslint-disable-next-line @next/next/no-img-element */}<img src={U + "Instagramtickv3.png"} alt="Verificado" style={{ width: "0.66em", height: "0.66em", display: "inline-block" }} /></a>
+              <div style={{ marginTop: "5px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Cantautora & Violinista · Medellín", "Singer-songwriter & Violinist · Medellín")}</div>
+            </div>
+            <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "12px 24px", borderRadius: "999px", whiteSpace: "nowrap" }}>{t("Seguir", "Follow")}</a>
+          </div>
+
+          <div style={{ marginTop: "clamp(20px, 3vw, 30px)", width: isMobile ? "auto" : "min(1600px, calc(100vw - 40px))", marginLeft: isMobile ? undefined : "50%", transform: isMobile ? undefined : "translateX(-50%)" }}>
+            <InstagramEmbeds urls={IG_POSTS} isMobile={isMobile} vw={vw} />
+          </div>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Desliza para ver más →", "Swipe for more →")}</div>
+
+          <div style={{ marginTop: "clamp(24px, 3.4vw, 36px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "14px" }}>
             {[
-              { href: "https://www.instagram.com/meliroxoficial/", img: F + "DVR_0454.jpg", pos: "50% 20%", label: "Instagram", title: t("Detrás del escenario", "Behind the stage"), handle: "@meliroxoficial →" },
               { href: "https://open.spotify.com/artist/0Me2xPijWmN9C9P2Vs5IGP", img: F + "DVR_0449.jpg", pos: "50% 30%", label: "Spotify", title: t("Escucha su música", "Hear her music"), handle: "Meli Rox →" },
               { href: "https://www.youtube.com/@meliroxmusic", img: F + "IMG_2482.jpg", pos: "50% 15%", label: "YouTube", title: t("Videos y presentaciones", "Videos & performances"), handle: "@meliroxmusic →" },
             ].map((s) => (
-              <a key={s.label} href={s.href} target="_blank" style={{ position: "relative", display: "block", textDecoration: "none", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.22)", height: "300px" }}>
+              <a key={s.label} href={s.href} target="_blank" style={{ position: "relative", display: "block", textDecoration: "none", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.22)", height: "200px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.img} alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "saturate(.85) brightness(.7)", transition: "transform .8s" }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(10,9,8,.92))" }} />
-                <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{s.label}</div>
-                  <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "27px", color: "#f7f1e0" }}>{s.title}</div>
-                  <div style={{ marginTop: "8px", fontSize: "13.5px", fontWeight: 600, color: "#d4b47a" }}>{s.handle}</div>
+                <img src={s.img} alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "saturate(.85) brightness(.62)", transition: "transform .8s" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 35%, rgba(10,9,8,.92))" }} />
+                <div style={{ position: "absolute", left: "20px", right: "20px", bottom: "18px" }}>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{s.label}</div>
+                  <div style={{ marginTop: "6px", fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", color: "#f7f1e0" }}>{s.title}</div>
+                  <div style={{ marginTop: "6px", fontSize: "13px", fontWeight: 600, color: "#d4b47a" }}>{s.handle}</div>
                 </div>
               </a>
             ))}
