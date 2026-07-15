@@ -64,6 +64,7 @@ const jsonLd = {
       name: "Meli Rox",
       url: SITE,
       image: `${SITE}/og.jpg`,
+      logo: `${SITE}/uploads/MRFavicon.png`,
       description:
         "Cantautora, violinista eléctrica y artista en vivo de Medellín, Colombia. Música original y presentaciones en vivo que unen la elegancia clásica con la energía contemporánea.",
       genre: ["Pop", "Electronic", "Afro House", "Crossover", "Live music"],
@@ -80,6 +81,7 @@ const jsonLd = {
       name: "Meli Rox — Música en vivo para eventos",
       url: SITE,
       image: `${SITE}/og.jpg`,
+      logo: `${SITE}/uploads/MRFavicon.png`,
       description:
         "Cantante y violinista eléctrica para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas en Medellín y toda Colombia.",
       telephone: "+573045502154",
