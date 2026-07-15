@@ -806,6 +806,9 @@ export default function Home() {
         </div>
         <div style={{ position: "relative", width: "min(1240px, 100%)", margin: "0 auto", padding: isMobile ? "0 clamp(20px, 5vw, 48px) clamp(52px, 9vh, 96px)" : "clamp(96px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(48px, 8vh, 80px)" }}>
           <div style={{ maxWidth: "580px" }}>
+            <h1 style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", border: 0 }}>
+              Meli Rox — Cantautora, Violinista Eléctrica y Artista en Vivo en Medellín, Colombia. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas.
+            </h1>
             <div style={{ height: isMobile ? "40px" : "52px", width: "1px", margin: "0 0 8px", background: "linear-gradient(180deg, transparent, #e8cf9e)", animation: "mrPulse 3.5s ease-in-out infinite" }} />
             {!isMobile && (
               <div style={{ width: "min(310px, 62vw)", overflow: "visible" }}>
@@ -1080,7 +1083,7 @@ export default function Home() {
       {/* AUDIO TEASER */}
       <section style={{ position: "relative", overflow: "hidden", padding: "clamp(48px, 9vw, 150px) clamp(20px, 5vw, 48px)", background: "#0a0807" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={F + "DVR_0523.jpg"} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 24%", opacity: 0.5, filter: "sepia(.4) saturate(.7) brightness(.7)" }} />
+        <img src={F + "DVR_0523.jpg"} alt="Meli Rox — cantautora y violinista en sesión" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 24%", opacity: 0.5, filter: "sepia(.4) saturate(.7) brightness(.7)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,7,.8), rgba(10,8,7,.35) 40%, rgba(10,8,7,.92))" }} />
         <div style={{ position: "relative", maxWidth: "780px", margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#d9c9a4", animation: "mrPulse 4s ease-in-out infinite" }}>{t("Más allá del escenario", "Beyond the stage")}</div>
@@ -1212,7 +1215,7 @@ export default function Home() {
             ].map((s) => (
               <a key={s.label} href={s.href} target="_blank" style={{ position: "relative", display: "block", textDecoration: "none", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.22)", height: "200px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.img} alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "saturate(.85) brightness(.62)", transition: "transform .8s" }} />
+                <img src={s.img} alt={"Meli Rox en " + s.label} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "saturate(.85) brightness(.62)", transition: "transform .8s" }} />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 35%, rgba(10,9,8,.92))" }} />
                 <div style={{ position: "absolute", left: "20px", right: "20px", bottom: "18px" }}>
                   <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{s.label}</div>
@@ -1228,7 +1231,7 @@ export default function Home() {
       {/* CONTACTO */}
       <section id="contacto" style={{ position: "relative", overflow: "hidden", padding: "clamp(52px, 10vw, 170px) clamp(20px, 5vw, 48px)", background: "#080706" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={F + "DVR_0490.jpg"} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
+        <img src={F + "DVR_0490.jpg"} alt="Meli Rox — violinista eléctrica en vivo en Medellín" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
         <div style={{ position: "relative", maxWidth: "940px", margin: "0 auto", textAlign: "center" }}>
           <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(38px, 6.4vw, 80px)", lineHeight: 1.06, color: "#f9f4e4", textWrap: "pretty", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>
