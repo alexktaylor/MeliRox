@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Footer from "./components/Footer";
+import YouTubeEmbed from "./components/YouTubeEmbed";
 
 const U = "/uploads/";
 const F = "/uploads/drive-download-20260714T181149Z-1-001/";
@@ -1017,8 +1018,10 @@ export default function Home() {
                 <p style={{ margin: "10px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>&quot;Paradise 42&quot; — Mak Negron ft. Meli Rox.</p>
               </div>
               <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908", flex: "1 1 auto" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Premio", "Award")}</div>
-                <div style={{ marginTop: "12px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.35, color: "#f2ecdf" }}>{t("Reconocimiento internacional Premios Estela por «On My Own».", "International Premios Estela recognition for “On My Own”.")}</div>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("En televisión", "On television")}</div>
+                <div style={{ margin: "12px 0 16px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.3, color: "#f2ecdf" }}>{t("Escúchala en vivo en televisión nacional.", "Watch her live on national television.")}</div>
+                <YouTubeEmbed id="qIS-ePBF3ok" title="Meli Rox en vivo — Las Tres Gracias TV" />
+                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
               </div>
             </div>
           </div>
