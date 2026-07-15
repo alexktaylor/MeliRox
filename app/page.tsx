@@ -1234,7 +1234,7 @@ export default function Home() {
         <img src={F + "DVR_0490.jpg"} alt="Meli Rox — violinista eléctrica en vivo en Medellín" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
         <div style={{ position: "relative", maxWidth: "940px", margin: "0 auto", textAlign: "center" }}>
-          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(38px, 6.4vw, 80px)", lineHeight: 1.06, color: "#f9f4e4", textWrap: "pretty", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>
+          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: isMobile ? "clamp(34px, 8vw, 52px)" : "clamp(40px, 4.4vw, 72px)", lineHeight: 1.06, color: "#f9f4e4", whiteSpace: isMobile ? "normal" : "nowrap", textWrap: isMobile ? "pretty" : "nowrap", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>
             {isEn ? (<>Make the moment <em style={{ color: "#e8cf9e" }}>sound different.</em></>) : (<>Haz que el momento <em style={{ color: "#e8cf9e" }}>suene diferente.</em></>)}
           </h2>
           <div style={{ marginTop: "clamp(38px, 5vw, 56px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", textAlign: "left" }}>
