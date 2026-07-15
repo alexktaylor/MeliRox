@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Footer from "./Footer";
+import SiteNav from "./SiteNav";
 
 const SITE = "https://melirox.com";
-const U = "/uploads/";
 export const F = "/uploads/drive-download-20260714T181149Z-1-001/";
 const GOLD = "linear-gradient(135deg, #ecd9ac, #b98f4e)";
 const serif = "'Cormorant Garamond', serif";
@@ -91,20 +91,14 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(cfg)) }} />
 
-      {/* Header */}
-      <header style={{ position: "sticky", top: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", padding: "12px clamp(20px, 5vw, 48px)", background: "rgba(11,10,8,.82)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,180,122,.14)" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ height: "68px", width: "auto", margin: "-16px 0 -16px -8px" }} />
-        </Link>
-        <a href={WA} target="_blank" style={{ textDecoration: "none", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 20px", borderRadius: "999px", whiteSpace: "nowrap" }}>{cfg.headerCta}</a>
-      </header>
+      {/* Nav */}
+      <SiteNav cta={cfg.headerCta} waHref={WA} />
 
       {/* Hero */}
       <section style={{ position: "relative", minHeight: "clamp(560px, 82vh, 820px)", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#080706" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={cfg.heroImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.heroPos, filter: "saturate(.9) brightness(.82)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(8,7,6,.55) 0%, transparent 30%, rgba(8,7,6,.55) 62%, rgba(8,7,6,.95) 100%)" }} />
+        <div className="svc-hero-fade" style={{ position: "absolute", inset: 0 }} />
         <div style={{ position: "relative", width: "min(1200px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 90px)" }}>
           <div style={{ ...eyebrow, color: "#e3d5b0" }}>{cfg.eyebrow}</div>
           <h1 style={{ margin: "14px 0 0", fontFamily: serif, fontWeight: 300, fontSize: "clamp(40px, 6.5vw, 82px)", lineHeight: 1.04, color: "#f9f4e4", maxWidth: "860px", textShadow: "0 2px 30px rgba(0,0,0,.7)" }}>
