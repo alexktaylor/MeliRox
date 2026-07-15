@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import Footer from "./components/Footer";
 
 const U = "/uploads/";
 const F = "/uploads/drive-download-20260714T181149Z-1-001/";
@@ -1256,11 +1257,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: "26px clamp(20px, 5vw, 48px)", background: "#080706", borderTop: "1px solid rgba(212,180,122,.12)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ height: "64px", width: "auto", opacity: 0.9, margin: "-16px 0 -16px -12px" }} />
-        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".18em", textTransform: "uppercase", color: "#7d7159" }}>© 2026 Meli Rox · Medellín, Colombia</div>
-      </footer>
+      <Footer en={isEn} />
 
       {/* LIGHTBOX */}
       {lb && (
