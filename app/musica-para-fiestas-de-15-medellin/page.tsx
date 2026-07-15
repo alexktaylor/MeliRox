@@ -58,7 +58,7 @@ const cfg: ServiceConfig = {
   gallery: [
     { src: F + "DSC09018.jpg", alt: "Meli Rox en una fiesta de 15 en Medellín" },
     { src: F + "party.jpg", alt: "Show de violín eléctrico en una celebración" },
-    { src: F + "IMG_2482.jpg", alt: "Meli Rox cantando en vivo" },
+    { src: F + "DSC08571.jpg", alt: "Meli Rox en una fiesta de 15 en Medellín" },
     { src: F + "DSC08415.jpg", alt: "Meli Rox violinista eléctrica en escena" },
   ],
   faq: [

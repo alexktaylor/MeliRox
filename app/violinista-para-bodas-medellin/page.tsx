@@ -77,6 +77,30 @@ const cfg: ServiceConfig = {
   serviceType: "Música en vivo para bodas",
   serviceDesc: "Voz y violín eléctrico en vivo para ceremonia, cóctel y recepción de bodas en Medellín, con repertorio personalizado.",
   breadcrumbName: "Violinista para bodas en Medellín",
+  packages: [
+    { n: "01", title: "Acto ceremonial", format: "Dúo de voz, violín y piano (o guitarra)", details: ["Ceremonia", "Entrada y votos"] },
+    { n: "02", title: "Cóctel", format: "Violín y voz", details: ["45 min", "Escoge tu música", "Pólvora fría"] },
+    { n: "03", title: "Todo incluido", format: "Ceremonia + cóctel", details: ["Paquete completo", "Reserva con el 30%"] },
+  ],
+  repertoire: [
+    { title: "Hasta mi final", artist: "Il Divo", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/0e/e5/d2/0ee5d28a-794f-424a-5dbe-08e2d8319824/mzaf_5376181552421193433.plus.aac.p.m4a" },
+    { title: "Perfect", artist: "Ed Sheeran", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c7/ba/bc/c7babc66-f598-aaa6-bcf6-307281795817/mzaf_16337361235117168274.plus.aac.p.m4a" },
+    { title: "A Thousand Years", artist: "Christina Perri", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8e/3a/e7/8e3ae749-5e13-a9ca-fef6-61d615bc3087/mzaf_5415208554281396500.plus.aac.p.m4a" },
+    { title: "Señorita", artist: "Shawn Mendes & Camila Cabello", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cf/06/d6/cf06d6fd-f7a0-2898-8363-67688df6c14f/mzaf_8234301186390421644.plus.aac.p.m4a" },
+    { title: "Thinking Out Loud", artist: "Ed Sheeran", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/78/a5/f2/78a5f25e-ad1b-718d-82ad-b82e676c1855/mzaf_6133970271589343093.plus.aac.p.m4a" },
+    { title: "All of Me", artist: "John Legend", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ff/94/6c/ff946ca7-e49a-fdf8-ea5b-11e6f56a0417/mzaf_17369156110722174773.plus.aac.p.m4a" },
+    { title: "Love Me Like You Do", artist: "Ellie Goulding", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/55/26/f9/5526f99f-a256-81bb-6996-918db13723f8/mzaf_12880409831419607391.plus.aac.p.m4a" },
+    { title: "Nella Fantasia", artist: "Il Divo", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/52/6d/ee/526deeed-5844-c269-796e-0ba2fe46e814/mzaf_10959848333413175672.plus.aac.p.m4a" },
+    { title: "Creo en ti", artist: "Reik", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3e/e7/2f/3ee72f58-29d1-9c48-bb1f-6721de74db23/mzaf_13824032248174944279.plus.aac.p.m4a" },
+    { title: "Ocean", artist: "KAROL G", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/eb/1d/72/eb1d7234-ed15-2d3a-c145-7cb7fa855486/mzaf_17307725212739337953.plus.aac.p.m4a" },
+    { title: "Disfruto", artist: "Carla Morrison", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/55/89/f6/5589f6d7-bed1-d60d-c376-8c2da227a997/mzaf_1226023105227924942.plus.aac.p.m4a" },
+    { title: "Acróstico", artist: "Shakira", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2e/a2/41/2ea241fc-1aab-549f-7519-90253984952b/mzaf_15630977518920139422.plus.aac.p.m4a" },
+    { title: "Por primera vez", artist: "Camilo & Evaluna Montaner", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/91/6c/87/916c8747-2c0d-32d8-e66f-8dcc21439d61/mzaf_5140771430125228194.plus.aac.p.m4a" },
+    { title: "La tierra del olvido", artist: "Carlos Vives", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/56/58/75/5658757a-3788-27e2-5215-942e01585a4d/mzaf_17010109186127815887.plus.aac.p.m4a" },
+    { title: "Cásate conmigo", artist: "Silvestre Dangond & Nicky Jam", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2f/fe/cf/2ffecfa7-157d-1700-abf5-17c196c68157/mzaf_11842889685391172405.plus.aac.p.m4a" },
+    { title: "Eres mi sueño", artist: "Fonseca", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/22/33/47/22334787-2ffd-092d-602f-51fd7f88802c/mzaf_11671728325722748664.plus.aac.p.m4a" },
+    { title: "Favorito", artist: "Camilo", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/29/ca/19/29ca1939-525d-2c8e-48e8-4f7fd9427ee0/mzaf_1062712349094666712.plus.aac.p.m4a" },
+  ],
 };
 
 export default function Page() {

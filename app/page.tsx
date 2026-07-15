@@ -302,7 +302,7 @@ function liveModeDefs(isEn: boolean): { id: string; name: string; img: string; p
     {
       id: "voz",
       name: isEn ? "Live vocals" : "Voz en vivo",
-      img: F + "IMG_2482.jpg",
+      img: F + "IMG_2513.jpg",
       vidSrc: "/Vids/voz.mp4",
       pos: "50% 30%",
       cap: isEn
@@ -415,7 +415,7 @@ const CHAPTERS = [
   },
   {
     num: "02",
-    img: F + "IMG_2482.jpg",
+    img: F + "IMG_2513.jpg",
     pos: "50% 15%",
     dir: "row-reverse",
     tEs: "La voz",
@@ -473,7 +473,7 @@ const GAL: Gal[] = [
   { src: F + "wedding.jpg", cat: "bodas", es: "Bodas", en: "Weddings", h: 400 },
   { src: F + "DSC08415.jpg", cat: "live", es: "En vivo", en: "Live", h: 340 },
   { src: F + "DVR_0449.jpg", cat: "ses", es: "Sesión", en: "Session", h: 380 },
-  { src: F + "IMG_2482.jpg", cat: "live", es: "En vivo", en: "Live", h: 300 },
+  { src: F + "DVR_0507.jpg", cat: "live", es: "En vivo", en: "Live", h: 300 },
   { src: U + "IMG_5220.JPG.jpeg", cat: "ev", es: "Eventos", en: "Events", h: 420 },
   { src: F + "DVR_0367.jpg", cat: "ses", es: "Sesión", en: "Session", h: 300 },
   { src: F + "IMG_1922.JPG", cat: "bodas", es: "Bodas", en: "Weddings", h: 380 },

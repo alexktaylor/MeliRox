@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Footer from "./Footer";
 import SiteNav from "./SiteNav";
+import WeddingRepertoire, { type Song } from "./WeddingRepertoire";
 
 const SITE = "https://melirox.com";
 export const F = "/uploads/drive-download-20260714T181149Z-1-001/";
@@ -44,6 +45,8 @@ export type ServiceConfig = {
   serviceType: string;
   serviceDesc: string;
   breadcrumbName: string;
+  packages?: { n: string; title: string; format: string; details: string[] }[];
+  repertoire?: Song[];
 };
 
 export function buildJsonLd(cfg: ServiceConfig) {
@@ -97,7 +100,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
       {/* Hero */}
       <section style={{ position: "relative", minHeight: "clamp(560px, 82vh, 820px)", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#080706" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={cfg.heroImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.heroPos, filter: "saturate(.9) brightness(.82)" }} />
+        <img src={cfg.heroImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.heroPos, filter: "saturate(.9) brightness(.72)" }} />
         <div className="svc-hero-fade" style={{ position: "absolute", inset: 0 }} />
         <div style={{ position: "relative", width: "min(1200px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 90px)" }}>
           <div style={{ ...eyebrow, color: "#e3d5b0" }}>{cfg.eyebrow}</div>
@@ -161,15 +164,61 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
         </div>
       </section>
 
-      {/* Video */}
-      <section style={{ padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 7vw, 100px)", background: "#0b0a08" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", background: "#000" }}>
-            <video src={cfg.video} poster={cfg.videoPoster} controls playsInline preload="none" style={{ display: "block", width: "100%", maxHeight: "80vh", objectFit: "contain", background: "#000" }} />
+      {/* Packages */}
+      {cfg.packages && (
+        <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ ...eyebrow, textAlign: "center" }}>El proceso</div>
+            <h2 style={{ margin: "12px 0 clamp(30px, 4vw, 48px)", textAlign: "center", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>Paquetes a la medida.</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "clamp(16px, 2.5vw, 26px)" }}>
+              {cfg.packages.map((p) => (
+                <div key={p.n} style={{ border: "1px solid rgba(212,180,122,.22)", borderRadius: "6px", padding: "clamp(26px, 3.4vw, 38px)", background: "radial-gradient(ellipse 100% 80% at 0% 0%, rgba(138,106,63,.15), transparent 60%), #0a0908", display: "flex", flexDirection: "column" }}>
+                  <div style={{ fontFamily: serif, fontWeight: 300, fontSize: "clamp(46px, 6vw, 68px)", lineHeight: 1, color: "#f1e2ba" }}>{p.n}</div>
+                  <div style={{ marginTop: "16px", fontFamily: serif, fontStyle: "italic", fontSize: "clamp(22px, 2.6vw, 28px)", color: "#f4edda" }}>{p.title}</div>
+                  <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c", lineHeight: 1.6 }}>{p.format}</div>
+                  <div style={{ marginTop: "18px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    {p.details.map((d) => (
+                      <span key={d} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".1em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px" }}>{d}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p style={{ margin: "clamp(24px, 3vw, 32px) 0 0", textAlign: "center", fontWeight: 300, fontSize: "15px", color: "#a99a7c" }}>Reserva con el 30%. Cada paquete se adapta a tu boda.</p>
           </div>
-          <p style={{ margin: "16px 0 0", textAlign: "center", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Meli Rox en vivo · toca para reproducir</p>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {cfg.repertoire ? (
+        /* Video (left) + Repertoire (right) — songs first on mobile */
+        <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(138,106,63,.12), transparent 60%), #0a0908" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(28px, 4vw, 56px)", alignItems: "flex-start" }}>
+              <div className="svc-rep-video" style={{ flex: "1 1 340px", minWidth: 0 }}>
+                <div className="svc-rep-sticky">
+                  <div style={{ position: "relative", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", background: "#000" }}>
+                    <video src={cfg.video} poster={cfg.videoPoster} controls playsInline preload="none" style={{ display: "block", width: "100%", maxHeight: "72vh", objectFit: "contain", background: "#000" }} />
+                  </div>
+                  <p style={{ margin: "14px 0 0", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Meli Rox en vivo · toca para reproducir</p>
+                </div>
+              </div>
+              <div className="svc-rep-list" style={{ flex: "1 1 440px", minWidth: 0 }}>
+                <WeddingRepertoire songs={cfg.repertoire} />
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        /* Video */
+        <section style={{ padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 7vw, 100px)", background: "#0b0a08" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", background: "#000" }}>
+              <video src={cfg.video} poster={cfg.videoPoster} controls playsInline preload="none" style={{ display: "block", width: "100%", maxHeight: "80vh", objectFit: "contain", background: "#000" }} />
+            </div>
+            <p style={{ margin: "16px 0 0", textAlign: "center", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Meli Rox en vivo · toca para reproducir</p>
+          </div>
+        </section>
+      )}
 
       {/* Gallery */}
       <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
