@@ -2,6 +2,23 @@ import Link from "next/link";
 import Footer from "./Footer";
 import SiteNav from "./SiteNav";
 import WeddingRepertoire, { type Song } from "./WeddingRepertoire";
+import MediaCarousel, { type MediaItem } from "./MediaCarousel";
+import InstagramStrip from "./InstagramStrip";
+import YouTubeEmbed from "./YouTubeEmbed";
+
+// All of Meli's performance videos (violin-forward order) — shown in the media carousel
+const ALL_VIDEOS: { videoSrc: string; poster: string; alt: string }[] = [
+  { videoSrc: "/Vids/violin.mp4", poster: "/Vids/posters/violin.jpg", alt: "Violín eléctrico en vivo" },
+  { videoSrc: "/Vids/conciertos.mp4", poster: "/Vids/posters/conciertos.jpg", alt: "Festival" },
+  { videoSrc: "/Vids/bodas.mp4", poster: "/Vids/posters/bodas.jpg", alt: "Boda" },
+  { videoSrc: "/Vids/quince.mp4", poster: "/Vids/posters/quince.jpg", alt: "Fiesta de 15" },
+  { videoSrc: "/Vids/privados.mp4", poster: "/Vids/posters/privados.jpg", alt: "Evento privado" },
+  { videoSrc: "/Vids/corporate.mp4", poster: "/Vids/posters/corporate.jpg", alt: "Evento corporativo" },
+  { videoSrc: "/Vids/voz.mp4", poster: "/Vids/posters/voz.jpg", alt: "Voz en vivo" },
+  { videoSrc: "/Vids/paradise.mp4", poster: "/Vids/posters/paradise.jpg", alt: "En vivo" },
+  { videoSrc: "/Vids/banda.mp4", poster: "/Vids/posters/banda.jpg", alt: "Banda y DJs" },
+  { videoSrc: "/Vids/colab.mp4", poster: "/Vids/posters/colab.jpg", alt: "Colaboración" },
+];
 
 const SITE = "https://melirox.com";
 export const F = "/uploads/drive-download-20260714T181149Z-1-001/";
@@ -89,6 +106,14 @@ export function buildJsonLd(cfg: ServiceConfig) {
 export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
   const WA = wa(cfg.waMsg);
   const eyebrow: React.CSSProperties = { fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" };
+
+  // Media carousel: this page's video first, then the rest, then the page photos
+  const pageVideo = ALL_VIDEOS.find((v) => v.videoSrc === cfg.video);
+  const orderedVideos = pageVideo ? [pageVideo, ...ALL_VIDEOS.filter((v) => v !== pageVideo)] : ALL_VIDEOS;
+  const mediaItems: MediaItem[] = [
+    ...orderedVideos.map((v) => ({ src: v.poster, alt: v.alt, videoSrc: v.videoSrc })),
+    ...cfg.gallery.map((g) => ({ src: g.src, alt: g.alt })),
+  ];
 
   return (
     <>
@@ -189,49 +214,44 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
         </section>
       )}
 
-      {cfg.repertoire ? (
-        /* Video (left) + Repertoire (right) — songs first on mobile */
-        <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(138,106,63,.12), transparent 60%), #0a0908" }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(28px, 4vw, 56px)", alignItems: "flex-start" }}>
-              <div className="svc-rep-video" style={{ flex: "1 1 340px", minWidth: 0 }}>
-                <div className="svc-rep-sticky">
-                  <div style={{ position: "relative", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", background: "#000" }}>
-                    <video src={cfg.video} poster={cfg.videoPoster} controls playsInline preload="none" style={{ display: "block", width: "100%", maxHeight: "72vh", objectFit: "contain", background: "#000" }} />
-                  </div>
-                  <p style={{ margin: "14px 0 0", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Meli Rox en vivo · toca para reproducir</p>
-                </div>
-              </div>
-              <div className="svc-rep-list" style={{ flex: "1 1 440px", minWidth: 0 }}>
-                <WeddingRepertoire songs={cfg.repertoire} />
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : (
-        /* Video */
-        <section style={{ padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 7vw, 100px)", background: "#0b0a08" }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-            <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", background: "#000" }}>
-              <video src={cfg.video} poster={cfg.videoPoster} controls playsInline preload="none" style={{ display: "block", width: "100%", maxHeight: "80vh", objectFit: "contain", background: "#000" }} />
-            </div>
-            <p style={{ margin: "16px 0 0", textAlign: "center", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Meli Rox en vivo · toca para reproducir</p>
+      {/* Media carousel — all her videos + photos */}
+      <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(138,106,63,.12), transparent 60%), #0a0908" }}>
+        <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
+          <div style={eyebrow}>Míralo en vivo</div>
+          <h2 style={{ margin: "12px 0 clamp(24px, 3.4vw, 40px)", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>{cfg.galleryTitle}</h2>
+          <MediaCarousel items={mediaItems} />
+          <p style={{ margin: "4px 0 0", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Desliza · toca para reproducir</p>
+        </div>
+      </section>
+
+      {/* Repertoire (playlist) */}
+      {cfg.repertoire && (
+        <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+          <div style={{ maxWidth: "760px", margin: "0 auto" }}>
+            <WeddingRepertoire songs={cfg.repertoire} />
           </div>
         </section>
       )}
 
-      {/* Gallery */}
+      {/* En televisión — credibility */}
       <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={eyebrow}>Galería</div>
-          <h2 style={{ margin: "12px 0 clamp(28px, 4vw, 44px)", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>{cfg.galleryTitle}</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "14px" }}>
-            {cfg.gallery.map((g) => (
-              <div key={g.src} style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.16)", height: "clamp(320px, 42vw, 460px)" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={g.src} alt={g.alt} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 28%", filter: "saturate(.9) brightness(.9)" }} />
-              </div>
-            ))}
+        <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
+          <div style={{ ...eyebrow, textAlign: "center" }}>En televisión</div>
+          <h2 style={{ margin: "12px 0 8px", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>Vista en televisión nacional.</h2>
+          <p style={{ margin: "0 auto clamp(26px, 3.4vw, 38px)", maxWidth: "560px", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5" }}>#1 en La X 103.9 · La Solar · Medellín Music Lab · Reconocimiento Premios Estela.</p>
+          <YouTubeEmbed id="qIS-ePBF3ok" title="Meli Rox en vivo — Las Tres Gracias TV" />
+          <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
+        </div>
+      </section>
+
+      {/* Instagram */}
+      <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(138,106,63,.1), transparent 60%), #0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+        <div style={{ maxWidth: "1560px", margin: "0 auto" }}>
+          <div style={{ ...eyebrow, textAlign: "center" }}>Instagram</div>
+          <h2 style={{ margin: "12px 0 clamp(22px, 3vw, 34px)", textAlign: "center", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>Síguela en @meliroxoficial.</h2>
+          <InstagramStrip />
+          <div style={{ textAlign: "center", marginTop: "16px" }}>
+            <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "13px 26px", borderRadius: "999px" }}>Ver en Instagram</a>
           </div>
         </div>
       </section>

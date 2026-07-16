@@ -28,8 +28,8 @@ const cfg: ServiceConfig = {
   eyebrow: "Fiestas de 15 en Medellín",
   h1Pre: "Música para fiestas de 15 ",
   h1Em: "en Medellín",
-  heroImg: F + "DSC09018.jpg",
-  heroPos: "50% 20%",
+  heroImg: F + "IMG_1922.JPG",
+  heroPos: "50% 34%",
   heroSub: "Una entrada que nadie va a olvidar — voz, violín eléctrico y una puesta en escena creada para convertir la celebración en un momento verdaderamente especial.",
   ctaPrimary: "Cotizar la fiesta",
   stats: [
@@ -43,8 +43,8 @@ const cfg: ServiceConfig = {
   statementEm: "merece ser inolvidable.",
   statementBody:
     "Voz, violín eléctrico y una producción pensada para el gran momento de la quinceañera. Meli Rox crea una experiencia a la medida — desde la entrada triunfal hasta la canción que hará llorar a toda la familia.",
-  momentsImg: F + "party.jpg",
-  momentsPos: "50% 30%",
+  momentsImg: F + "Meli%20violin%20(1).jpeg",
+  momentsPos: "50% 18%",
   momentsTitle: "Una puesta en escena a tu medida.",
   moments: [
     { t: "Entrada especial", d: "Una entrada triunfal con violín eléctrico en vivo que marca el inicio de la noche y deja a todos sin palabras." },
@@ -56,10 +56,10 @@ const cfg: ServiceConfig = {
   videoPoster: "/Vids/posters/quince.jpg",
   galleryTitle: "El show en vivo.",
   gallery: [
-    { src: F + "DSC09018.jpg", alt: "Meli Rox en una fiesta de 15 en Medellín" },
-    { src: F + "party.jpg", alt: "Show de violín eléctrico en una celebración" },
+    { src: F + "IMG_2501.jpg", alt: "Meli Rox tocando violín eléctrico en vivo" },
+    { src: F + "DVR_0507.jpg", alt: "Meli Rox con violín eléctrico" },
+    { src: F + "wedding1.jpg", alt: "Meli Rox violinista para celebraciones" },
     { src: F + "DSC08571.jpg", alt: "Meli Rox en una fiesta de 15 en Medellín" },
-    { src: F + "DSC08415.jpg", alt: "Meli Rox violinista eléctrica en escena" },
   ],
   faq: [
     { q: "¿Qué incluye el show para una fiesta de 15?", a: "Una entrada especial con violín eléctrico en vivo, puesta en escena con alas LED y una canción personalizada para la quinceañera. Los formatos se adaptan al espacio y al estilo de la fiesta." },
@@ -68,8 +68,8 @@ const cfg: ServiceConfig = {
     { q: "¿Qué formatos hay disponibles?", a: "Desde violín y voz en vivo con pistas, hasta ensambles con banda o DJ para la fiesta completa. Cada evento se cotiza según el formato, la fecha y el lugar." },
     { q: "¿Cómo reservo y cuánto cuesta?", a: "El valor depende del formato, la fecha y la locación. Escríbenos por WhatsApp con los detalles de la fiesta y te enviamos disponibilidad y una propuesta a la medida." },
   ],
-  ctaImg: F + "DSC09018.jpg",
-  ctaPos: "50% 20%",
+  ctaImg: F + "DVR_0507.jpg",
+  ctaPos: "50% 18%",
   ctaTitlePre: "Haz de su fiesta de 15 ",
   ctaTitleEm: "un momento inolvidable.",
   ctaBody: "Cuéntanos la fecha y el lugar de la celebración y recibe una propuesta a la medida para la entrada, el show y la canción personalizada.",

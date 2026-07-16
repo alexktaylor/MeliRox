@@ -32,7 +32,8 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
           ))}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "14px", flex: "0 0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: "0 0 auto" }}>
+          <Link href="/" className="svc-nav-home" style={{ textDecoration: "none", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#ecd9ac", border: "1px solid rgba(212,180,122,.4)", borderRadius: "999px", padding: "10px 15px", whiteSpace: "nowrap" }}>Inicio</Link>
           <a href={waHref} target="_blank" className="svc-nav-cta" style={{ textDecoration: "none", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 20px", borderRadius: "999px", whiteSpace: "nowrap" }}>{cta}</a>
           <button onClick={() => setOpen((v) => !v)} aria-label="Menú" className="svc-nav-burger" style={{ alignItems: "center", justifyContent: "center", width: "44px", height: "44px", background: "none", border: "1px solid rgba(212,180,122,.4)", borderRadius: "50%", color: "#ecd9ac", fontSize: "16px", cursor: "pointer" }}>{open ? "✕" : "☰"}</button>
         </div>

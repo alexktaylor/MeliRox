@@ -40,10 +40,12 @@ input[type="range"].mrmix::-moz-range-thumb { width: 26px; height: 26px; border-
 .svc-nav-links { display: none; }
 .svc-nav-cta { display: none; }
 .svc-nav-burger { display: inline-flex; }
+.svc-nav-home { display: inline-flex; }
 @media (min-width: 900px) {
   .svc-nav-links { display: flex; }
   .svc-nav-cta { display: inline-block; }
   .svc-nav-burger { display: none; }
+  .svc-nav-home { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

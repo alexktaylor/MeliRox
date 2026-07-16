@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Footer from "./components/Footer";
 import YouTubeEmbed from "./components/YouTubeEmbed";
+import InstagramStrip from "./components/InstagramStrip";
 
 const U = "/uploads/";
 const F = "/uploads/drive-download-20260714T181149Z-1-001/";
@@ -75,108 +76,6 @@ function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onA
 
 // Latest Instagram posts/reels to feature (official embed). Paste permalinks like
 // "https://www.instagram.com/reel/XXXXXXXXXXX/" — the section shows a big CTA until filled.
-const IG_POSTS: string[] = [
-  "https://www.instagram.com/p/DaQ9Q-NJ0E1/",
-  "https://www.instagram.com/p/DaHPE5LBjpj/",
-  "https://www.instagram.com/p/DZn3RTQJTAF/",
-  "https://www.instagram.com/p/DZJNvHfpFxn/",
-  "https://www.instagram.com/p/DY-8aVxJKla/",
-];
-
-// How much of the Instagram embed's bottom chrome (View more / like-comment-share / add-comment) to crop off.
-const IG_FOOTER_CROP = 172;
-const IG_NATURAL_W = 326; // Instagram's enforced minimum embed width
-
-function InstagramEmbeds({ urls, isMobile, vw }: { urls: string[]; isMobile: boolean; vw: number }) {
-  const wrapRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const outerRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Desktop: scale every embed down so all fit one row. Mobile: full-size swipe slider.
-  const N = urls.length;
-  const gap = 14;
-  const avail = Math.min(1560, vw - 60);
-  // Mobile: shrink so the next reel peeks (signals scroll). Desktop: scale so all fit one row.
-  const scale = isMobile
-    ? Math.min(1, (vw * 0.8) / IG_NATURAL_W)
-    : Math.max(0.5, Math.min(1, (avail - (N - 1) * gap) / (N * IG_NATURAL_W)));
-  const itemW = Math.round(IG_NATURAL_W * scale);
-
-  useEffect(() => {
-    const w = window as unknown as { instgrm?: { embeds?: { process?: () => void } } };
-    const process = () => {
-      try {
-        w.instgrm?.embeds?.process?.();
-      } catch {}
-    };
-    if (w.instgrm) {
-      process();
-    } else {
-      const existing = document.getElementById("ig-embed-script") as HTMLScriptElement | null;
-      if (existing) {
-        existing.addEventListener("load", process);
-      } else {
-        const s = document.createElement("script");
-        s.id = "ig-embed-script";
-        s.src = "https://www.instagram.com/embed.js";
-        s.async = true;
-        s.onload = process;
-        document.body.appendChild(s);
-      }
-    }
-
-    // Crop each embed's footer once it becomes an iframe. Keep polling so late-rendering
-    // embeds are all handled (not just the first ones).
-    const observers: ResizeObserver[] = [];
-    const handled = new Set<number>();
-    const applyCrop = (i: number) => {
-      const wrap = wrapRefs.current[i];
-      const outer = outerRefs.current[i];
-      if (!wrap || !outer) return;
-      const iframe = wrap.querySelector("iframe") as HTMLIFrameElement | null;
-      if (!iframe) return false;
-      const apply = () => {
-        const h = iframe.offsetHeight;
-        if (h > IG_FOOTER_CROP + 120) {
-          const ch = h - IG_FOOTER_CROP;
-          wrap.style.height = ch + "px";
-          outer.style.height = Math.round(ch * scale) + "px";
-        }
-      };
-      apply();
-      const ro = new ResizeObserver(apply);
-      ro.observe(iframe);
-      observers.push(ro);
-      return true;
-    };
-    const poll = setInterval(() => {
-      urls.forEach((_, i) => {
-        if (!handled.has(i) && applyCrop(i)) handled.add(i);
-      });
-      if (handled.size >= urls.length) clearInterval(poll);
-    }, 250);
-    const stop = setTimeout(() => clearInterval(poll), 10000);
-    return () => {
-      clearInterval(poll);
-      clearTimeout(stop);
-      observers.forEach((o) => o.disconnect());
-    };
-  }, [urls, isMobile, vw, scale]);
-
-  return (
-    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: isMobile ? "x mandatory" : "none", padding: "2px 0 14px", scrollbarWidth: "thin", scrollbarColor: "rgba(212,180,122,.4) transparent" }}>
-      <div style={{ display: "flex", gap: gap + "px", width: "max-content", margin: isMobile ? 0 : "0 auto", alignItems: "flex-start", justifyContent: isMobile ? "flex-start" : "center" }}>
-        {urls.map((u, i) => (
-          <div key={u} ref={(el) => { outerRefs.current[i] = el; }} style={{ flex: "0 0 auto", width: itemW + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
-            <div ref={(el) => { wrapRefs.current[i] = el; }} style={{ width: IG_NATURAL_W + "px", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", transform: `scale(${scale})`, transformOrigin: "top left" }}>
-              <blockquote className="instagram-media" data-instgrm-permalink={u} data-instgrm-version="14" style={{ background: "#0a0908", border: 0, margin: 0, width: "100%", minWidth: 0 }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 type Cat = {
   id: string;
   es: string;
@@ -1208,7 +1107,7 @@ export default function Home() {
           </div>
 
           <div style={{ marginTop: "clamp(20px, 3vw, 30px)", width: isMobile ? "auto" : "min(1600px, calc(100vw - 40px))", marginLeft: isMobile ? undefined : "50%", transform: isMobile ? undefined : "translateX(-50%)" }}>
-            <InstagramEmbeds urls={IG_POSTS} isMobile={isMobile} vw={vw} />
+            <InstagramStrip />
           </div>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Desliza para ver más →", "Swipe for more →")}</div>
 
