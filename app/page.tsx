@@ -628,6 +628,22 @@ export default function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            name: "Meli Rox — Cantautora y Violinista Eléctrica en vivo",
+            description: "Meli Rox: voz, violín eléctrico y música original en vivo en Medellín. Bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas.",
+            thumbnailUrl: ["https://melirox.com/Vids/hero-poster.jpg"],
+            contentUrl: "https://melirox.com/Vids/hero.mp4",
+            uploadDate: "2026-06-01T00:00:00-05:00",
+            publisher: { "@id": "https://melirox.com/#business" },
+          }),
+        }}
+      />
+
       {/* NAV */}
       <nav
         style={{

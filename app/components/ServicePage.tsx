@@ -99,6 +99,15 @@ export function buildJsonLd(cfg: ServiceConfig) {
           acceptedAnswer: { "@type": "Answer", text: f.a },
         })),
       },
+      {
+        "@type": "VideoObject",
+        name: cfg.serviceName + " — Meli Rox en vivo",
+        description: cfg.serviceDesc,
+        thumbnailUrl: [SITE + cfg.videoPoster],
+        contentUrl: SITE + cfg.video,
+        uploadDate: "2026-06-01T00:00:00-05:00",
+        publisher: { "@id": SITE + "/#business" },
+      },
     ],
   };
 }
