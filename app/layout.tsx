@@ -30,6 +30,13 @@ export const metadata: Metadata = {
   creator: "Meli Rox",
   publisher: "Meli Rox",
   alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: { url: "/apple-icon.png", sizes: "180x180" },
+  },
   openGraph: {
     type: "website",
     locale: "es_CO",
