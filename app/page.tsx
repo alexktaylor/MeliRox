@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import Link from "next/link";
 import Footer from "./components/Footer";
 import YouTubeEmbed from "./components/YouTubeEmbed";
 import InstagramStrip from "./components/InstagramStrip";
+import NavEvents from "./components/NavEvents";
+import { SERVICE_LINKS } from "./components/serviceLinks";
 
 const U = "/uploads/";
 const F = "/uploads/drive-download-20260714T181149Z-1-001/";
@@ -78,6 +81,7 @@ function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onA
 // "https://www.instagram.com/reel/XXXXXXXXXXX/" — the section shows a big CTA until filled.
 type Cat = {
   id: string;
+  href: string;
   es: string;
   en: string;
   img: string;
@@ -100,6 +104,7 @@ type Cat = {
 const CATS: Cat[] = [
   {
     id: "bodas",
+    href: "/violinista-para-bodas-medellin",
     es: "Bodas",
     en: "Weddings",
     img: F + "IMG_1922.JPG",
@@ -119,6 +124,7 @@ const CATS: Cat[] = [
   },
   {
     id: "quince",
+    href: "/musica-para-fiestas-de-15-medellin",
     es: "Fiestas de 15",
     en: "Quinceañeras",
     img: F + "DSC09018.jpg",
@@ -139,6 +145,7 @@ const CATS: Cat[] = [
   },
   {
     id: "privados",
+    href: "/violinista-eventos-privados-medellin",
     es: "Eventos privados",
     en: "Private events",
     img: F + "IMG_6812.JPG",
@@ -158,6 +165,7 @@ const CATS: Cat[] = [
   },
   {
     id: "corporativos",
+    href: "/musica-eventos-corporativos-medellin",
     es: "Eventos corporativos",
     en: "Corporate events",
     img: U + "corporate-5250.jpg",
@@ -177,6 +185,7 @@ const CATS: Cat[] = [
   },
   {
     id: "conciertos",
+    href: "/violinista-electrica-medellin",
     es: "Conciertos y festivales",
     en: "Concerts & festivals",
     img: F + "IMG_2501.jpg",
@@ -685,9 +694,9 @@ export default function Home() {
             <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
             <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
             <a href="#experiencias" style={navLink}>{t("Experiencias", "Experiences")}</a>
+            <NavEvents isEn={isEn} triggerStyle={navLink} />
             <a href="#historia" style={navLink}>Meli Rox</a>
             <a href="#galeria" style={navLink}>{t("Galería", "Gallery")}</a>
-            <a href="#contacto" style={navLink}>{t("Contacto", "Contact")}</a>
           </div>
         )}
         {isMobile ? (
@@ -708,7 +717,10 @@ export default function Home() {
           <a href="#experiencias" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Experiencias", "Experiences")}</a>
           <a href="#historia" onClick={() => setMenuOpen(false)} style={mobileLink}>Meli Rox</a>
           <a href="#galeria" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Galería", "Gallery")}</a>
-          <a href="#contacto" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Contacto", "Contact")}</a>
+          <div style={{ margin: "14px 0 2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>{t("Eventos", "Events")}</div>
+          {SERVICE_LINKS.map((s) => (
+            <Link key={s.href} href={s.href} onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", color: "#d9ccae", padding: "8px 0", borderBottom: "1px solid rgba(212,180,122,.1)" }}>{t(s.es, s.en)}</Link>
+          ))}
           <a href={waMain} target="_blank" onClick={() => setMenuOpen(false)} style={{ marginTop: "26px", textAlign: "center", textDecoration: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "17px 28px", borderRadius: "999px" }}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
         </div>
       )}
@@ -891,7 +903,7 @@ export default function Home() {
               <p style={CSS({ margin: 0, fontWeight: 300, fontSize: "16.5px", lineHeight: 1.8, color: "#cabfa5", maxWidth: "480px", textWrap: "pretty" })}>{t(activeCat.cEs, activeCat.cEn)}</p>
               <div style={{ marginTop: "30px", display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
                 <a href={wa(isEn ? activeCat.mEn : activeCat.mEs)} target="_blank" style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "16px 28px", borderRadius: "999px" }}>{t(activeCat.ctaEs, activeCat.ctaEn)}</a>
-                <a href={"tel:" + PHONE} style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#ddd2b8", padding: "16px 6px", borderBottom: "1px solid rgba(212,180,122,.35)" }}>{t("Llamar", "Call")}</a>
+                <Link href={activeCat.href} style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#ddd2b8", padding: "16px 6px", borderBottom: "1px solid rgba(212,180,122,.35)" }}>{t("Ver más", "Learn more")} →</Link>
               </div>
             </div>
           </div>

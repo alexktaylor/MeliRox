@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import NavEvents from "./NavEvents";
+import { SERVICE_LINKS } from "./serviceLinks";
 
 const GOLD = "linear-gradient(135deg, #ecd9ac, #b98f4e)";
 
@@ -30,6 +32,7 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
           {NAV.map((n) => (
             <Link key={n.href} href={n.href} style={navLink}>{n.label}</Link>
           ))}
+          <NavEvents triggerStyle={navLink} />
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: "0 0 auto" }}>
@@ -43,6 +46,10 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
         <div style={{ position: "fixed", inset: 0, zIndex: 45, background: "rgba(8,7,6,.97)", backdropFilter: "blur(10px)", padding: "110px clamp(24px, 8vw, 48px) 40px", display: "flex", flexDirection: "column", gap: "6px", overflowY: "auto" }}>
           {NAV.map((n) => (
             <Link key={n.href} href={n.href} onClick={() => setOpen(false)} style={{ textDecoration: "none", fontFamily: "'Cormorant Garamond', serif", fontSize: "34px", color: "#f4edda", padding: "10px 0", borderBottom: "1px solid rgba(212,180,122,.14)" }}>{n.label}</Link>
+          ))}
+          <div style={{ margin: "16px 0 2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>Eventos</div>
+          {SERVICE_LINKS.map((s) => (
+            <Link key={s.href} href={s.href} onClick={() => setOpen(false)} style={{ textDecoration: "none", fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", color: "#d9ccae", padding: "8px 0", borderBottom: "1px solid rgba(212,180,122,.1)" }}>{s.es}</Link>
           ))}
           <a href={waHref} target="_blank" onClick={() => setOpen(false)} style={{ marginTop: "26px", textAlign: "center", textDecoration: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "17px 28px", borderRadius: "999px" }}>{cta}</a>
         </div>
