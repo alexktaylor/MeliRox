@@ -39,43 +39,35 @@ function PauseIcon({ size = 16, color = "currentColor" }: { size?: number; color
 function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onActivate?: () => void }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(false);
-  const bgSrc = src.replace("/Vids/", "/Vids/bg/");
   const poster = src.replace("/Vids/", "/Vids/posters/").replace(".mp4", ".jpg");
-  // Preview = light bg loop; autoplay only while in view.
+  // Desktop: autoplay a muted preview when in view; clicking just unmutes the SAME
+  // clip (instant, no reload). Mobile: poster + tap-to-play (no heavy autoplay).
   useEffect(() => {
-    if (active) return;
     const v = ref.current;
     if (!v) return;
+    if (window.innerWidth < 760) return;
     v.muted = true;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) v.play().catch(() => {});
         else v.pause();
       },
-      { rootMargin: "400px 0px", threshold: 0.1 }
+      { rootMargin: "300px 0px", threshold: 0.1 }
     );
     io.observe(v);
     return () => io.disconnect();
-  }, [active]);
-  // On click: swap to the full-quality original, unmute and play from the start.
-  useEffect(() => {
-    if (!active) return;
-    const v = ref.current;
-    if (!v) return;
-    v.muted = false;
-    v.currentTime = 0;
-    v.load();
-    v.play().catch(() => {});
-  }, [active]);
+  }, [src]);
   const activate = () => {
-    if (!active) {
-      setActive(true);
-      onActivate?.();
-    }
+    const v = ref.current;
+    if (!v || active) return;
+    v.muted = false;
+    setActive(true);
+    onActivate?.();
+    v.play().catch(() => {});
   };
   return (
     <>
-      <video ref={ref} src={active ? src : bgSrc} poster={poster} playsInline preload="none" loop={!active} controls={active} onClick={activate} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: pos, filter: "saturate(.95) brightness(.9)", cursor: active ? "default" : "pointer" }} />
+      <video ref={ref} src={src} poster={poster} playsInline preload="none" loop={!active} controls={active} onClick={activate} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: pos, filter: "saturate(.95) brightness(.9)", cursor: active ? "default" : "pointer" }} />
       {!active && (
         <div onClick={activate} style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "8px", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", border: "1px solid rgba(232,207,158,.55)", borderRadius: "999px", padding: "9px 14px", color: "#ecd9ac", fontFamily: "var(--font-mono), monospace", fontSize: "10px", letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer", zIndex: 3 }}>
           <svg width={13} height={13} viewBox="0 0 24 24" fill="#ecd9ac" aria-hidden="true"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z" /></svg>
@@ -439,14 +431,14 @@ export default function Home() {
   useEffect(() => {
     const v = heroVideoRef.current;
     if (!v) return;
-    // Mobile (slow connections): keep the static poster only — never download the
-    // hero video. This is the biggest LCP/payload win. Desktop plays the video.
-    if (window.innerWidth < 760) return;
     v.muted = true;
-    v.play().catch(() => {});
+    // Mobile: swap to a tiny 640px hero clip (~0.9MB) so it plays fast on 4G.
+    // The poster is preloaded, so it's the LCP and paints instantly regardless.
+    if (window.innerWidth < 760) v.src = "/Vids/bg/hero-mobile.mp4";
+    const play = () => v.play().catch(() => {});
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
+        if (e.isIntersecting) play();
         else v.pause();
       },
       { threshold: 0.05 }
