@@ -30,6 +30,8 @@ const cfg: ServiceConfig = {
   h1Pre: "La violinista ",
   h1Em: "de Medellín.",
   heroImg: F + "DVR_0507.jpg",
+  heroVideo: "/Vids/hero.mp4",
+  heroVideoPos: "60% 26%",
   heroPos: "50% 18%",
   heroSub: "Voz, violín eléctrico y música original en vivo — donde la elegancia clásica se encuentra con la energía contemporánea.",
   ctaPrimary: "Consultar disponibilidad",
@@ -45,6 +47,7 @@ const cfg: ServiceConfig = {
   statementBody:
     "Meli Rox une voz, violín eléctrico y música original en una experiencia que va de la elegancia clásica a la energía del Afro House. Cantautora y violinista de Medellín, con más de una década en escenarios de Colombia y el exterior, y presencia en radio y televisión nacional.",
   momentsImg: F + "Meli%20violin%20(1).jpeg",
+  momentsVideo: "/Vids/voz.mp4",
   momentsPos: "50% 18%",
   momentsTitle: "Una violinista para cada momento.",
   moments: [
@@ -78,6 +81,7 @@ const cfg: ServiceConfig = {
     { q: "¿Cómo consulto disponibilidad y precios?", a: "Escríbenos por WhatsApp con la fecha, la ciudad y el tipo de evento y te enviamos disponibilidad y una propuesta a la medida." },
   ],
   ctaImg: F + "DVR_0490.jpg",
+  ctaVideo: "/Vids/paradise.mp4",
   ctaPos: "50% 20%",
   ctaTitlePre: "Lleva su música ",
   ctaTitleEm: "a tu evento.",

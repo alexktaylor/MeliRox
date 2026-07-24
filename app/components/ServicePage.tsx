@@ -5,6 +5,7 @@ import WeddingRepertoire, { type Song } from "./WeddingRepertoire";
 import MediaCarousel, { type MediaItem } from "./MediaCarousel";
 import InstagramStrip from "./InstagramStrip";
 import YouTubeEmbed from "./YouTubeEmbed";
+import AutoVideo from "./AutoVideo";
 
 // All of Meli's performance videos (violin-forward order) — shown in the media carousel
 const ALL_VIDEOS: { videoSrc: string; poster: string; alt: string }[] = [
@@ -35,6 +36,8 @@ export type ServiceConfig = {
   h1Pre: string;
   h1Em: string;
   heroImg: string;
+  heroVideo?: string;
+  heroVideoPos?: string;
   heroPos: string;
   heroSub: string;
   ctaPrimary: string;
@@ -44,6 +47,7 @@ export type ServiceConfig = {
   statementEm: string;
   statementBody: string;
   momentsImg: string;
+  momentsVideo?: string;
   momentsPos: string;
   momentsTitle: string;
   moments: { t: string; d: string }[];
@@ -54,6 +58,7 @@ export type ServiceConfig = {
   gallery: { src: string; alt: string }[];
   faq: { q: string; a: string }[];
   ctaImg: string;
+  ctaVideo?: string;
   ctaPos: string;
   ctaTitlePre: string;
   ctaTitleEm: string;
@@ -134,9 +139,13 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
       <SiteNav cta={cfg.headerCta} waHref={WA} />
 
       {/* Hero */}
-      <section style={{ position: "relative", minHeight: "clamp(560px, 82vh, 820px)", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#080706" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={cfg.heroImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.heroPos, filter: "saturate(.9) brightness(.72)" }} />
+      <section className="svc-hero" style={{ position: "relative", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#080706" }}>
+        {cfg.heroVideo ? (
+          <AutoVideo src={cfg.heroVideo} poster={cfg.heroImg} pos={cfg.heroVideoPos || cfg.heroPos} eager filter="saturate(.95) brightness(.76) contrast(1.03)" />
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={cfg.heroImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.heroPos, filter: "saturate(.9) brightness(.72)" }} />
+        )}
         <div className="svc-hero-fade" style={{ position: "absolute", inset: 0 }} />
         <div style={{ position: "relative", width: "min(1200px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 90px)" }}>
           <div style={{ ...eyebrow, color: "#e3d5b0" }}>{cfg.eyebrow}</div>
@@ -180,8 +189,12 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "clamp(24px, 4vw, 44px)", alignItems: "center" }}>
             <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.18)", minHeight: "clamp(340px, 50vh, 520px)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={cfg.momentsImg} alt={cfg.momentsTitle} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.momentsPos, filter: "saturate(.92) brightness(.9)" }} />
+              {cfg.momentsVideo ? (
+                <AutoVideo src={cfg.momentsVideo} poster={cfg.momentsImg} pos={cfg.momentsPos} filter="saturate(.95) brightness(.9)" />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={cfg.momentsImg} alt={cfg.momentsTitle} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.momentsPos, filter: "saturate(.92) brightness(.9)" }} />
+              )}
             </div>
             <div>
               <div style={eyebrow}>La experiencia</div>
@@ -310,8 +323,14 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
 
       {/* Final CTA */}
       <section style={{ position: "relative", overflow: "hidden", padding: "clamp(64px, 10vw, 150px) clamp(20px, 5vw, 48px)", background: "#080706" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={cfg.ctaImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.ctaPos, opacity: 0.34, filter: "sepia(.35) saturate(.75) brightness(.7)" }} />
+        {cfg.ctaVideo ? (
+          <div style={{ position: "absolute", inset: 0, opacity: 0.34 }}>
+            <AutoVideo src={cfg.ctaVideo} poster={cfg.ctaImg} pos={cfg.ctaPos} filter="sepia(.35) saturate(.75) brightness(.7)" />
+          </div>
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={cfg.ctaImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.ctaPos, opacity: 0.34, filter: "sepia(.35) saturate(.75) brightness(.7)" }} />
+        )}
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
         <div style={{ position: "relative", maxWidth: "820px", margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ margin: 0, fontFamily: serif, fontWeight: 300, fontSize: "clamp(34px, 5.5vw, 68px)", lineHeight: 1.08, color: "#f9f4e4", textShadow: "0 2px 30px rgba(0,0,0,.8)" }}>

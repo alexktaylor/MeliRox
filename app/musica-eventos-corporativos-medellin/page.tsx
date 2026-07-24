@@ -30,6 +30,8 @@ const cfg: ServiceConfig = {
   h1Pre: "Música para eventos corporativos ",
   h1Em: "en Medellín",
   heroImg: U + "corporate-5250.jpg",
+  heroVideo: "/Vids/violin.mp4",
+  heroVideoPos: "45% 34%",
   heroPos: "50% 30%",
   heroSub: "Impacto visual con producción profesional — voz y violín eléctrico en vivo para galas, lanzamientos, activaciones de marca y premiaciones.",
   ctaPrimary: "Cotizar evento corporativo",
@@ -45,6 +47,7 @@ const cfg: ServiceConfig = {
   statementBody:
     "Con más de una década en escenarios de Colombia y el exterior, Meli Rox aporta elegancia, energía y producción de alto impacto a galas, lanzamientos y premiaciones — una experiencia musical a la altura de tu marca.",
   momentsImg: U + "IMG_5220.JPG.jpeg",
+  momentsVideo: "/Vids/violin.mp4",
   momentsPos: "50% 28%",
   momentsTitle: "Producción a la altura de tu marca.",
   moments: [
@@ -70,6 +73,7 @@ const cfg: ServiceConfig = {
     { q: "¿Cómo solicito una cotización?", a: "Escríbenos por WhatsApp con la fecha, la ciudad y el tipo de evento y te enviamos una propuesta a la medida con disponibilidad." },
   ],
   ctaImg: U + "IMG_5220.JPG.jpeg",
+  ctaVideo: "/Vids/paradise.mp4",
   ctaPos: "50% 28%",
   ctaTitlePre: "Un evento corporativo ",
   ctaTitleEm: "que se recuerda.",

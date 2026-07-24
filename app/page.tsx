@@ -671,7 +671,7 @@ export default function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "VideoObject",
-            name: "Meli Rox — Cantautora y Violinista Eléctrica en vivo",
+            name: "Meli Rox — Cantautora y Violinista en vivo",
             description: "Meli Rox: voz, violín eléctrico y música original en vivo en Medellín. Bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas.",
             thumbnailUrl: ["https://melirox.com/Vids/hero-poster.jpg"],
             contentUrl: "https://melirox.com/Vids/hero.mp4",
@@ -764,7 +764,7 @@ export default function Home() {
         <div style={{ position: "relative", width: "min(1240px, 100%)", margin: "0 auto", padding: isMobile ? "0 clamp(20px, 5vw, 48px) clamp(52px, 9vh, 96px)" : "clamp(96px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(48px, 8vh, 80px)" }}>
           <div style={{ maxWidth: "580px" }}>
             <h1 style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", border: 0 }}>
-              Meli Rox — Cantautora, Violinista Eléctrica y Artista en Vivo en Medellín, Colombia. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas.
+              Meli Rox — Cantautora, Violinista y Artista en Vivo en Medellín, Colombia. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas.
             </h1>
             <div style={{ height: isMobile ? "40px" : "52px", width: "1px", margin: "0 0 8px", background: "linear-gradient(180deg, transparent, #e8cf9e)", animation: "mrPulse 3.5s ease-in-out infinite" }} />
             {!isMobile && (
@@ -1190,7 +1190,7 @@ export default function Home() {
       {/* CONTACTO */}
       <section id="contacto" style={{ position: "relative", overflow: "hidden", padding: "clamp(52px, 10vw, 170px) clamp(20px, 5vw, 48px)", background: "#080706" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={F + "DVR_0490.jpg"} alt="Meli Rox — violinista eléctrica en vivo en Medellín" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
+        <img src={F + "DVR_0490.jpg"} alt="Meli Rox — violinista en vivo en Medellín" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
         <div style={{ position: "relative", maxWidth: "940px", margin: "0 auto", textAlign: "center" }}>
           <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: isMobile ? "clamp(34px, 8vw, 52px)" : "clamp(40px, 4.4vw, 72px)", lineHeight: 1.06, color: "#f9f4e4", whiteSpace: isMobile ? "normal" : "nowrap", textWrap: isMobile ? "pretty" : "nowrap", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>

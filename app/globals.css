@@ -26,9 +26,13 @@ input[type="range"].mrmix::-webkit-slider-thumb { -webkit-appearance: none; appe
 input[type="range"].mrmix::-moz-range-track { height: 2px; background: rgba(212,180,122,.5); }
 input[type="range"].mrmix::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #0b0a08; border: 1px solid #e8cf9e; box-shadow: 0 0 18px rgba(232,207,158,.8); cursor: ew-resize; }
 
+/* Service-page hero: near full-fold like the home hero (taller on mobile where the video shines) */
+.svc-hero { min-height: 88vh; min-height: 88svh; }
+@media (max-width: 760px) { .svc-hero { min-height: 92vh; min-height: 92svh; } }
 .svc-hero-fade { background: linear-gradient(180deg, rgba(8,7,6,.55) 0%, rgba(8,7,6,.15) 24%, rgba(8,7,6,.5) 52%, rgba(8,7,6,.8) 74%, rgba(8,7,6,.97) 100%); }
 @media (max-width: 760px) {
-  .svc-hero-fade { background: linear-gradient(180deg, rgba(8,7,6,.74) 0%, rgba(8,7,6,.45) 14%, rgba(8,7,6,.68) 33%, rgba(8,7,6,.87) 51%, rgba(8,7,6,.95) 72%, rgba(8,7,6,.99) 100%); }
+  /* lighter through the top ~half so Meli stays visible; dark only where the text sits */
+  .svc-hero-fade { background: linear-gradient(180deg, rgba(8,7,6,.42) 0%, rgba(8,7,6,.12) 20%, rgba(8,7,6,.28) 42%, rgba(8,7,6,.62) 60%, rgba(8,7,6,.9) 80%, rgba(8,7,6,.99) 100%); }
 }
 
 .svc-rep-sticky { position: static; }

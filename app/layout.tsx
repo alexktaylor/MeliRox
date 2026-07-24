@@ -7,12 +7,12 @@ const GA_ID = "G-Q6SCNZTWTZ";
 
 const SITE = "https://melirox.com";
 const DESCRIPTION =
-  "Meli Rox es cantautora, violinista eléctrica y artista en vivo en Medellín. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas en Colombia.";
+  "Meli Rox es cantautora, violinista y artista en vivo en Medellín. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas en Colombia.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "Meli Rox — Cantautora y Violinista Eléctrica en Medellín",
+    default: "Meli Rox — Cantautora y Violinista en Medellín",
     template: "%s | Meli Rox",
   },
   description: DESCRIPTION,
@@ -49,12 +49,12 @@ export const metadata: Metadata = {
     title: "Meli Rox — Voz, violín y energía que transforma",
     description: DESCRIPTION,
     images: [
-      { url: "/og.jpg", width: 1200, height: 630, alt: "Meli Rox — cantautora y violinista eléctrica en vivo" },
+      { url: "/og.jpg", width: 1200, height: 630, alt: "Meli Rox — cantautora y violinista en vivo" },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meli Rox — Cantautora y Violinista Eléctrica",
+    title: "Meli Rox — Cantautora y Violinista",
     description: DESCRIPTION,
     images: ["/og.jpg"],
   },
@@ -77,7 +77,7 @@ const jsonLd = {
       image: `${SITE}/og.jpg`,
       logo: `${SITE}/uploads/MRFavicon.png`,
       description:
-        "Cantautora, violinista eléctrica y artista en vivo de Medellín, Colombia. Música original y presentaciones en vivo que unen la elegancia clásica con la energía contemporánea.",
+        "Cantautora, violinista y artista en vivo de Medellín, Colombia. Música original y presentaciones en vivo que unen la elegancia clásica con la energía contemporánea.",
       genre: ["Pop", "Electronic", "Afro House", "Crossover", "Live music"],
       foundingLocation: { "@type": "Place", name: "Medellín, Colombia" },
       sameAs: [
@@ -94,7 +94,7 @@ const jsonLd = {
       image: `${SITE}/og.jpg`,
       logo: `${SITE}/uploads/MRFavicon.png`,
       description:
-        "Cantante y violinista eléctrica para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas en Medellín y toda Colombia.",
+        "Cantante y violinista para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas en Medellín y toda Colombia.",
       telephone: "+573045502154",
       email: "meliroxmusic@gmail.com",
       priceRange: "$$",

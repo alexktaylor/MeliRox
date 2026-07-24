@@ -87,7 +87,7 @@ export default function Footer({ en = false }: { en?: boolean }) {
         {/* Bottom bar */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "14px", flexWrap: "wrap", marginTop: "clamp(38px, 5vw, 60px)", paddingTop: "22px", borderTop: "1px solid rgba(212,180,122,.1)", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".18em", textTransform: "uppercase", color: "#6f6450" }}>
           <span>© 2026 Meli Rox · Medellín, Colombia</span>
-          <span>{t("Cantautora · Violinista eléctrica · Artista en vivo", "Singer-songwriter · Electric violinist · Live artist")}</span>
+          <span>{t("Cantautora · Violinista · Artista en vivo", "Singer-songwriter · Violinist · Live artist")}</span>
         </div>
       </div>
     </footer>
