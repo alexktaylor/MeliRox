@@ -9,16 +9,16 @@ import AutoVideo from "./AutoVideo";
 
 // All of Meli's performance videos (violin-forward order) — shown in the media carousel
 const ALL_VIDEOS: { videoSrc: string; poster: string; alt: string }[] = [
-  { videoSrc: "/Vids/violin.mp4", poster: "/Vids/posters/violin.jpg", alt: "Violín eléctrico en vivo" },
-  { videoSrc: "/Vids/conciertos.mp4", poster: "/Vids/posters/conciertos.jpg", alt: "Festival" },
-  { videoSrc: "/Vids/bodas.mp4", poster: "/Vids/posters/bodas.jpg", alt: "Boda" },
-  { videoSrc: "/Vids/quince.mp4", poster: "/Vids/posters/quince.jpg", alt: "Fiesta de 15" },
-  { videoSrc: "/Vids/privados.mp4", poster: "/Vids/posters/privados.jpg", alt: "Evento privado" },
-  { videoSrc: "/Vids/corporate.mp4", poster: "/Vids/posters/corporate.jpg", alt: "Evento corporativo" },
-  { videoSrc: "/Vids/voz.mp4", poster: "/Vids/posters/voz.jpg", alt: "Voz en vivo" },
-  { videoSrc: "/Vids/paradise.mp4", poster: "/Vids/posters/paradise.jpg", alt: "En vivo" },
-  { videoSrc: "/Vids/banda.mp4", poster: "/Vids/posters/banda.jpg", alt: "Banda y DJs" },
-  { videoSrc: "/Vids/colab.mp4", poster: "/Vids/posters/colab.jpg", alt: "Colaboración" },
+  { videoSrc: "/Vids/play/violin.mp4", poster: "/Vids/posters/violin.jpg", alt: "Violín eléctrico en vivo" },
+  { videoSrc: "/Vids/play/conciertos.mp4", poster: "/Vids/posters/conciertos.jpg", alt: "Festival" },
+  { videoSrc: "/Vids/play/bodas.mp4", poster: "/Vids/posters/bodas.jpg", alt: "Boda" },
+  { videoSrc: "/Vids/play/quince.mp4", poster: "/Vids/posters/quince.jpg", alt: "Fiesta de 15" },
+  { videoSrc: "/Vids/play/privados.mp4", poster: "/Vids/posters/privados.jpg", alt: "Evento privado" },
+  { videoSrc: "/Vids/play/corporate.mp4", poster: "/Vids/posters/corporate.jpg", alt: "Evento corporativo" },
+  { videoSrc: "/Vids/play/voz.mp4", poster: "/Vids/posters/voz.jpg", alt: "Voz en vivo" },
+  { videoSrc: "/Vids/play/paradise.mp4", poster: "/Vids/posters/paradise.jpg", alt: "En vivo" },
+  { videoSrc: "/Vids/play/banda.mp4", poster: "/Vids/posters/banda.jpg", alt: "Banda y DJs" },
+  { videoSrc: "/Vids/play/colab.mp4", poster: "/Vids/posters/colab.jpg", alt: "Colaboración" },
 ];
 
 const SITE = "https://melirox.com";

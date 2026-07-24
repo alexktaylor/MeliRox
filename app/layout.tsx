@@ -157,8 +157,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.instagram.com" />
         <link rel="preconnect" href="https://static.cdninstagram.com" />
         <link rel="dns-prefetch" href="https://scontent.cdninstagram.com" />
-        {/* LCP: paint the hero poster instantly instead of waiting on the video */}
-        <link rel="preload" as="image" href="/Vids/hero-poster.jpg" fetchPriority="high" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

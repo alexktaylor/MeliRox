@@ -39,13 +39,12 @@ function PauseIcon({ size = 16, color = "currentColor" }: { size?: number; color
 function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onActivate?: () => void }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(false);
-  const poster = src.replace("/Vids/", "/Vids/posters/").replace(".mp4", ".jpg");
-  // Desktop: autoplay a muted preview when in view; clicking just unmutes the SAME
-  // clip (instant, no reload). Mobile: poster + tap-to-play (no heavy autoplay).
+  const poster = "/Vids/posters/" + src.split("/").pop()!.replace(".mp4", ".jpg");
+  // Autoplay a muted preview when in view (all devices); clicking just unmutes the
+  // SAME clip (instant, no reload).
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    if (window.innerWidth < 760) return;
     v.muted = true;
     const io = new IntersectionObserver(
       ([e]) => {
@@ -108,8 +107,8 @@ const CATS: Cat[] = [
     href: "/violinista-para-bodas-medellin",
     es: "Bodas",
     en: "Weddings",
-    img: F + "IMG_1922.JPG",
-    vidSrc: "/Vids/bodas.mp4",
+    img: F + "IMG_1922.webp",
+    vidSrc: "/Vids/preview/bodas.mp4",
     pos: "50% 28%",
     tone: "linear-gradient(180deg, #0b0a08, #171008 50%, #0b0a08)",
     tEs: "Música que acompaña los momentos que nunca se repiten.",
@@ -128,10 +127,10 @@ const CATS: Cat[] = [
     href: "/musica-para-fiestas-de-15-medellin",
     es: "Fiestas de 15",
     en: "Quinceañeras",
-    img: F + "DSC09018.jpg",
+    img: F + "DSC09018.webp",
     pos: "50% 18%",
     vid: true,
-    vidSrc: "/Vids/quince.mp4",
+    vidSrc: "/Vids/preview/quince.mp4",
     tone: "linear-gradient(180deg, #0b0a08, #14120a 50%, #0b0a08)",
     tEs: "Una entrada que nadie va a olvidar.",
     tEn: "An entrance no one will forget.",
@@ -149,8 +148,8 @@ const CATS: Cat[] = [
     href: "/violinista-eventos-privados-medellin",
     es: "Eventos privados",
     en: "Private events",
-    img: F + "IMG_6812.JPG",
-    vidSrc: "/Vids/privados.mp4",
+    img: F + "IMG_6812.webp",
+    vidSrc: "/Vids/preview/privados.mp4",
     pos: "50% 33%",
     tone: "linear-gradient(180deg, #0b0a08, #12100c 50%, #0b0a08)",
     tEs: "Música diseñada a la medida del momento.",
@@ -169,8 +168,8 @@ const CATS: Cat[] = [
     href: "/musica-eventos-corporativos-medellin",
     es: "Eventos corporativos",
     en: "Corporate events",
-    img: U + "corporate-5250.jpg",
-    vidSrc: "/Vids/corporate.mp4",
+    img: U + "corporate-5250.webp",
+    vidSrc: "/Vids/preview/corporate.mp4",
     pos: "50% 47%",
     tone: "linear-gradient(180deg, #0b0a08, #100f0c 50%, #0b0a08)",
     tEs: "Impacto visual con producción profesional.",
@@ -189,8 +188,8 @@ const CATS: Cat[] = [
     href: "/violinista-electrica-medellin",
     es: "Conciertos y festivales",
     en: "Concerts & festivals",
-    img: F + "IMG_2501.jpg",
-    vidSrc: "/Vids/conciertos.mp4",
+    img: F + "IMG_2501.webp",
+    vidSrc: "/Vids/preview/conciertos.mp4",
     pos: "50% 55%",
     vid: true,
     tone: "linear-gradient(180deg, #0b0a08, #0e1010 50%, #0b0a08)",
@@ -212,8 +211,8 @@ function liveModeDefs(isEn: boolean): { id: string; name: string; img: string; p
     {
       id: "voz",
       name: isEn ? "Live vocals" : "Voz en vivo",
-      img: F + "IMG_2513.jpg",
-      vidSrc: "/Vids/voz.mp4",
+      img: F + "IMG_2513.webp",
+      vidSrc: "/Vids/preview/voz.mp4",
       pos: "50% 30%",
       cap: isEn
         ? "A voice that fills the stage — festivals, events and full productions."
@@ -222,8 +221,8 @@ function liveModeDefs(isEn: boolean): { id: string; name: string; img: string; p
     {
       id: "violin",
       name: isEn ? "Electric violin" : "Violín eléctrico",
-      img: F + "IMG_2501.jpg",
-      vidSrc: "/Vids/violin.mp4",
+      img: F + "IMG_2501.webp",
+      vidSrc: "/Vids/preview/violin.mp4",
       pos: "50% 28%",
       cap: isEn
         ? "Classical expression inside modern, electronic energy."
@@ -232,8 +231,8 @@ function liveModeDefs(isEn: boolean): { id: string; name: string; img: string; p
     {
       id: "banda",
       name: isEn ? "Band & DJs" : "Banda y DJs",
-      img: F + "party.jpg",
-      vidSrc: "/Vids/paradise.mp4",
+      img: F + "party.webp",
+      vidSrc: "/Vids/preview/paradise.mp4",
       pos: "50% 42%",
       cap: isEn
         ? "Live musicians and DJs on stage."
@@ -242,8 +241,8 @@ function liveModeDefs(isEn: boolean): { id: string; name: string; img: string; p
     {
       id: "colab",
       name: isEn ? "Collaborations" : "Colaboraciones",
-      img: F + "party.jpg",
-      vidSrc: "/Vids/colab.mp4",
+      img: F + "party.webp",
+      vidSrc: "/Vids/preview/colab.mp4",
       pos: "50% 40%",
       cap: isEn
         ? "Sessions with DJs, producers and guest artists."
@@ -315,7 +314,7 @@ const REL_DATA = [
 const CHAPTERS = [
   {
     num: "01",
-    img: F + "DVR_0449.jpg",
+    img: F + "DVR_0449.webp",
     pos: "50% 30%",
     dir: "row",
     tEs: "La base",
@@ -325,7 +324,7 @@ const CHAPTERS = [
   },
   {
     num: "02",
-    img: F + "IMG_2513.jpg",
+    img: F + "IMG_2513.webp",
     pos: "50% 15%",
     dir: "row-reverse",
     tEs: "La voz",
@@ -335,7 +334,7 @@ const CHAPTERS = [
   },
   {
     num: "03",
-    img: F + "Meli%20violin%20(1).jpeg",
+    img: F + "Meli%20violin%20(1).webp",
     pos: "50% 48%",
     dir: "row",
     tEs: "La transformación",
@@ -345,7 +344,7 @@ const CHAPTERS = [
   },
   {
     num: "04",
-    img: F + "DVR_0490.jpg",
+    img: F + "DVR_0490.webp",
     pos: "50% 20%",
     dir: "row-reverse",
     tEs: "Meli Rox",
@@ -369,32 +368,32 @@ const P = "/Vids/posters/";
 
 const GAL: Gal[] = [
   // Videos (poster = src, plays in lightbox)
-  { src: P + "conciertos.jpg", videoSrc: "/Vids/conciertos.mp4", cat: "live", es: "Festival", en: "Festival", h: 440, vid: "0:35" },
-  { src: P + "voz.jpg", videoSrc: "/Vids/voz.mp4", cat: "live", es: "Voz en vivo", en: "Live vocals", h: 380, vid: "0:47" },
-  { src: P + "violin.jpg", videoSrc: "/Vids/violin.mp4", cat: "live", es: "Violín eléctrico", en: "Electric violin", h: 340, vid: "0:20" },
-  { src: P + "bodas.jpg", videoSrc: "/Vids/bodas.mp4", cat: "bodas", es: "Bodas", en: "Weddings", h: 400, vid: "0:30" },
-  { src: P + "corporate.jpg", videoSrc: "/Vids/corporate.mp4", cat: "ev", es: "Corporativo", en: "Corporate", h: 380, vid: "0:34" },
-  { src: P + "quince.jpg", videoSrc: "/Vids/quince.mp4", cat: "ev", es: "Fiesta de 15", en: "Quinceañera", h: 360, vid: "0:24" },
-  { src: P + "privados.jpg", videoSrc: "/Vids/privados.mp4", cat: "ev", es: "Evento privado", en: "Private event", h: 400, vid: "0:30" },
-  { src: P + "paradise.jpg", videoSrc: "/Vids/paradise.mp4", cat: "live", es: "En vivo", en: "Live", h: 340, vid: "0:28" },
-  { src: P + "banda.jpg", videoSrc: "/Vids/banda.mp4", cat: "live", es: "Banda", en: "Band", h: 360, vid: "0:35" },
-  { src: P + "colab.jpg", videoSrc: "/Vids/colab.mp4", cat: "live", es: "Colaboración", en: "Collaboration", h: 300, vid: "0:38" },
+  { src: P + "conciertos.jpg", videoSrc: "/Vids/play/conciertos.mp4", cat: "live", es: "Festival", en: "Festival", h: 440, vid: "0:35" },
+  { src: P + "voz.jpg", videoSrc: "/Vids/play/voz.mp4", cat: "live", es: "Voz en vivo", en: "Live vocals", h: 380, vid: "0:47" },
+  { src: P + "violin.jpg", videoSrc: "/Vids/play/violin.mp4", cat: "live", es: "Violín eléctrico", en: "Electric violin", h: 340, vid: "0:20" },
+  { src: P + "bodas.jpg", videoSrc: "/Vids/play/bodas.mp4", cat: "bodas", es: "Bodas", en: "Weddings", h: 400, vid: "0:30" },
+  { src: P + "corporate.jpg", videoSrc: "/Vids/play/corporate.mp4", cat: "ev", es: "Corporativo", en: "Corporate", h: 380, vid: "0:34" },
+  { src: P + "quince.jpg", videoSrc: "/Vids/play/quince.mp4", cat: "ev", es: "Fiesta de 15", en: "Quinceañera", h: 360, vid: "0:24" },
+  { src: P + "privados.jpg", videoSrc: "/Vids/play/privados.mp4", cat: "ev", es: "Evento privado", en: "Private event", h: 400, vid: "0:30" },
+  { src: P + "paradise.jpg", videoSrc: "/Vids/play/paradise.mp4", cat: "live", es: "En vivo", en: "Live", h: 340, vid: "0:28" },
+  { src: P + "banda.jpg", videoSrc: "/Vids/play/banda.mp4", cat: "live", es: "Banda", en: "Band", h: 360, vid: "0:35" },
+  { src: P + "colab.jpg", videoSrc: "/Vids/play/colab.mp4", cat: "live", es: "Colaboración", en: "Collaboration", h: 300, vid: "0:38" },
   // Photos
-  { src: F + "wedding.jpg", cat: "bodas", es: "Bodas", en: "Weddings", h: 400 },
-  { src: F + "DSC08415.jpg", cat: "live", es: "En vivo", en: "Live", h: 340 },
-  { src: F + "DVR_0449.jpg", cat: "ses", es: "Sesión", en: "Session", h: 380 },
-  { src: F + "DVR_0507.jpg", cat: "live", es: "En vivo", en: "Live", h: 300 },
-  { src: U + "IMG_5220.JPG.jpeg", cat: "ev", es: "Eventos", en: "Events", h: 420 },
-  { src: F + "DVR_0367.jpg", cat: "ses", es: "Sesión", en: "Session", h: 300 },
-  { src: F + "IMG_1922.JPG", cat: "bodas", es: "Bodas", en: "Weddings", h: 380 },
-  { src: F + "IMG_2501.jpg", cat: "live", es: "Festival", en: "Festival", h: 340 },
-  { src: F + "DVR_0490.jpg", cat: "ses", es: "Sesión", en: "Session", h: 320 },
-  { src: F + "wedding1.jpg", cat: "bodas", es: "Bodas", en: "Weddings", h: 360 },
-  { src: F + "IMG_6812.JPG", cat: "ev", es: "Eventos", en: "Events", h: 300 },
-  { src: F + "DSC08345.jpg", cat: "ses", es: "Sesión", en: "Session", h: 400 },
-  { src: F + "party.jpg", cat: "live", es: "En vivo", en: "Live", h: 320 },
-  { src: F + "Meli%20violin%20(1).jpeg", cat: "live", es: "Club", en: "Club", h: 340 },
-  { src: F + "DVR_0523.jpg", cat: "ses", es: "Sesión", en: "Session", h: 300 },
+  { src: F + "wedding.webp", cat: "bodas", es: "Bodas", en: "Weddings", h: 400 },
+  { src: F + "DSC08415.webp", cat: "live", es: "En vivo", en: "Live", h: 340 },
+  { src: F + "DVR_0449.webp", cat: "ses", es: "Sesión", en: "Session", h: 380 },
+  { src: F + "DVR_0507.webp", cat: "live", es: "En vivo", en: "Live", h: 300 },
+  { src: U + "IMG_5220.JPG.webp", cat: "ev", es: "Eventos", en: "Events", h: 420 },
+  { src: F + "DVR_0367.webp", cat: "ses", es: "Sesión", en: "Session", h: 300 },
+  { src: F + "IMG_1922.webp", cat: "bodas", es: "Bodas", en: "Weddings", h: 380 },
+  { src: F + "IMG_2501.webp", cat: "live", es: "Festival", en: "Festival", h: 340 },
+  { src: F + "DVR_0490.webp", cat: "ses", es: "Sesión", en: "Session", h: 320 },
+  { src: F + "wedding1.webp", cat: "bodas", es: "Bodas", en: "Weddings", h: 360 },
+  { src: F + "IMG_6812.webp", cat: "ev", es: "Eventos", en: "Events", h: 300 },
+  { src: F + "DSC08345.webp", cat: "ses", es: "Sesión", en: "Session", h: 400 },
+  { src: F + "party.webp", cat: "live", es: "En vivo", en: "Live", h: 320 },
+  { src: F + "Meli%20violin%20(1).webp", cat: "live", es: "Club", en: "Club", h: 340 },
+  { src: F + "DVR_0523.webp", cat: "ses", es: "Sesión", en: "Session", h: 300 },
 ];
 
 const FDEFS = [
@@ -669,6 +668,8 @@ export default function Home() {
 
   return (
     <>
+      {/* LCP: paint the hero poster instantly (React hoists this into <head>). Homepage only. */}
+      <link rel="preload" as="image" href="/Vids/hero-poster.jpg" fetchPriority="high" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -687,6 +688,7 @@ export default function Home() {
 
       {/* NAV */}
       <nav
+        className="mr-nav"
         style={{
           position: "fixed",
           top: 0,
@@ -697,7 +699,6 @@ export default function Home() {
           alignItems: "center",
           justifyContent: "space-between",
           gap: "18px",
-          padding: isMobile ? "12px clamp(20px, 6vw, 48px)" : "16px clamp(16px, 4vw, 48px)",
           background: "rgba(11,10,8,.82)",
           backdropFilter: "blur(14px)",
           borderBottom: "1px solid rgba(212,180,122,.14)",
@@ -705,40 +706,34 @@ export default function Home() {
       >
         <a href="#inicio" style={{ display: "flex", alignItems: "center", textDecoration: "none", flex: "0 0 auto" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" fetchPriority="high" style={{ height: isMobile ? "88px" : "78px", width: "auto", margin: isMobile ? "-24px 0 -24px -14px" : "-20px 0 -20px -14px" }} />
+          <img src={U + "meli-rox-logo-clean-print-transparent.webp"} alt="Meli Rox" fetchPriority="high" className="mr-nav-logo" style={{ width: "auto" }} />
         </a>
-        {isMobile ? (
-          langToggle
-        ) : (
-          <div
-            style={CSS({
-              display: "flex",
-              alignItems: "center",
-              gap: "clamp(14px, 2.4vw, 30px)",
-              flex: "1 1 auto",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              fontSize: "13.5px",
-              fontWeight: 500,
-              letterSpacing: ".06em",
-            })}
-          >
-            <a href="#experiencias" style={navLink}>{t("Experiencias", "Experiences")}</a>
-            <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
-            <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
-            <NavEvents isEn={isEn} triggerStyle={navLink} />
-            <a href="#historia" style={navLink}>Meli Rox</a>
-            <a href="#galeria" style={navLink}>{t("Galería", "Gallery")}</a>
-          </div>
-        )}
-        {isMobile ? (
-          burger
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: "0 0 auto" }}>
-            {langToggle}
-            <a href={waMain} target="_blank" style={{ textDecoration: "none", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 18px", borderRadius: "999px", whiteSpace: "nowrap" }}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
-          </div>
-        )}
+        <div className="mr-hide-desktop" style={{ flex: "0 0 auto" }}>{langToggle}</div>
+        <div
+          className="mr-hide-mobile"
+          style={CSS({
+            alignItems: "center",
+            gap: "clamp(14px, 2.4vw, 30px)",
+            flex: "1 1 auto",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            fontSize: "13.5px",
+            fontWeight: 500,
+            letterSpacing: ".06em",
+          })}
+        >
+          <a href="#experiencias" style={navLink}>{t("Experiencias", "Experiences")}</a>
+          <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
+          <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
+          <NavEvents isEn={isEn} triggerStyle={navLink} />
+          <a href="#historia" style={navLink}>Meli Rox</a>
+          <a href="#galeria" style={navLink}>{t("Galería", "Gallery")}</a>
+        </div>
+        <div className="mr-hide-desktop" style={{ flex: "0 0 auto" }}>{burger}</div>
+        <div className="mr-hide-mobile" style={{ alignItems: "center", gap: "16px", flex: "0 0 auto" }}>
+          {langToggle}
+          <a href={waMain} target="_blank" style={{ textDecoration: "none", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 18px", borderRadius: "999px", whiteSpace: "nowrap" }}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
+        </div>
       </nav>
 
       {/* MOBILE MENU */}
@@ -758,25 +753,23 @@ export default function Home() {
       )}
 
       {/* HERO */}
-      <header id="inicio" className="hero-fold" style={{ position: "relative", display: "flex", alignItems: isMobile ? "flex-end" : "center", overflow: "hidden", background: "#080706" }}>
+      <header id="inicio" className="hero-fold mr-hero" style={{ position: "relative", display: "flex", overflow: "hidden", background: "#080706" }}>
         <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <video ref={heroVideoRef} src="/Vids/bg/hero.mp4" poster="/Vids/hero-poster.jpg" muted loop playsInline preload="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
+          <video ref={heroVideoRef} src="/Vids/bg/hero.mp4" poster="/Vids/hero-poster.jpg" muted loop playsInline preload="none" className="mr-hero-video" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(8,7,6,.92) 0%, rgba(8,7,6,.68) 34%, rgba(8,7,6,.12) 62%, rgba(8,7,6,.42) 100%)" }} />
-          <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: isMobile ? "68%" : "34%", background: isMobile ? "linear-gradient(180deg, transparent 0%, rgba(8,7,6,.28) 34%, rgba(8,7,6,.62) 58%, rgba(8,7,6,.88) 80%, rgba(8,7,6,.97) 100%)" : "linear-gradient(180deg, transparent, rgba(8,7,6,.9))" }} />
+          <div className="mr-hero-bottom" style={{ position: "absolute", left: 0, right: 0, bottom: 0 }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 45% 45% at 22% 62%, rgba(212,164,90,.1), transparent 70%)" }} />
         </div>
-        <div style={{ position: "relative", width: "min(1240px, 100%)", margin: "0 auto", padding: isMobile ? "0 clamp(20px, 5vw, 48px) clamp(52px, 9vh, 96px)" : "clamp(96px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(48px, 8vh, 80px)" }}>
+        <div className="mr-hero-pad" style={{ position: "relative", width: "min(1240px, 100%)", margin: "0 auto" }}>
           <div style={{ maxWidth: "580px" }}>
             <h1 style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", border: 0 }}>
               Meli Rox — Cantautora, Violinista y Artista en Vivo en Medellín, Colombia. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas.
             </h1>
-            <div style={{ height: isMobile ? "40px" : "52px", width: "1px", margin: "0 0 8px", background: "linear-gradient(180deg, transparent, #e8cf9e)", animation: "mrPulse 3.5s ease-in-out infinite" }} />
-            {!isMobile && (
-              <div style={{ width: "min(310px, 62vw)", overflow: "visible" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" fetchPriority="high" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
-              </div>
-            )}
+            <div className="mr-hero-bar" style={{ width: "1px", margin: "0 0 8px", background: "linear-gradient(180deg, transparent, #e8cf9e)", animation: "mrPulse 3.5s ease-in-out infinite" }} />
+            <div className="mr-hero-logo" style={{ width: "min(310px, 62vw)", overflow: "visible" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={U + "meli-rox-logo-clean-print-transparent.webp"} alt="Meli Rox" fetchPriority="high" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
+            </div>
             <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: ".32em", textTransform: "uppercase", color: "#e3d5b0" }}>
               {t("Cantautora · Violinista · Artista en vivo", "Singer-songwriter · Violinist · Live artist")}
             </div>
@@ -822,10 +815,10 @@ export default function Home() {
           </div>
           <div style={{ position: "relative", height: "clamp(400px, 64vh, 660px)", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.18)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={F + "wedding.jpg"} alt="Meli — cálida, íntima, emocional" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 20%" : "50% 30%", filter: "sepia(.26) saturate(.82) brightness(.96)", transform: `scale(${1 + mix * 0.0006})`, transition: "transform .6s" }} />
+            <img src={F + "wedding.webp"} alt="Meli — cálida, íntima, emocional" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 20%" : "50% 30%", filter: "sepia(.26) saturate(.82) brightness(.96)", transform: `scale(${1 + mix * 0.0006})`, transition: "transform .6s" }} />
             <div style={{ position: "absolute", inset: 0, opacity: mix / 100, transition: "opacity .7s ease" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={F + "DSC08415.jpg"} alt="Rox — eléctrica, audaz, imparable" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 14%" : "50% 24%", filter: "saturate(1.08) brightness(.95) contrast(1.06)" }} />
+              <img src={F + "DSC08415.webp"} alt="Rox — eléctrica, audaz, imparable" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 14%" : "50% 24%", filter: "saturate(1.08) brightness(.95) contrast(1.06)" }} />
             </div>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(11,10,8,.55), transparent 40%)", pointerEvents: "none" }} />
             <div style={{ position: "absolute", left: 0, right: 0, bottom: "20px", textAlign: "center", pointerEvents: "none" }}>
@@ -863,7 +856,7 @@ export default function Home() {
                 <CategoryVideo key={activeCat.id} src={activeCat.vidSrc} pos={activeCat.pos} onActivate={() => setVidSound(true)} />
               ) : (
                 /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={activeCat.img} alt={t(activeCat.es, activeCat.en)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeCat.pos, filter: "saturate(.92) brightness(.9)", transition: "opacity .5s" }} />
+                <img src={activeCat.img} alt={t(activeCat.es, activeCat.en)} loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeCat.pos, filter: "saturate(.92) brightness(.9)", transition: "opacity .5s" }} />
               )}
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.75))", pointerEvents: "none" }} />
               {activeCat.vid && !activeCat.vidSrc && (
@@ -897,7 +890,7 @@ export default function Home() {
       <section id="envivo" style={{ position: "relative", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ position: "relative", height: "clamp(460px, 80vh, 760px)", overflow: "hidden" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={F + "IMG_2471.jpg"} alt="Meli Rox en tarima con alas iridiscentes" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(1.02) brightness(.88)" }} />
+          <img src={F + "IMG_2471.webp"} alt="Meli Rox en tarima con alas iridiscentes" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(1.02) brightness(.88)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,10,8,.5), transparent 30%, rgba(11,10,8,.96) 82%)" }} />
           <div style={{ position: "absolute", left: 0, right: 0, bottom: "clamp(30px, 6vw, 64px)", padding: "0 clamp(20px, 5vw, 48px)" }}>
             <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -919,7 +912,7 @@ export default function Home() {
               <CategoryVideo key={liveMode} src={activeLive.vidSrc} pos={activeLive.pos} />
             ) : (
               /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={activeLive.img} alt={activeLive.cap} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
+              <img src={activeLive.img} alt={activeLive.cap} loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
             )}
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.85))", pointerEvents: "none" }} />
             {!activeLive.vidSrc && (
@@ -961,11 +954,11 @@ export default function Home() {
             </div>
             <div style={{ position: "relative", minHeight: "380px" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={F + "DSC08345.jpg"} alt="Meli Rox — retrato de escenario" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 22%", filter: "saturate(.92) brightness(.95)" }} />
+              <img src={F + "DSC08345.webp"} alt="Meli Rox — retrato de escenario" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 22%", filter: "saturate(.92) brightness(.95)" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #0e0c09, transparent 30%)" }} />
-              <figure style={{ margin: 0, position: "absolute", right: "18px", bottom: "18px", width: "min(190px, 42%)", border: "1px solid rgba(232,207,158,.5)", borderRadius: "3px", overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,.6)", cursor: "zoom-in" }} onClick={() => setLb({ src: U + "lax_proof-1784055218158.jpeg", alt: "Paradise 42 — Puesto #1, Las 20 de La X" })}>
+              <figure style={{ margin: 0, position: "absolute", right: "18px", bottom: "18px", width: "min(190px, 42%)", border: "1px solid rgba(232,207,158,.5)", borderRadius: "3px", overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,.6)", cursor: "zoom-in" }} onClick={() => setLb({ src: U + "lax_proof-1784055218158.webp", alt: "Paradise 42 — Puesto #1, Las 20 de La X" })}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={U + "lax_proof-1784055218158.jpeg"} alt="Paradise 42 — Puesto #1, Las 20 de La X" style={{ display: "block", width: "100%", height: "auto" }} />
+                <img src={U + "lax_proof-1784055218158.webp"} alt="Paradise 42 — Puesto #1, Las 20 de La X" loading="lazy" decoding="async" style={{ display: "block", width: "100%", height: "auto" }} />
                 <figcaption style={{ padding: "8px 10px", background: "rgba(11,10,8,.92)", fontFamily: "var(--font-mono), monospace", fontSize: "10.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#e3d5b0" }}>{t("Anuncio oficial · La X", "Official proof · La X")}</figcaption>
               </figure>
             </div>
@@ -1001,7 +994,7 @@ export default function Home() {
       {/* AUDIO TEASER */}
       <section style={{ position: "relative", overflow: "hidden", padding: "clamp(48px, 9vw, 150px) clamp(20px, 5vw, 48px)", background: "#0a0807" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={F + "DVR_0523.jpg"} alt="Meli Rox — cantautora y violinista en sesión" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 24%", opacity: 0.5, filter: "sepia(.4) saturate(.7) brightness(.7)" }} />
+        <img src={F + "DVR_0523.webp"} alt="Meli Rox — cantautora y violinista en sesión" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 24%", opacity: 0.5, filter: "sepia(.4) saturate(.7) brightness(.7)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,7,.8), rgba(10,8,7,.35) 40%, rgba(10,8,7,.92))" }} />
         <div style={{ position: "relative", maxWidth: "780px", margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#d9c9a4", animation: "mrPulse 4s ease-in-out infinite" }}>{t("Más allá del escenario", "Beyond the stage")}</div>
@@ -1055,7 +1048,7 @@ export default function Home() {
             </div>
             <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.24)", minHeight: "420px" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={F + "IMG_2501.jpg"} alt="Meli Rox — violín eléctrico en festival" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 25%", filter: "saturate(.95) brightness(.85)" }} />
+              <img src={F + "IMG_2501.webp"} alt="Meli Rox — violín eléctrico en festival" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 25%", filter: "saturate(.95) brightness(.85)" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 45%, rgba(10,9,8,.9))" }} />
               <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
                 <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>Festival</div>
@@ -1157,10 +1150,10 @@ export default function Home() {
           <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
             <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ flex: "0 0 auto", width: "64px", height: "64px", borderRadius: "50%", display: "block", overflow: "hidden" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={U + "MeliIGThumb.jpg"} alt="Meli Rox" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+              <img src={U + "MeliIGThumb.jpg"} alt="Meli Rox" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
             </a>
             <div style={{ flex: "1 1 auto", minWidth: "160px" }}>
-              <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "7px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(26px, 3.4vw, 34px)", color: "#f4edda", lineHeight: 1 }}>@meliroxoficial{/* eslint-disable-next-line @next/next/no-img-element */}<img src={U + "Instagramtickv3.png"} alt="Verificado" style={{ width: "0.66em", height: "0.66em", display: "inline-block" }} /></a>
+              <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "7px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(26px, 3.4vw, 34px)", color: "#f4edda", lineHeight: 1 }}>@meliroxoficial{/* eslint-disable-next-line @next/next/no-img-element */}<img src={U + "Instagramtickv3.png"} alt="Verificado" loading="lazy" decoding="async" style={{ width: "0.66em", height: "0.66em", display: "inline-block" }} /></a>
               <div style={{ marginTop: "5px", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Cantautora & Violinista · Medellín", "Singer-songwriter & Violinist · Medellín")}</div>
             </div>
             <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "12px 24px", borderRadius: "999px", whiteSpace: "nowrap" }}>{t("Seguir", "Follow")}</a>
@@ -1173,8 +1166,8 @@ export default function Home() {
 
           <div style={{ marginTop: "clamp(24px, 3.4vw, 36px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "14px" }}>
             {[
-              { href: "https://open.spotify.com/artist/0Me2xPijWmN9C9P2Vs5IGP", img: F + "DVR_0449.jpg", pos: "50% 30%", label: "Spotify", title: t("Escucha su música", "Hear her music"), handle: "Meli Rox →" },
-              { href: "https://www.youtube.com/@meliroxmusic", img: F + "IMG_2513.jpg", pos: "50% 18%", label: "YouTube", title: t("Videos y presentaciones", "Videos & performances"), handle: "@meliroxmusic →" },
+              { href: "https://open.spotify.com/artist/0Me2xPijWmN9C9P2Vs5IGP", img: F + "DVR_0449.webp", pos: "50% 30%", label: "Spotify", title: t("Escucha su música", "Hear her music"), handle: "Meli Rox →" },
+              { href: "https://www.youtube.com/@meliroxmusic", img: F + "IMG_2513.webp", pos: "50% 18%", label: "YouTube", title: t("Videos y presentaciones", "Videos & performances"), handle: "@meliroxmusic →" },
             ].map((s) => (
               <a key={s.label} href={s.href} target="_blank" style={{ position: "relative", display: "block", textDecoration: "none", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.22)", height: "200px" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1194,7 +1187,7 @@ export default function Home() {
       {/* CONTACTO */}
       <section id="contacto" style={{ position: "relative", overflow: "hidden", padding: "clamp(52px, 10vw, 170px) clamp(20px, 5vw, 48px)", background: "#080706" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={F + "DVR_0490.jpg"} alt="Meli Rox — violinista en vivo en Medellín" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
+        <img src={F + "DVR_0490.webp"} alt="Meli Rox — violinista en vivo en Medellín" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
         <div style={{ position: "relative", maxWidth: "940px", margin: "0 auto", textAlign: "center" }}>
           <h2 style={CSS({ margin: 0, fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: isMobile ? "clamp(34px, 8vw, 52px)" : "clamp(40px, 4.4vw, 72px)", lineHeight: 1.06, color: "#f9f4e4", whiteSpace: isMobile ? "normal" : "nowrap", textWrap: isMobile ? "pretty" : "nowrap", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>
@@ -1235,7 +1228,7 @@ export default function Home() {
       )}
 
       {/* WHATSAPP FAB */}
-      <a href={waMain} target="_blank" aria-label="WhatsApp" style={{ position: "fixed", right: "22px", bottom: "22px", zIndex: 60, width: "58px", height: "58px", borderRadius: "50%", background: GOLD, display: isMobile ? "none" : "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", boxShadow: "0 8px 30px rgba(0,0,0,.55), 0 0 24px rgba(232,207,158,.25)", transition: "transform .3s" }}>
+      <a href={waMain} target="_blank" aria-label="WhatsApp" className="mr-fab" style={{ position: "fixed", right: "22px", bottom: "22px", zIndex: 60, width: "58px", height: "58px", borderRadius: "50%", background: GOLD, alignItems: "center", justifyContent: "center", textDecoration: "none", boxShadow: "0 8px 30px rgba(0,0,0,.55), 0 0 24px rgba(232,207,158,.25)", transition: "transform .3s" }}>
         <svg width="27" height="27" viewBox="0 0 24 24" fill="#171208"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3z" /></svg>
       </a>
     </>

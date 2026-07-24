@@ -66,6 +66,34 @@ input[type="range"].mrmix::-moz-range-thumb { width: 26px; height: 26px; border-
   .svc-nav-home { display: none; }
 }
 
+/* Home nav + hero: breakpoints live in CSS so phones paint the MOBILE layout on the
+   very first frame (no desktop→mobile hydration flip / CLS). Values mirror the old
+   isMobile inline styles exactly. */
+.mr-hide-mobile { display: flex; }
+.mr-hide-desktop { display: none; }
+.mr-nav { padding: 16px clamp(16px, 4vw, 48px); }
+.mr-nav-logo { height: 78px; margin: -20px 0 -20px -14px; }
+.mr-hero { align-items: center; }
+.mr-hero-video { object-position: 68% 30%; }
+.mr-hero-bottom { height: 34%; background: linear-gradient(180deg, transparent, rgba(8,7,6,.9)); }
+.mr-hero-pad { padding: clamp(96px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(48px, 8vh, 80px); }
+.mr-hero-bar { height: 52px; }
+.mr-hero-logo { display: block; }
+.mr-fab { display: flex; }
+@media (max-width: 759px) {
+  .mr-hide-mobile { display: none; }
+  .mr-hide-desktop { display: flex; }
+  .mr-nav { padding: 12px clamp(20px, 6vw, 48px); }
+  .mr-nav-logo { height: 88px; margin: -24px 0 -24px -14px; }
+  .mr-hero { align-items: flex-end; }
+  .mr-hero-video { object-position: 50% 30%; }
+  .mr-hero-bottom { height: 68%; background: linear-gradient(180deg, transparent 0%, rgba(8,7,6,.28) 34%, rgba(8,7,6,.62) 58%, rgba(8,7,6,.88) 80%, rgba(8,7,6,.97) 100%); }
+  .mr-hero-pad { padding: 0 clamp(20px, 5vw, 48px) clamp(52px, 9vh, 96px); }
+  .mr-hero-bar { height: 40px; }
+  .mr-hero-logo { display: none; }
+  .mr-fab { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation-duration: .01s !important; animation-iteration-count: 1 !important; transition-duration: .01s !important; }

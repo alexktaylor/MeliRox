@@ -29,7 +29,7 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
       <header style={{ position: "sticky", top: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "18px", padding: "12px clamp(20px, 5vw, 48px)", background: "rgba(11,10,8,.82)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,180,122,.14)" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flex: "0 0 auto" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/uploads/meli-rox-logo-clean-print-transparent.png" alt="Meli Rox" style={{ height: "72px", width: "auto", margin: "-18px 0 -18px -10px" }} />
+          <img src="/uploads/meli-rox-logo-clean-print-transparent.webp" alt="Meli Rox" style={{ height: "72px", width: "auto", margin: "-18px 0 -18px -10px" }} />
         </Link>
 
         <div className="svc-nav-links" style={{ alignItems: "center", gap: "clamp(14px, 2.2vw, 28px)", flexWrap: "wrap", justifyContent: "center", flex: "1 1 auto" }}>

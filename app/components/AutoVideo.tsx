@@ -23,9 +23,6 @@ export default function AutoVideo({
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    // Mobile: show the poster only (no video download) — keeps service pages fast
-    // on 4G. Desktop plays the video.
-    if (window.innerWidth < 760) return;
     v.muted = true; // set in JS so iOS honours muted autoplay
     const start = () => {
       if (!v.getAttribute("src")) {
