@@ -29,7 +29,7 @@ const cfg: ServiceConfig = {
   h1Pre: "Música para fiestas de 15 ",
   h1Em: "en Medellín",
   heroImg: F + "IMG_1922.JPG",
-  heroVideo: "/Vids/quince.mp4",
+  heroVideo: "/Vids/bg/quince.mp4",
   heroVideoPos: "50% 40%",
   heroPos: "50% 34%",
   heroSub: "Una entrada que nadie va a olvidar — voz, violín eléctrico y una puesta en escena creada para convertir la celebración en un momento verdaderamente especial.",
@@ -46,7 +46,7 @@ const cfg: ServiceConfig = {
   statementBody:
     "Voz, violín eléctrico y una producción pensada para el gran momento de la quinceañera. Meli Rox crea una experiencia a la medida — desde la entrada triunfal hasta la canción que hará llorar a toda la familia.",
   momentsImg: F + "Meli%20violin%20(1).jpeg",
-  momentsVideo: "/Vids/violin.mp4",
+  momentsVideo: "/Vids/bg/violin.mp4",
   momentsPos: "50% 18%",
   momentsTitle: "Una puesta en escena a tu medida.",
   moments: [
@@ -72,7 +72,7 @@ const cfg: ServiceConfig = {
     { q: "¿Cómo reservo y cuánto cuesta?", a: "El valor depende del formato, la fecha y la locación. Escríbenos por WhatsApp con los detalles de la fiesta y te enviamos disponibilidad y una propuesta a la medida." },
   ],
   ctaImg: F + "DVR_0507.jpg",
-  ctaVideo: "/Vids/conciertos.mp4",
+  ctaVideo: "/Vids/bg/conciertos.mp4",
   ctaPos: "50% 18%",
   ctaTitlePre: "Haz de su fiesta de 15 ",
   ctaTitleEm: "un momento inolvidable.",

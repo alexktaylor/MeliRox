@@ -29,7 +29,7 @@ const cfg: ServiceConfig = {
   h1Pre: "Violinista para eventos privados ",
   h1Em: "en Medellín",
   heroImg: F + "IMG_6812.JPG",
-  heroVideo: "/Vids/privados.mp4",
+  heroVideo: "/Vids/bg/privados.mp4",
   heroVideoPos: "50% 44%",
   heroPos: "50% 18%",
   heroSub: "Música diseñada a la medida del momento — cumpleaños, aniversarios, propuestas y cenas exclusivas con voz y violín eléctrico en vivo.",
@@ -46,7 +46,7 @@ const cfg: ServiceConfig = {
   statementBody:
     "Una propuesta de matrimonio, un aniversario, una cena especial. Meli Rox crea una experiencia íntima y personalizada con voz y violín eléctrico en vivo, para que el momento se sienta tan único como es.",
   momentsImg: F + "IMG_6812.JPG",
-  momentsVideo: "/Vids/voz.mp4",
+  momentsVideo: "/Vids/bg/voz.mp4",
   momentsPos: "50% 15%",
   momentsTitle: "Una experiencia íntima y personalizada.",
   moments: [
@@ -72,7 +72,7 @@ const cfg: ServiceConfig = {
     { q: "¿Cómo reservo y cuánto cuesta?", a: "El valor depende del formato, la fecha y la locación. Escríbenos por WhatsApp con los detalles y te enviamos disponibilidad y una propuesta a la medida." },
   ],
   ctaImg: F + "DVR_0490.jpg",
-  ctaVideo: "/Vids/violin.mp4",
+  ctaVideo: "/Vids/bg/violin.mp4",
   ctaPos: "50% 20%",
   ctaTitlePre: "Haz que tu momento ",
   ctaTitleEm: "suene diferente.",

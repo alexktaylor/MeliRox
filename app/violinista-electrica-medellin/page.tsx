@@ -29,7 +29,7 @@ const cfg: ServiceConfig = {
   h1Pre: "Violinista eléctrica ",
   h1Em: "en Medellín",
   heroImg: F + "IMG_2501.jpg",
-  heroVideo: "/Vids/voz.mp4",
+  heroVideo: "/Vids/bg/voz.mp4",
   heroVideoPos: "50% 30%",
   heroPos: "50% 25%",
   heroSub: "Violín eléctrico, voz y electrónica en vivo — Afro House, colaboraciones con DJs y grandes escenarios.",
@@ -46,7 +46,7 @@ const cfg: ServiceConfig = {
   statementBody:
     "Meli Rox lleva el violín eléctrico a un terreno propio: voz, música original y electrónica en vivo que unen la elegancia clásica con la energía del Afro House. De La Solar al Medellín Music Lab, un show pensado para grandes escenarios.",
   momentsImg: F + "IMG_2471.jpg",
-  momentsVideo: "/Vids/violin.mp4",
+  momentsVideo: "/Vids/bg/violin.mp4",
   momentsPos: "50% 25%",
   momentsTitle: "Un show para grandes escenarios.",
   moments: [
@@ -72,7 +72,7 @@ const cfg: ServiceConfig = {
     { q: "¿Cómo consulto disponibilidad para un evento?", a: "Escríbenos por WhatsApp con la fecha, la ciudad y el tipo de show y te enviamos el formato y una propuesta a la medida." },
   ],
   ctaImg: F + "DVR_0523.jpg",
-  ctaVideo: "/Vids/paradise.mp4",
+  ctaVideo: "/Vids/bg/paradise.mp4",
   ctaPos: "50% 24%",
   ctaTitlePre: "Lleva su energía ",
   ctaTitleEm: "a tu escenario.",

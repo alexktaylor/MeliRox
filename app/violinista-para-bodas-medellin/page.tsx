@@ -29,7 +29,7 @@ const cfg: ServiceConfig = {
   h1Pre: "Violinista para bodas ",
   h1Em: "en Medellín",
   heroImg: F + "wedding.jpg",
-  heroVideo: "/Vids/bodas.mp4",
+  heroVideo: "/Vids/bg/bodas.mp4",
   heroVideoPos: "55% 32%",
   heroPos: "50% 28%",
   heroSub: "Voz y violín eléctrico en vivo para ceremonia, cóctel y recepción — repertorio personalizado que convierte tu boda en un momento inolvidable.",
@@ -46,7 +46,7 @@ const cfg: ServiceConfig = {
   statementBody:
     "Con más de una década sobre el escenario y cientos de eventos en Colombia y el exterior, Meli Rox une voz, violín eléctrico y música original para acompañar los momentos que nunca se repiten — desde la entrada de la novia hasta el último baile de la noche.",
   momentsImg: F + "IMG_1922.JPG",
-  momentsVideo: "/Vids/violin.mp4",
+  momentsVideo: "/Vids/bg/violin.mp4",
   momentsPos: "50% 30%",
   momentsTitle: "Del «sí, acepto» al primer baile.",
   moments: [
@@ -72,7 +72,7 @@ const cfg: ServiceConfig = {
     { q: "¿Cómo reservo y cuánto cuesta?", a: "El valor depende del formato, la fecha y la locación. Escríbenos por WhatsApp con la fecha y el lugar de tu boda y te enviamos disponibilidad y una propuesta a la medida." },
   ],
   ctaImg: F + "Meli%20Rox%20wedding.jpeg",
-  ctaVideo: "/Vids/voz.mp4",
+  ctaVideo: "/Vids/bg/voz.mp4",
   ctaPos: "50% 30%",
   ctaTitlePre: "Reserva tu fecha ",
   ctaTitleEm: "antes de que se agende.",
