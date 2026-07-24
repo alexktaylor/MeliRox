@@ -40,13 +40,8 @@ export const metadata: Metadata = {
   creator: "Meli Rox",
   publisher: "Meli Rox",
   alternates: { canonical: "/" },
-  icons: {
-    icon: [
-      { url: "/icon.png", type: "image/png", sizes: "192x192" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    apple: { url: "/apple-icon.png", sizes: "180x180" },
-  },
+  // Icons come from the app/icon.png + app/apple-icon.png file conventions
+  // (same setup as voxflow.me, whose icon Google picks up correctly).
   openGraph: {
     type: "website",
     locale: "es_CO",
