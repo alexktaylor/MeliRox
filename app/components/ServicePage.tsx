@@ -64,6 +64,8 @@ export type ServiceConfig = {
   breadcrumbName: string;
   packages?: { n: string; title: string; format: string; details: string[] }[];
   repertoire?: Song[];
+  servicesGrid?: { href: string; label: string; sub: string; img: string; pos?: string }[];
+  servicesTitle?: string;
 };
 
 export function buildJsonLd(cfg: ServiceConfig) {
@@ -197,6 +199,30 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
           </div>
         </div>
       </section>
+
+      {/* Services grid — hub links out to each service page */}
+      {cfg.servicesGrid && (
+        <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={eyebrow}>Servicios en Medellín</div>
+            <h2 style={{ margin: "12px 0 clamp(28px, 4vw, 44px)", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", lineHeight: 1.1, color: "#f4edda", maxWidth: "760px" }}>{cfg.servicesTitle}</h2>
+            <div className="svc-services-grid" style={{ display: "grid", gap: "14px", ["--svc-cols" as string]: String(cfg.servicesGrid.length) }}>
+              {cfg.servicesGrid.map((s) => (
+                <Link key={s.href} href={s.href} style={{ position: "relative", display: "block", textDecoration: "none", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", height: "clamp(300px, 40vw, 380px)" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.img} alt={s.label} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos || "50% 30%", filter: "saturate(.9) brightness(.72)" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 35%, rgba(10,9,8,.92))" }} />
+                  <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "22px" }}>
+                    <div style={{ fontFamily: serif, fontSize: "clamp(24px, 3vw, 30px)", color: "#f7f1e0", lineHeight: 1.1 }}>{s.label}</div>
+                    <div style={{ margin: "6px 0 12px", fontWeight: 300, fontSize: "14.5px", lineHeight: 1.5, color: "#cabfa5" }}>{s.sub}</div>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#ecd9ac" }}>Ver más →</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Packages */}
       {cfg.packages && (

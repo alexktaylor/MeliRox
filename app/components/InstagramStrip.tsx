@@ -41,28 +41,22 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
         w.instgrm?.embeds?.process?.();
       } catch {}
     };
-    if (w.instgrm) {
-      process();
-    } else {
-      const existing = document.getElementById("ig-embed-script") as HTMLScriptElement | null;
-      if (existing) {
-        existing.addEventListener("load", process);
-      } else {
-        const s = document.createElement("script");
-        s.id = "ig-embed-script";
-        s.src = "https://www.instagram.com/embed.js";
-        s.async = true;
-        s.onload = process;
-        document.body.appendChild(s);
-      }
+    // Ensure the embed script is present (once per page load)
+    if (!w.instgrm && !document.getElementById("ig-embed-script")) {
+      const s = document.createElement("script");
+      s.id = "ig-embed-script";
+      s.src = "https://www.instagram.com/embed.js";
+      s.async = true;
+      s.onload = process;
+      document.body.appendChild(s);
     }
 
     const observers: ResizeObserver[] = [];
-    const handled = new Set<number>();
+    const cropped = new Set<number>();
     const applyCrop = (i: number) => {
       const wrap = wrapRefs.current[i];
       const outer = outerRefs.current[i];
-      if (!wrap || !outer) return;
+      if (!wrap || !outer) return false;
       const iframe = wrap.querySelector("iframe") as HTMLIFrameElement | null;
       if (!iframe) return false;
       const apply = () => {
@@ -79,13 +73,23 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
       observers.push(ro);
       return true;
     };
+    // Poll: keep calling process() until every blockquote becomes an iframe,
+    // then crop each. Re-processing is safe (embed.js ignores done nodes) and
+    // fixes the race where process() ran before the blockquotes mounted or
+    // before the script finished loading.
     const poll = setInterval(() => {
+      let pending = false;
       urls.forEach((_, i) => {
-        if (!handled.has(i) && applyCrop(i)) handled.add(i);
+        if (cropped.has(i)) return;
+        if (applyCrop(i)) cropped.add(i);
+        else pending = true;
       });
-      if (handled.size >= urls.length) clearInterval(poll);
-    }, 250);
-    const stop = setTimeout(() => clearInterval(poll), 10000);
+      if (pending) process();
+      if (cropped.size >= urls.length) clearInterval(poll);
+    }, 300);
+    // First tick immediately so we don't wait 300ms on warm navigations
+    process();
+    const stop = setTimeout(() => clearInterval(poll), 20000);
     return () => {
       clearInterval(poll);
       clearTimeout(stop);

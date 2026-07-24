@@ -37,6 +37,15 @@ input[type="range"].mrmix::-moz-range-thumb { width: 26px; height: 26px; border-
   .svc-rep-list { order: 1; }
 }
 
+/* Services grid: 1 col mobile, 2 tablet, all-in-one-row on desktop (no orphan) */
+.svc-services-grid { grid-template-columns: 1fr; }
+@media (min-width: 560px) {
+  .svc-services-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1000px) {
+  .svc-services-grid { grid-template-columns: repeat(var(--svc-cols, 5), 1fr); }
+}
+
 .svc-nav-links { display: none; }
 .svc-nav-cta { display: none; }
 .svc-nav-burger { display: inline-flex; }

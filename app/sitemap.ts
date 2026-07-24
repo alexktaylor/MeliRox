@@ -3,6 +3,7 @@ import type { MetadataRoute } from "next";
 const SITE = "https://melirox.com";
 
 const SERVICE_PATHS = [
+  "/violinista-medellin",
   "/violinista-para-bodas-medellin",
   "/musica-para-fiestas-de-15-medellin",
   "/musica-eventos-corporativos-medellin",
