@@ -7,14 +7,18 @@ import { SERVICE_LINKS } from "./serviceLinks";
 
 const GOLD = "linear-gradient(135deg, #ecd9ac, #b98f4e)";
 
-const NAV = [
+// Mirrors the home nav order: Inicio · Experiencias · En vivo · Música · [Eventos ▾] · Meli Rox · Galería
+const NAV_LEFT = [
   { href: "/", label: "Inicio" },
-  { href: "/#musica", label: "Música" },
-  { href: "/#envivo", label: "En vivo" },
   { href: "/#experiencias", label: "Experiencias" },
-  { href: "/#galeria", label: "Galería" },
-  { href: "/#contacto", label: "Contacto" },
+  { href: "/#envivo", label: "En vivo" },
+  { href: "/#musica", label: "Música" },
 ];
+const NAV_RIGHT = [
+  { href: "/#historia", label: "Meli Rox" },
+  { href: "/#galeria", label: "Galería" },
+];
+const NAV = [...NAV_LEFT, ...NAV_RIGHT];
 
 export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }) {
   const [open, setOpen] = useState(false);
@@ -29,10 +33,13 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
         </Link>
 
         <div className="svc-nav-links" style={{ alignItems: "center", gap: "clamp(14px, 2.2vw, 28px)", flexWrap: "wrap", justifyContent: "center", flex: "1 1 auto" }}>
-          {NAV.map((n) => (
+          {NAV_LEFT.map((n) => (
             <Link key={n.href} href={n.href} style={navLink}>{n.label}</Link>
           ))}
           <NavEvents triggerStyle={navLink} />
+          {NAV_RIGHT.map((n) => (
+            <Link key={n.href} href={n.href} style={navLink}>{n.label}</Link>
+          ))}
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: "0 0 auto" }}>

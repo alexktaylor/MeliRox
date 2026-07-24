@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const IG_POSTS: string[] = [
   "https://www.instagram.com/p/DaQ9Q-NJ0E1/",
@@ -10,12 +10,15 @@ export const IG_POSTS: string[] = [
   "https://www.instagram.com/p/DY-8aVxJKla/",
 ];
 
-const IG_FOOTER_CROP = 172;
 const IG_NATURAL_W = 326; // Instagram's enforced minimum embed width
+const IG_IFRAME_H = 560; // height we render the embed at
+const IG_VISIBLE_H = 470; // crop the bottom (likes / caption / "view on Instagram") bar
+
+// Build the direct /embed iframe URL — no embed.js, no blockquote conversion.
+const embedSrc = (permalink: string) =>
+  permalink.replace(/\/?$/, "/") + "embed";
 
 export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] }) {
-  const wrapRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const outerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [vw, setVw] = useState(1200);
   const [loaded, setLoaded] = useState<boolean[]>(() => urls.map(() => false));
 
@@ -34,85 +37,32 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
     ? Math.min(1, (vw * 0.8) / IG_NATURAL_W)
     : Math.max(0.5, Math.min(1, (avail - (N - 1) * gap) / (N * IG_NATURAL_W)));
   const itemW = Math.round(IG_NATURAL_W * scale);
+  const itemH = Math.round(IG_VISIBLE_H * scale);
 
-  useEffect(() => {
-    const w = window as unknown as { instgrm?: { embeds?: { process?: () => void } } };
-    const process = () => {
-      try {
-        w.instgrm?.embeds?.process?.();
-      } catch {}
-    };
-    // Ensure the embed script is present (once per page load)
-    if (!w.instgrm && !document.getElementById("ig-embed-script")) {
-      const s = document.createElement("script");
-      s.id = "ig-embed-script";
-      s.src = "https://www.instagram.com/embed.js";
-      s.async = true;
-      s.onload = process;
-      document.body.appendChild(s);
-    }
-
-    const observers: ResizeObserver[] = [];
-    const cropped = new Set<number>();
-    const applyCrop = (i: number) => {
-      const wrap = wrapRefs.current[i];
-      const outer = outerRefs.current[i];
-      if (!wrap || !outer) return false;
-      const iframe = wrap.querySelector("iframe") as HTMLIFrameElement | null;
-      if (!iframe) return false;
-      const apply = () => {
-        const h = iframe.offsetHeight;
-        if (h > IG_FOOTER_CROP + 120) {
-          const ch = h - IG_FOOTER_CROP;
-          wrap.style.height = ch + "px";
-          outer.style.height = Math.round(ch * scale) + "px";
-        }
-      };
-      apply();
-      const ro = new ResizeObserver(apply);
-      ro.observe(iframe);
-      observers.push(ro);
-      return true;
-    };
-    // Poll: keep calling process() until every blockquote becomes an iframe,
-    // then crop each. Re-processing is safe (embed.js ignores done nodes) and
-    // fixes the race where process() ran before the blockquotes mounted or
-    // before the script finished loading.
-    const poll = setInterval(() => {
-      let pending = false;
-      urls.forEach((_, i) => {
-        if (cropped.has(i)) return;
-        if (applyCrop(i)) {
-          cropped.add(i);
-          setLoaded((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))));
-        } else pending = true;
-      });
-      if (pending) process();
-      if (cropped.size >= urls.length) clearInterval(poll);
-    }, 300);
-    // First tick immediately so we don't wait 300ms on warm navigations
-    process();
-    const stop = setTimeout(() => clearInterval(poll), 20000);
-    return () => {
-      clearInterval(poll);
-      clearTimeout(stop);
-      observers.forEach((o) => o.disconnect());
-    };
-  }, [urls, isMobile, vw, scale]);
+  const markLoaded = (i: number) =>
+    setLoaded((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))));
 
   return (
     <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: isMobile ? "x mandatory" : "none", padding: "2px 0 14px", scrollbarWidth: "thin", scrollbarColor: "rgba(212,180,122,.4) transparent" }}>
       <div style={{ display: "flex", gap: gap + "px", width: "max-content", margin: isMobile ? 0 : "0 auto", alignItems: "flex-start", justifyContent: isMobile ? "flex-start" : "center" }}>
         {urls.map((u, i) => (
-          <div key={u} ref={(el) => { outerRefs.current[i] = el; }} style={{ position: "relative", flex: "0 0 auto", width: itemW + "px", minHeight: Math.round(IG_NATURAL_W * 1.15 * scale) + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
+          <div key={u} style={{ position: "relative", flex: "0 0 auto", width: itemW + "px", height: itemH + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
             {!loaded[i] && (
               <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", background: "#0e0c09", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", pointerEvents: "none" }}>
                 <div style={{ width: "26px", height: "26px", borderRadius: "50%", border: "2px solid rgba(212,180,122,.25)", borderTopColor: "#ecd9ac", animation: "ig-spin 0.8s linear infinite" }} />
                 <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".24em", textTransform: "uppercase", color: "#8a7d63" }}>Instagram</div>
               </div>
             )}
-            <div ref={(el) => { wrapRefs.current[i] = el; }} style={{ width: IG_NATURAL_W + "px", minHeight: Math.round(IG_NATURAL_W * 1.15) + "px", background: "#0e0c09", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", transform: `scale(${scale})`, transformOrigin: "top left" }}>
-              <blockquote className="instagram-media" data-instgrm-permalink={u} data-instgrm-version="14" style={{ background: "#0a0908", border: 0, margin: 0, width: "100%", minWidth: 0 }} />
+            <div style={{ position: "absolute", inset: 0, width: IG_NATURAL_W + "px", height: IG_VISIBLE_H + "px", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", background: "#0e0c09", transform: `scale(${scale})`, transformOrigin: "top left" }}>
+              <iframe
+                src={embedSrc(u)}
+                title="Instagram"
+                loading="lazy"
+                scrolling="no"
+                allowTransparency
+                onLoad={() => markLoaded(i)}
+                style={{ display: "block", width: IG_NATURAL_W + "px", height: IG_IFRAME_H + "px", border: 0, background: "#0a0908" }}
+              />
             </div>
           </div>
         ))}

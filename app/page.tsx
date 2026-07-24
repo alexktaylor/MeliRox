@@ -443,6 +443,34 @@ export default function Home() {
     return () => io.disconnect();
   }, []);
 
+  // In-page anchor links scroll smoothly WITHOUT writing #hash into the URL
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement)?.closest?.('a[href^="#"]') as HTMLAnchorElement | null;
+      if (!a) return;
+      const href = a.getAttribute("href");
+      if (!href || href === "#") return;
+      const el = document.getElementById(href.slice(1));
+      if (!el) return;
+      e.preventDefault();
+      setMenuOpen(false);
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  // Arriving with a #hash (e.g. from a service page's nav): scroll to it, then strip the hash from the URL
+  useEffect(() => {
+    const h = window.location.hash;
+    if (!h || h.length < 2) return;
+    const clean = () => history.replaceState(null, "", window.location.pathname + window.location.search);
+    const el = document.getElementById(h.slice(1));
+    if (!el) { clean(); return; }
+    const id = requestAnimationFrame(() => { el.scrollIntoView({ block: "start" }); clean(); });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   useEffect(() => {
     let l: string | null = null;
     try {
@@ -673,7 +701,7 @@ export default function Home() {
       >
         <a href="#inicio" style={{ display: "flex", alignItems: "center", textDecoration: "none", flex: "0 0 auto" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ height: isMobile ? "88px" : "78px", width: "auto", margin: isMobile ? "-24px 0 -24px -14px" : "-20px 0 -20px -14px" }} />
+          <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" fetchPriority="high" style={{ height: isMobile ? "88px" : "78px", width: "auto", margin: isMobile ? "-24px 0 -24px -14px" : "-20px 0 -20px -14px" }} />
         </a>
         {isMobile ? (
           langToggle
@@ -691,9 +719,9 @@ export default function Home() {
               letterSpacing: ".06em",
             })}
           >
-            <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
-            <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
             <a href="#experiencias" style={navLink}>{t("Experiencias", "Experiences")}</a>
+            <a href="#envivo" style={navLink}>{t("En vivo", "Live")}</a>
+            <a href="#musica" style={navLink}>{t("Música", "Music")}</a>
             <NavEvents isEn={isEn} triggerStyle={navLink} />
             <a href="#historia" style={navLink}>Meli Rox</a>
             <a href="#galeria" style={navLink}>{t("Galería", "Gallery")}</a>
@@ -712,9 +740,9 @@ export default function Home() {
       {/* MOBILE MENU */}
       {menuOpen && isMobile && (
         <div style={{ position: "fixed", inset: 0, zIndex: 45, background: "rgba(8,7,6,.97)", backdropFilter: "blur(10px)", padding: "110px clamp(24px, 8vw, 48px) 40px", display: "flex", flexDirection: "column", gap: "6px", overflowY: "auto" }}>
-          <a href="#musica" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Música", "Music")}</a>
-          <a href="#envivo" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("En vivo", "Live")}</a>
           <a href="#experiencias" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Experiencias", "Experiences")}</a>
+          <a href="#envivo" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("En vivo", "Live")}</a>
+          <a href="#musica" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Música", "Music")}</a>
           <a href="#historia" onClick={() => setMenuOpen(false)} style={mobileLink}>Meli Rox</a>
           <a href="#galeria" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Galería", "Gallery")}</a>
           <div style={{ margin: "14px 0 2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>{t("Eventos", "Events")}</div>
@@ -728,7 +756,7 @@ export default function Home() {
       {/* HERO */}
       <header id="inicio" className="hero-fold" style={{ position: "relative", display: "flex", alignItems: isMobile ? "flex-end" : "center", overflow: "hidden", background: "#080706" }}>
         <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <video ref={heroVideoRef} src="/Vids/hero.mp4" poster="/Vids/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
+          <video ref={heroVideoRef} src="/Vids/hero.mp4" poster="/Vids/hero-poster.jpg" autoPlay muted loop playsInline preload="metadata" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(8,7,6,.92) 0%, rgba(8,7,6,.68) 34%, rgba(8,7,6,.12) 62%, rgba(8,7,6,.42) 100%)" }} />
           <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: isMobile ? "68%" : "34%", background: isMobile ? "linear-gradient(180deg, transparent 0%, rgba(8,7,6,.28) 34%, rgba(8,7,6,.62) 58%, rgba(8,7,6,.88) 80%, rgba(8,7,6,.97) 100%)" : "linear-gradient(180deg, transparent, rgba(8,7,6,.9))" }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 45% 45% at 22% 62%, rgba(212,164,90,.1), transparent 70%)" }} />
@@ -742,7 +770,7 @@ export default function Home() {
             {!isMobile && (
               <div style={{ width: "min(310px, 62vw)", overflow: "visible" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
+                <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" fetchPriority="high" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
               </div>
             )}
             <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: ".32em", textTransform: "uppercase", color: "#e3d5b0" }}>
@@ -811,55 +839,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* EN VIVO */}
-      <section id="envivo" style={{ position: "relative", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
-        <div style={{ position: "relative", height: "clamp(460px, 80vh, 760px)", overflow: "hidden" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={F + "IMG_2471.jpg"} alt="Meli Rox en tarima con alas iridiscentes" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(1.02) brightness(.88)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,10,8,.5), transparent 30%, rgba(11,10,8,.96) 82%)" }} />
-          <div style={{ position: "absolute", left: 0, right: 0, bottom: "clamp(30px, 6vw, 64px)", padding: "0 clamp(20px, 5vw, 48px)" }}>
-            <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#e3d5b0", textShadow: "0 1px 10px rgba(0,0,0,.8)" }}>{t("En vivo", "Live")}</div>
-              <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(38px, 6.4vw, 78px)", lineHeight: 1.04, color: "#f9f4e4", maxWidth: "820px", textWrap: "pretty", textShadow: "0 2px 30px rgba(0,0,0,.85)" })}>
-                {isEn ? (<>She doesn&apos;t perform the stage.<br /><em style={{ color: "#e8cf9e" }}>She transforms it.</em></>) : (<>No interpreta el escenario.<br /><em style={{ color: "#e8cf9e" }}>Lo transforma.</em></>)}
-              </h2>
-            </div>
-          </div>
-        </div>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "clamp(20px, 3vw, 36px) clamp(20px, 5vw, 48px) clamp(28px, 4vw, 48px)" }}>
-          <div style={CSS({ display: "flex", gap: "10px", flexWrap: pillWrap as CSSProperties["flexWrap"], overflowX: pillOx as CSSProperties["overflowX"], paddingBottom: "4px" })}>
-            {lms.map((m) => (
-              <button key={m.id} onClick={() => setLiveMode(m.id)} style={pillStyle(m.id === liveMode)}>{m.name}</button>
-            ))}
-          </div>
-          <div style={{ position: "relative", marginTop: "18px", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", height: "clamp(320px, 52vw, 620px)" }}>
-            {activeLive.vidSrc ? (
-              <CategoryVideo key={liveMode} src={activeLive.vidSrc} pos={activeLive.pos} />
-            ) : (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={activeLive.img} alt={activeLive.cap} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
-            )}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.85))", pointerEvents: "none" }} />
-            {!activeLive.vidSrc && (
-              <>
-                <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", pointerEvents: "none" }}><PlayIcon size={28} color="#ecd9ac" /></div>
-                <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
-              </>
-            )}
-            <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px", pointerEvents: "none" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{activeLive.name}</div>
-              <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 32px)", color: "#f7f1e0", lineHeight: 1.2, textShadow: "0 1px 12px rgba(0,0,0,.8)" }}>{activeLive.cap}</div>
-            </div>
-          </div>
-        </div>
-        <div style={{ overflow: "hidden", borderTop: "1px solid rgba(212,180,122,.14)", borderBottom: "1px solid rgba(212,180,122,.14)", padding: "20px 0", whiteSpace: "nowrap" }}>
-          <div style={{ display: "inline-flex", gap: "52px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px", letterSpacing: ".26em", textTransform: "uppercase", color: "#cabfa5", animation: "mrDrift 32s linear infinite" }}>
-            <span>{t("Voz en vivo · Violín eléctrico · Afro House · Repertorio personalizado · Colaboraciones con DJs · Banda en vivo · Alas LED · Experiencias personalizadas · ", "Live vocals · Electric violin · Afro House · Custom repertoire · DJ collaborations · Full band · LED wings · Custom experiences · ")}</span>
-            <span>{t("Voz en vivo · Violín eléctrico · Afro House · Repertorio personalizado · Colaboraciones con DJs · Banda en vivo · Alas LED · Experiencias personalizadas · ", "Live vocals · Electric violin · Afro House · Custom repertoire · DJ collaborations · Full band · LED wings · Custom experiences · ")}</span>
-          </div>
-        </div>
-      </section>
-
       {/* EXPERIENCIAS */}
       <section id="experiencias" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: activeCat.tone, transition: "background 1s" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -910,47 +889,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LOGROS */}
-      <section style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(32px, 4.8vw, 58px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "800px", textWrap: "pretty" })}>
-            {isEn ? (<>Born in Medellín. <em style={{ color: "#e8cf9e" }}>Heard beyond borders.</em></>) : (<>Nacida en Medellín. <em style={{ color: "#e8cf9e" }}>Escuchada más allá de las fronteras.</em></>)}
-          </h2>
-          <div style={{ marginTop: "clamp(36px, 5vw, 56px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "14px", alignItems: "stretch" }}>
-            <div style={{ gridColumn: "span 1", display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(26px, 3.6vw, 42px)", background: "radial-gradient(ellipse 100% 90% at 0% 0%, rgba(138,106,63,.18), transparent 65%), #0a0908", flex: "1 1 auto" }}>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(72px, 9vw, 120px)", lineHeight: 0.9, color: "#f1e2ba" }}>10+</div>
-                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Años en la música", "Years in music")}</div>
-                <p style={CSS({ margin: "16px 0 0", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5", textWrap: "pretty" })}>{t("Creando, interpretando y transformando escenarios — desde la Red de Escuelas de Música de Medellín.", "Creating, performing and transforming stages — from Medellín's Network of Music Schools.")}</p>
-              </div>
-              <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Escenarios del mundo", "Stages of the world")}</div>
-                <div style={{ marginTop: "14px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.55, color: "#f2ecdf" }}>Colombia · {t("Estados Unidos", "United States")} · Francia · Guatemala · España</div>
-                <p style={{ margin: "12px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>{t("Incluyendo temporadas de entretenimiento en cruceros internacionales.", "Including international cruise-ship entertainment seasons.")}</p>
-              </div>
+      {/* EN VIVO */}
+      <section id="envivo" style={{ position: "relative", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+        <div style={{ position: "relative", height: "clamp(460px, 80vh, 760px)", overflow: "hidden" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={F + "IMG_2471.jpg"} alt="Meli Rox en tarima con alas iridiscentes" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(1.02) brightness(.88)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,10,8,.5), transparent 30%, rgba(11,10,8,.96) 82%)" }} />
+          <div style={{ position: "absolute", left: 0, right: 0, bottom: "clamp(30px, 6vw, 64px)", padding: "0 clamp(20px, 5vw, 48px)" }}>
+            <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#e3d5b0", textShadow: "0 1px 10px rgba(0,0,0,.8)" }}>{t("En vivo", "Live")}</div>
+              <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(38px, 6.4vw, 78px)", lineHeight: 1.04, color: "#f9f4e4", maxWidth: "820px", textWrap: "pretty", textShadow: "0 2px 30px rgba(0,0,0,.85)" })}>
+                {isEn ? (<>She doesn&apos;t perform the stage.<br /><em style={{ color: "#e8cf9e" }}>She transforms it.</em></>) : (<>No interpreta el escenario.<br /><em style={{ color: "#e8cf9e" }}>Lo transforma.</em></>)}
+              </h2>
             </div>
-            <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.24)", minHeight: "420px" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={F + "IMG_2501.jpg"} alt="Meli Rox — violín eléctrico en festival" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 25%", filter: "saturate(.95) brightness(.85)" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 45%, rgba(10,9,8,.9))" }} />
-              <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>Festival</div>
-                <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(24px, 2.8vw, 32px)", color: "#f7f1e0", lineHeight: 1.2 }}>{t("En vivo en La Solar y el Medellín Music Lab.", "Live at La Solar and Medellín Music Lab.")}</div>
-              </div>
+          </div>
+        </div>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "clamp(20px, 3vw, 36px) clamp(20px, 5vw, 48px) clamp(28px, 4vw, 48px)" }}>
+          <div style={CSS({ display: "flex", gap: "10px", flexWrap: pillWrap as CSSProperties["flexWrap"], overflowX: pillOx as CSSProperties["overflowX"], paddingBottom: "4px" })}>
+            {lms.map((m) => (
+              <button key={m.id} onClick={() => setLiveMode(m.id)} style={pillStyle(m.id === liveMode)}>{m.name}</button>
+            ))}
+          </div>
+          <div style={{ position: "relative", marginTop: "18px", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.2)", height: "clamp(320px, 52vw, 620px)" }}>
+            {activeLive.vidSrc ? (
+              <CategoryVideo key={liveMode} src={activeLive.vidSrc} pos={activeLive.pos} />
+            ) : (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={activeLive.img} alt={activeLive.cap} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: activeLive.pos, filter: "saturate(.95) brightness(.9)" }} />
+            )}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.85))", pointerEvents: "none" }} />
+            {!activeLive.vidSrc && (
+              <>
+                <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", pointerEvents: "none" }}><PlayIcon size={28} color="#ecd9ac" /></div>
+                <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
+              </>
+            )}
+            <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px", pointerEvents: "none" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{activeLive.name}</div>
+              <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 32px)", color: "#f7f1e0", lineHeight: 1.2, textShadow: "0 1px 12px rgba(0,0,0,.8)" }}>{activeLive.cap}</div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div style={{ border: "1px solid rgba(232,207,158,.4)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "linear-gradient(160deg, rgba(212,164,90,.16), rgba(10,9,8,0) 55%), #0a0908" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>Radio</div>
-                <div style={{ marginTop: "12px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(26px, 3vw, 36px)", lineHeight: 1.1, color: "#f1e2ba" }}>#1 <span style={{ fontSize: ".62em", fontStyle: "italic" }}>en La X 103.9</span></div>
-                <p style={{ margin: "10px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>&quot;Paradise 42&quot; — Mak Negron ft. Meli Rox.</p>
-              </div>
-              <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908", flex: "1 1 auto" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("En televisión", "On television")}</div>
-                <div style={{ margin: "12px 0 16px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.3, color: "#f2ecdf" }}>{t("Escúchala en vivo en televisión nacional.", "Watch her live on national television.")}</div>
-                <YouTubeEmbed id="qIS-ePBF3ok" title="Meli Rox en vivo — Las Tres Gracias TV" />
-                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
-              </div>
-            </div>
+          </div>
+        </div>
+        <div style={{ overflow: "hidden", borderTop: "1px solid rgba(212,180,122,.14)", borderBottom: "1px solid rgba(212,180,122,.14)", padding: "20px 0", whiteSpace: "nowrap" }}>
+          <div style={{ display: "inline-flex", gap: "52px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px", letterSpacing: ".26em", textTransform: "uppercase", color: "#cabfa5", animation: "mrDrift 32s linear infinite" }}>
+            <span>{t("Voz en vivo · Violín eléctrico · Afro House · Repertorio personalizado · Colaboraciones con DJs · Banda en vivo · Alas LED · Experiencias personalizadas · ", "Live vocals · Electric violin · Afro House · Custom repertoire · DJ collaborations · Full band · LED wings · Custom experiences · ")}</span>
+            <span>{t("Voz en vivo · Violín eléctrico · Afro House · Repertorio personalizado · Colaboraciones con DJs · Banda en vivo · Alas LED · Experiencias personalizadas · ", "Live vocals · Electric violin · Afro House · Custom repertoire · DJ collaborations · Full band · LED wings · Custom experiences · ")}</span>
           </div>
         </div>
       </section>
@@ -1043,6 +1026,51 @@ export default function Home() {
               <a href={waNotify} target="_blank" style={{ textDecoration: "none", fontSize: "13px", fontWeight: 600, letterSpacing: ".08em", color: "#ecd9ac", borderBottom: "1px solid rgba(212,180,122,.5)", paddingBottom: "3px", display: "inline-flex", alignItems: "center", gap: "5px" }}>{t("Avísame cuando salga", "Notify me when it drops")}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ecd9ac" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7V16" /></svg></a>
             </div>
             <audio ref={audioRef} src={U + "audio_preview-1784054734635.mp3"} preload="none" onTimeUpdate={(e) => { const a = e.currentTarget; const cur = a.currentTime; setProg(Math.min(cur / PREVIEW_SECONDS, 1)); if (cur >= PREVIEW_SECONDS) { a.pause(); a.currentTime = 0; setPlaying(false); setProg(0); } }} onEnded={() => { setPlaying(false); setProg(0); }} style={{ display: "none" }} />
+          </div>
+        </div>
+      </section>
+
+      {/* LOGROS */}
+      <section style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(32px, 4.8vw, 58px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "800px", textWrap: "pretty" })}>
+            {isEn ? (<>Born in Medellín. <em style={{ color: "#e8cf9e" }}>Heard beyond borders.</em></>) : (<>Nacida en Medellín. <em style={{ color: "#e8cf9e" }}>Escuchada más allá de las fronteras.</em></>)}
+          </h2>
+          <div style={{ marginTop: "clamp(36px, 5vw, 56px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "14px", alignItems: "stretch" }}>
+            <div style={{ gridColumn: "span 1", display: "flex", flexDirection: "column", gap: "14px" }}>
+              <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(26px, 3.6vw, 42px)", background: "radial-gradient(ellipse 100% 90% at 0% 0%, rgba(138,106,63,.18), transparent 65%), #0a0908", flex: "1 1 auto" }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(72px, 9vw, 120px)", lineHeight: 0.9, color: "#f1e2ba" }}>10+</div>
+                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Años en la música", "Years in music")}</div>
+                <p style={CSS({ margin: "16px 0 0", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5", textWrap: "pretty" })}>{t("Creando, interpretando y transformando escenarios — desde la Red de Escuelas de Música de Medellín.", "Creating, performing and transforming stages — from Medellín's Network of Music Schools.")}</p>
+              </div>
+              <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908" }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Escenarios del mundo", "Stages of the world")}</div>
+                <div style={{ marginTop: "14px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.55, color: "#f2ecdf" }}>Colombia · {t("Estados Unidos", "United States")} · Francia · Guatemala · España</div>
+                <p style={{ margin: "12px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>{t("Incluyendo temporadas de entretenimiento en cruceros internacionales.", "Including international cruise-ship entertainment seasons.")}</p>
+              </div>
+            </div>
+            <div style={{ position: "relative", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.24)", minHeight: "420px" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={F + "IMG_2501.jpg"} alt="Meli Rox — violín eléctrico en festival" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 25%", filter: "saturate(.95) brightness(.85)" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 45%, rgba(10,9,8,.9))" }} />
+              <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>Festival</div>
+                <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(24px, 2.8vw, 32px)", color: "#f7f1e0", lineHeight: 1.2 }}>{t("En vivo en La Solar y el Medellín Music Lab.", "Live at La Solar and Medellín Music Lab.")}</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <div style={{ border: "1px solid rgba(232,207,158,.4)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "linear-gradient(160deg, rgba(212,164,90,.16), rgba(10,9,8,0) 55%), #0a0908" }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>Radio</div>
+                <div style={{ marginTop: "12px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(26px, 3vw, 36px)", lineHeight: 1.1, color: "#f1e2ba" }}>#1 <span style={{ fontSize: ".62em", fontStyle: "italic" }}>en La X 103.9</span></div>
+                <p style={{ margin: "10px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>&quot;Paradise 42&quot; — Mak Negron ft. Meli Rox.</p>
+              </div>
+              <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908", flex: "1 1 auto" }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("En televisión", "On television")}</div>
+                <div style={{ margin: "12px 0 16px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.3, color: "#f2ecdf" }}>{t("Escúchala en vivo en televisión nacional.", "Watch her live on national television.")}</div>
+                <YouTubeEmbed id="qIS-ePBF3ok" title="Meli Rox en vivo — Las Tres Gracias TV" />
+                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

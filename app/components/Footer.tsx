@@ -52,7 +52,7 @@ export default function Footer({ en = false }: { en?: boolean }) {
           <div style={{ flex: "1 1 300px", maxWidth: "440px" }}>
             <Link href="/" style={{ display: "inline-block" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/meli-rox-logo-clean-print-transparent.png" alt="Meli Rox" style={{ height: "84px", width: "auto", margin: "-20px 0 -14px -14px" }} />
+              <img src="/uploads/meli-rox-logo-clean-print-transparent.png" alt="Meli Rox" loading="lazy" style={{ height: "84px", width: "auto", margin: "-20px 0 -14px -14px" }} />
             </Link>
             <p style={{ margin: "4px 0 22px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(19px, 2.4vw, 24px)", lineHeight: 1.4, color: "#cdbf9f" }}>
               {t("Voz, violín eléctrico y energía que transforma cualquier evento.", "Voice, electric violin and energy that transforms any event.")}
