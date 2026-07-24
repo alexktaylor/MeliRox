@@ -439,6 +439,9 @@ export default function Home() {
   useEffect(() => {
     const v = heroVideoRef.current;
     if (!v) return;
+    // Mobile (slow connections): keep the static poster only — never download the
+    // hero video. This is the biggest LCP/payload win. Desktop plays the video.
+    if (window.innerWidth < 760) return;
     v.muted = true;
     v.play().catch(() => {});
     const io = new IntersectionObserver(
@@ -765,7 +768,7 @@ export default function Home() {
       {/* HERO */}
       <header id="inicio" className="hero-fold" style={{ position: "relative", display: "flex", alignItems: isMobile ? "flex-end" : "center", overflow: "hidden", background: "#080706" }}>
         <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <video ref={heroVideoRef} src="/Vids/bg/hero.mp4" poster="/Vids/hero-poster.jpg" autoPlay muted loop playsInline preload="metadata" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
+          <video ref={heroVideoRef} src="/Vids/bg/hero.mp4" poster="/Vids/hero-poster.jpg" muted loop playsInline preload="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "50% 30%" : "68% 30%", filter: "saturate(.94) brightness(.9) contrast(1.03)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(8,7,6,.92) 0%, rgba(8,7,6,.68) 34%, rgba(8,7,6,.12) 62%, rgba(8,7,6,.42) 100%)" }} />
           <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: isMobile ? "68%" : "34%", background: isMobile ? "linear-gradient(180deg, transparent 0%, rgba(8,7,6,.28) 34%, rgba(8,7,6,.62) 58%, rgba(8,7,6,.88) 80%, rgba(8,7,6,.97) 100%)" : "linear-gradient(180deg, transparent, rgba(8,7,6,.9))" }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 45% 45% at 22% 62%, rgba(212,164,90,.1), transparent 70%)" }} />
