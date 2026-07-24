@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const IG_POSTS: string[] = [
   "https://www.instagram.com/p/DaQ9Q-NJ0E1/",
@@ -20,13 +20,34 @@ const embedSrc = (permalink: string) =>
 
 export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] }) {
   const [vw, setVw] = useState(1200);
+  const [show, setShow] = useState(false); // lazy-mount the iframes only when scrolled near
   const [loaded, setLoaded] = useState<boolean[]>(() => urls.map(() => false));
+  const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setVw(window.innerWidth);
     const onR = () => setVw(window.innerWidth);
     window.addEventListener("resize", onR);
     return () => window.removeEventListener("resize", onR);
+  }, []);
+
+  // Only inject the Instagram iframes when the section approaches the viewport.
+  // Keeping them out of the initial DOM stops them blocking the page load event
+  // and hogging the browser's connection pool (which was starving other media).
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShow(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "500px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const isMobile = vw < 760;
@@ -43,27 +64,29 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
     setLoaded((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))));
 
   return (
-    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: isMobile ? "x mandatory" : "none", padding: "2px 0 14px", scrollbarWidth: "thin", scrollbarColor: "rgba(212,180,122,.4) transparent" }}>
+    <div ref={wrapRef} style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: isMobile ? "x mandatory" : "none", padding: "2px 0 14px", scrollbarWidth: "thin", scrollbarColor: "rgba(212,180,122,.4) transparent" }}>
       <div style={{ display: "flex", gap: gap + "px", width: "max-content", margin: isMobile ? 0 : "0 auto", alignItems: "flex-start", justifyContent: isMobile ? "flex-start" : "center" }}>
         {urls.map((u, i) => (
           <div key={u} style={{ position: "relative", flex: "0 0 auto", width: itemW + "px", height: itemH + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
-            {!loaded[i] && (
+            {(!show || !loaded[i]) && (
               <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", background: "#0e0c09", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", pointerEvents: "none" }}>
                 <div style={{ width: "26px", height: "26px", borderRadius: "50%", border: "2px solid rgba(212,180,122,.25)", borderTopColor: "#ecd9ac", animation: "ig-spin 0.8s linear infinite" }} />
                 <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".24em", textTransform: "uppercase", color: "#8a7d63" }}>Instagram</div>
               </div>
             )}
-            <div style={{ position: "absolute", inset: 0, width: IG_NATURAL_W + "px", height: IG_VISIBLE_H + "px", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", background: "#0e0c09", transform: `scale(${scale})`, transformOrigin: "top left" }}>
-              <iframe
-                src={embedSrc(u)}
-                title="Instagram"
-                loading="lazy"
-                scrolling="no"
-                allowTransparency
-                onLoad={() => markLoaded(i)}
-                style={{ display: "block", width: IG_NATURAL_W + "px", height: IG_IFRAME_H + "px", border: 0, background: "#0a0908" }}
-              />
-            </div>
+            {show && (
+              <div style={{ position: "absolute", inset: 0, width: IG_NATURAL_W + "px", height: IG_VISIBLE_H + "px", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", background: "#0e0c09", transform: `scale(${scale})`, transformOrigin: "top left" }}>
+                <iframe
+                  src={embedSrc(u)}
+                  title="Instagram"
+                  loading="lazy"
+                  scrolling="no"
+                  allowTransparency
+                  onLoad={() => markLoaded(i)}
+                  style={{ display: "block", width: IG_NATURAL_W + "px", height: IG_IFRAME_H + "px", border: 0, background: "#0a0908" }}
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>
