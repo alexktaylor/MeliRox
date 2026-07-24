@@ -43,7 +43,7 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: "0 0 auto" }}>
-          <Link href="/" className="svc-nav-home" style={{ textDecoration: "none", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#ecd9ac", border: "1px solid rgba(212,180,122,.4)", borderRadius: "999px", padding: "10px 15px", whiteSpace: "nowrap" }}>Inicio</Link>
+          <Link href="/" className="svc-nav-home" style={{ textDecoration: "none", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#ecd9ac", border: "1px solid rgba(212,180,122,.4)", borderRadius: "999px", padding: "10px 15px", whiteSpace: "nowrap" }}>Inicio</Link>
           <a href={waHref} target="_blank" className="svc-nav-cta" style={{ textDecoration: "none", fontSize: "12.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "11px 20px", borderRadius: "999px", whiteSpace: "nowrap" }}>{cta}</a>
           <button onClick={() => setOpen((v) => !v)} aria-label="Menú" className="svc-nav-burger" style={{ alignItems: "center", justifyContent: "center", width: "44px", height: "44px", background: "none", border: "1px solid rgba(212,180,122,.4)", borderRadius: "50%", color: "#ecd9ac", fontSize: "16px", cursor: "pointer" }}>{open ? "✕" : "☰"}</button>
         </div>
@@ -52,11 +52,11 @@ export default function SiteNav({ cta, waHref }: { cta: string; waHref: string }
       {open && (
         <div style={{ position: "fixed", inset: 0, zIndex: 45, background: "rgba(8,7,6,.97)", backdropFilter: "blur(10px)", padding: "110px clamp(24px, 8vw, 48px) 40px", display: "flex", flexDirection: "column", gap: "6px", overflowY: "auto" }}>
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} onClick={() => setOpen(false)} style={{ textDecoration: "none", fontFamily: "'Cormorant Garamond', serif", fontSize: "34px", color: "#f4edda", padding: "10px 0", borderBottom: "1px solid rgba(212,180,122,.14)" }}>{n.label}</Link>
+            <Link key={n.href} href={n.href} onClick={() => setOpen(false)} style={{ textDecoration: "none", fontFamily: "var(--font-cormorant), serif", fontSize: "34px", color: "#f4edda", padding: "10px 0", borderBottom: "1px solid rgba(212,180,122,.14)" }}>{n.label}</Link>
           ))}
-          <div style={{ margin: "16px 0 2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>Eventos</div>
+          <div style={{ margin: "16px 0 2px", fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>Eventos</div>
           {SERVICE_LINKS.map((s) => (
-            <Link key={s.href} href={s.href} onClick={() => setOpen(false)} style={{ textDecoration: "none", fontFamily: "'Cormorant Garamond', serif", fontSize: "26px", color: "#d9ccae", padding: "8px 0", borderBottom: "1px solid rgba(212,180,122,.1)" }}>{s.es}</Link>
+            <Link key={s.href} href={s.href} onClick={() => setOpen(false)} style={{ textDecoration: "none", fontFamily: "var(--font-cormorant), serif", fontSize: "26px", color: "#d9ccae", padding: "8px 0", borderBottom: "1px solid rgba(212,180,122,.1)" }}>{s.es}</Link>
           ))}
           <a href={waHref} target="_blank" onClick={() => setOpen(false)} style={{ marginTop: "26px", textAlign: "center", textDecoration: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "17px 28px", borderRadius: "999px" }}>{cta}</a>
         </div>

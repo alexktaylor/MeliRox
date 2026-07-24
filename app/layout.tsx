@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Cormorant_Garamond, Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import LeadTracker from "./components/LeadTracker";
+
+// Self-hosted fonts: non-render-blocking + size-matched fallbacks (no layout shift)
+const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600"], style: ["normal", "italic"], variable: "--font-cormorant", display: "swap" });
+const manrope = Manrope({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700"], variable: "--font-manrope", display: "swap" });
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
 
 const GA_ID = "G-Q6SCNZTWTZ";
 
@@ -144,14 +150,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${cormorant.variable} ${manrope.variable} ${mono.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
         {/* Speed up Instagram embeds */}
         <link rel="preconnect" href="https://www.instagram.com" />
         <link rel="dns-prefetch" href="https://www.instagram.com" />
@@ -159,21 +159,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://scontent.cdninstagram.com" />
         {/* LCP: paint the hero poster instantly instead of waiting on the video */}
         <link rel="preload" as="image" href="/Vids/hero-poster.jpg" fetchPriority="high" />
-        {/* Fonts loaded non-render-blocking (media=print → swapped to all once loaded) */}
-        <link
-          id="gfonts"
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Manrope:wght@200;300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-          media="print"
-        />
-        <script dangerouslySetInnerHTML={{ __html: "var g=document.getElementById('gfonts');if(g){g.media='all';}" }} />
-        <noscript>
-          {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-          <link
-            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Manrope:wght@200;300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-            rel="stylesheet"
-          />
-        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

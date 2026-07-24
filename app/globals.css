@@ -4,7 +4,7 @@ body {
   margin: 0;
   background: #0b0a08;
   color: #f2ecdf;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-manrope), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 .hero-fold { min-height: 100vh; min-height: 100svh; }

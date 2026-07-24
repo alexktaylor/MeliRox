@@ -24,7 +24,7 @@ const ALL_VIDEOS: { videoSrc: string; poster: string; alt: string }[] = [
 const SITE = "https://melirox.com";
 export const F = "/uploads/drive-download-20260714T181149Z-1-001/";
 const GOLD = "linear-gradient(135deg, #ecd9ac, #b98f4e)";
-const serif = "'Cormorant Garamond', serif";
+const serif = "var(--font-cormorant), serif";
 
 const wa = (msg: string) => "https://wa.me/573045502154?text=" + encodeURIComponent(msg);
 
@@ -121,7 +121,7 @@ export function buildJsonLd(cfg: ServiceConfig) {
 
 export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
   const WA = wa(cfg.waMsg);
-  const eyebrow: React.CSSProperties = { fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" };
+  const eyebrow: React.CSSProperties = { fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" };
 
   // Media carousel: this page's video first, then the rest, then the page photos
   const pageVideo = ALL_VIDEOS.find((v) => v.videoSrc === cfg.video);
@@ -166,7 +166,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
           {cfg.stats.map((s) => (
             <div key={s.l} style={{ textAlign: "center" }}>
               <div style={{ fontFamily: serif, fontWeight: 300, fontSize: "clamp(36px, 4.6vw, 56px)", lineHeight: 1.05, color: "#f1e2ba" }}>{s.n}</div>
-              <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "#a99a7c" }}>{s.l}</div>
+              <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "#a99a7c" }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -228,7 +228,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
                   <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "22px" }}>
                     <div style={{ fontFamily: serif, fontSize: "clamp(24px, 3vw, 30px)", color: "#f7f1e0", lineHeight: 1.1 }}>{s.label}</div>
                     <div style={{ margin: "6px 0 12px", fontWeight: 300, fontSize: "14.5px", lineHeight: 1.5, color: "#cabfa5" }}>{s.sub}</div>
-                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#ecd9ac" }}>Ver más →</div>
+                    <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#ecd9ac" }}>Ver más →</div>
                   </div>
                 </Link>
               ))}
@@ -248,10 +248,10 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
                 <div key={p.n} style={{ border: "1px solid rgba(212,180,122,.22)", borderRadius: "6px", padding: "clamp(26px, 3.4vw, 38px)", background: "radial-gradient(ellipse 100% 80% at 0% 0%, rgba(138,106,63,.15), transparent 60%), #0a0908", display: "flex", flexDirection: "column" }}>
                   <div style={{ fontFamily: serif, fontWeight: 300, fontSize: "clamp(46px, 6vw, 68px)", lineHeight: 1, color: "#f1e2ba" }}>{p.n}</div>
                   <div style={{ marginTop: "16px", fontFamily: serif, fontStyle: "italic", fontSize: "clamp(22px, 2.6vw, 28px)", color: "#f4edda" }}>{p.title}</div>
-                  <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c", lineHeight: 1.6 }}>{p.format}</div>
+                  <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c", lineHeight: 1.6 }}>{p.format}</div>
                   <div style={{ marginTop: "18px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
                     {p.details.map((d) => (
-                      <span key={d} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".1em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px" }}>{d}</span>
+                      <span key={d} style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".1em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px" }}>{d}</span>
                     ))}
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
           <div style={eyebrow}>Míralo en vivo</div>
           <h2 style={{ margin: "12px 0 clamp(24px, 3.4vw, 40px)", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>{cfg.galleryTitle}</h2>
           <MediaCarousel items={mediaItems} />
-          <p style={{ margin: "4px 0 0", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Desliza · toca para reproducir</p>
+          <p style={{ margin: "4px 0 0", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>Desliza · toca para reproducir</p>
         </div>
       </section>
 
@@ -288,7 +288,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
           <h2 style={{ margin: "12px 0 8px", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>Vista en televisión nacional.</h2>
           <p style={{ margin: "0 auto clamp(26px, 3.4vw, 38px)", maxWidth: "560px", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5" }}>#1 en La X 103.9 · La Solar · Medellín Music Lab · Reconocimiento Premios Estela.</p>
           <YouTubeEmbed id="qIS-ePBF3ok" title="Meli Rox en vivo — Las Tres Gracias TV" />
-          <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
+          <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
         </div>
       </section>
 

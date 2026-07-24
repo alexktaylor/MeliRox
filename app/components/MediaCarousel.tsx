@@ -26,7 +26,7 @@ export default function MediaCarousel({ items }: { items: MediaItem[] }) {
                   </div>
                 </div>
               )}
-              <figcaption style={{ position: "absolute", left: "12px", bottom: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "#eee3c2", textShadow: "0 1px 8px rgba(0,0,0,.9)", pointerEvents: "none" }}>{m.alt}</figcaption>
+              <figcaption style={{ position: "absolute", left: "12px", bottom: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "#eee3c2", textShadow: "0 1px 8px rgba(0,0,0,.9)", pointerEvents: "none" }}>{m.alt}</figcaption>
             </figure>
           ))}
         </div>

@@ -22,11 +22,11 @@ export default function WeddingRepertoire({ songs }: { songs: Song[] }) {
     setPlaying(i);
   };
 
-  const serif = "'Cormorant Garamond', serif";
+  const serif = "var(--font-cormorant), serif";
 
   return (
     <div>
-      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>Repertorio · Ceremonia</div>
+      <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>Repertorio · Ceremonia</div>
       <h2 style={{ margin: "12px 0 0", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 48px)", color: "#f4edda", lineHeight: 1.12 }}>Escucha la lista de bodas.</h2>
       <p style={{ margin: "14px 0 clamp(24px, 3vw, 32px)", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5", maxWidth: "460px" }}>
         Toca cualquier canción para escuchar un adelanto. El repertorio es 100% personalizable para tu boda.
@@ -44,7 +44,7 @@ export default function WeddingRepertoire({ songs }: { songs: Song[] }) {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ marginLeft: "2px" }}><path d="M8 5v14l11-7z" /></svg>
                 )}
               </span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", color: "#8a7d63", width: "22px", flex: "0 0 auto" }}>{String(i + 1).padStart(2, "0")}</span>
+              <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", color: "#8a7d63", width: "22px", flex: "0 0 auto" }}>{String(i + 1).padStart(2, "0")}</span>
               <span style={{ flex: "1 1 auto", minWidth: 0 }}>
                 <span style={{ display: "block", fontFamily: serif, fontSize: "clamp(18px, 2.2vw, 22px)", color: active ? "#f7f1e0" : "#f2ecdf", lineHeight: 1.2 }}>{s.title}</span>
                 <span style={{ display: "block", marginTop: "2px", fontSize: "12.5px", fontWeight: 500, letterSpacing: ".04em", color: "#a99a7c" }}>{s.artist}</span>
@@ -54,7 +54,7 @@ export default function WeddingRepertoire({ songs }: { songs: Song[] }) {
         })}
       </div>
 
-      <p style={{ margin: "16px 0 0", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".18em", textTransform: "uppercase", color: "#8a7d63" }}>Adelantos de 30s · Canciones originales de referencia</p>
+      <p style={{ margin: "16px 0 0", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".18em", textTransform: "uppercase", color: "#8a7d63" }}>Adelantos de 30s · Canciones originales de referencia</p>
       <audio ref={audioRef} onEnded={() => setPlaying(-1)} style={{ display: "none" }} />
     </div>
   );

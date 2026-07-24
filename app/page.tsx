@@ -77,7 +77,7 @@ function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onA
     <>
       <video ref={ref} src={active ? src : bgSrc} poster={poster} playsInline preload="none" loop={!active} controls={active} onClick={activate} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: pos, filter: "saturate(.95) brightness(.9)", cursor: active ? "default" : "pointer" }} />
       {!active && (
-        <div onClick={activate} style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "8px", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", border: "1px solid rgba(232,207,158,.55)", borderRadius: "999px", padding: "9px 14px", color: "#ecd9ac", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer", zIndex: 3 }}>
+        <div onClick={activate} style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "8px", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", border: "1px solid rgba(232,207,158,.55)", borderRadius: "999px", padding: "9px 14px", color: "#ecd9ac", fontFamily: "var(--font-mono), monospace", fontSize: "10px", letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer", zIndex: 3 }}>
           <svg width={13} height={13} viewBox="0 0 24 24" fill="#ecd9ac" aria-hidden="true"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z" /></svg>
           <span>Toca para escuchar</span>
         </div>
@@ -657,7 +657,7 @@ export default function Home() {
   };
   const mobileLink: CSSProperties = {
     textDecoration: "none",
-    fontFamily: "'Cormorant Garamond', serif",
+    fontFamily: "var(--font-cormorant), serif",
     fontSize: "34px",
     color: "#f4edda",
     padding: "10px 0",
@@ -665,7 +665,7 @@ export default function Home() {
   };
 
   const langToggle = (
-    <div style={{ display: "flex", gap: "2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".08em", flex: "0 0 auto" }}>
+    <div style={{ display: "flex", gap: "2px", fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".08em", flex: "0 0 auto" }}>
       <button onClick={() => chooseLang("es")} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 8px", color: isEn ? "#a99a7c" : "#ecd9ac", borderBottom: "1px solid " + (isEn ? "transparent" : "#d4b47a") }}>ES</button>
       <button onClick={() => chooseLang("en")} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 8px", color: isEn ? "#ecd9ac" : "#a99a7c", borderBottom: "1px solid " + (isEn ? "#d4b47a" : "transparent") }}>EN</button>
     </div>
@@ -757,9 +757,9 @@ export default function Home() {
           <a href="#musica" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Música", "Music")}</a>
           <a href="#historia" onClick={() => setMenuOpen(false)} style={mobileLink}>Meli Rox</a>
           <a href="#galeria" onClick={() => setMenuOpen(false)} style={mobileLink}>{t("Galería", "Gallery")}</a>
-          <div style={{ margin: "14px 0 2px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>{t("Eventos", "Events")}</div>
+          <div style={{ margin: "14px 0 2px", fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63" }}>{t("Eventos", "Events")}</div>
           {SERVICE_LINKS.map((s) => (
-            <Link key={s.href} href={s.href} onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", color: "#d9ccae", padding: "8px 0", borderBottom: "1px solid rgba(212,180,122,.1)" }}>{t(s.es, s.en)}</Link>
+            <Link key={s.href} href={s.href} onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", fontFamily: "var(--font-cormorant), serif", fontSize: "24px", color: "#d9ccae", padding: "8px 0", borderBottom: "1px solid rgba(212,180,122,.1)" }}>{t(s.es, s.en)}</Link>
           ))}
           <a href={waMain} target="_blank" onClick={() => setMenuOpen(false)} style={{ marginTop: "26px", textAlign: "center", textDecoration: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "17px 28px", borderRadius: "999px" }}>{t("Cotiza tu experiencia", "Book Meli Rox")}</a>
         </div>
@@ -785,10 +785,10 @@ export default function Home() {
                 <img src={U + "meli-rox-logo-clean-print-transparent.png"} alt="Meli Rox" fetchPriority="high" style={{ display: "block", width: "135.9%", height: "auto", margin: "-21.5% 0 -28.6% -15.8%", maxWidth: "none" }} />
               </div>
             )}
-            <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: ".32em", textTransform: "uppercase", color: "#e3d5b0" }}>
+            <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: ".32em", textTransform: "uppercase", color: "#e3d5b0" }}>
               {t("Cantautora · Violinista · Artista en vivo", "Singer-songwriter · Violinist · Live artist")}
             </div>
-            <p style={CSS({ margin: "20px 0 0", maxWidth: "480px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(21px, 2.8vw, 30px)", lineHeight: 1.35, color: "#f3ead6", textWrap: "balance" })}>
+            <p style={CSS({ margin: "20px 0 0", maxWidth: "480px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(21px, 2.8vw, 30px)", lineHeight: 1.35, color: "#f3ead6", textWrap: "balance" })}>
               {t("Donde la elegancia clásica se encuentra con la energía moderna.", "Where classical elegance meets modern energy.")}
             </p>
             <div style={{ marginTop: "32px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -802,7 +802,7 @@ export default function Home() {
       {/* STATEMENT */}
       <section style={{ position: "relative", padding: "clamp(46px, 9vw, 130px) clamp(20px, 5vw, 48px)", textAlign: "center", background: "linear-gradient(180deg, #0b0a08, #14100a 55%, #0b0a08)" }}>
         <div style={{ maxWidth: "880px", margin: "0 auto" }}>
-          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(36px, 6vw, 68px)", lineHeight: 1.1, color: "#f4edda", textWrap: "pretty" })}>
+          <h2 style={CSS({ margin: 0, fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(36px, 6vw, 68px)", lineHeight: 1.1, color: "#f4edda", textWrap: "pretty" })}>
             {isEn ? (<>Not just a singer.<br />Not just a violinist.</>) : (<>No es solo una cantante.<br />No es solo una violinista.</>)}
           </h2>
           <div style={{ width: "56px", height: "1px", background: "linear-gradient(90deg, transparent, #d4b47a, transparent)", margin: "30px auto" }} />
@@ -817,15 +817,15 @@ export default function Home() {
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "20px", marginBottom: "20px" }}>
             <div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(34px, 5vw, 60px)", fontWeight: 400, lineHeight: 1, color: mix <= 50 ? "#ecd9ac" : "#7d7159", transition: "color .4s" }}>Meli</div>
-              <div style={{ marginTop: "8px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Cálida · Íntima · Emocional", "Warm · Intimate · Emotional")}</div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(34px, 5vw, 60px)", fontWeight: 400, lineHeight: 1, color: mix <= 50 ? "#ecd9ac" : "#7d7159", transition: "color .4s" }}>Meli</div>
+              <div style={{ marginTop: "8px", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Cálida · Íntima · Emocional", "Warm · Intimate · Emotional")}</div>
             </div>
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".26em", textTransform: "uppercase", color: "#a99a7c", textAlign: "center", paddingBottom: "10px" }}>
+            <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".26em", textTransform: "uppercase", color: "#a99a7c", textAlign: "center", paddingBottom: "10px" }}>
               {t("← Desliza la cuerda →", "← Slide the string →")}
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(34px, 5vw, 60px)", fontWeight: 400, fontStyle: "italic", lineHeight: 1, color: mix > 50 ? "#ecd9ac" : "#7d7159", transition: "color .4s" }}>Rox</div>
-              <div style={{ marginTop: "8px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Eléctrica · Audaz · Imparable", "Electric · Fearless · Unstoppable")}</div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(34px, 5vw, 60px)", fontWeight: 400, fontStyle: "italic", lineHeight: 1, color: mix > 50 ? "#ecd9ac" : "#7d7159", transition: "color .4s" }}>Rox</div>
+              <div style={{ marginTop: "8px", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Eléctrica · Audaz · Imparable", "Electric · Fearless · Unstoppable")}</div>
             </div>
           </div>
           <div style={{ position: "relative", height: "clamp(400px, 64vh, 660px)", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(212,180,122,.18)" }}>
@@ -837,7 +837,7 @@ export default function Home() {
             </div>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(11,10,8,.55), transparent 40%)", pointerEvents: "none" }} />
             <div style={{ position: "absolute", left: 0, right: 0, bottom: "20px", textAlign: "center", pointerEvents: "none" }}>
-              <div style={{ display: "inline-block", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 27px)", color: "#f6efdd", textShadow: "0 1px 14px rgba(0,0,0,.85)", background: "rgba(8,7,6,.35)", backdropFilter: "blur(4px)", padding: "10px 22px", borderRadius: "999px" }}>{mixCaption}</div>
+              <div style={{ display: "inline-block", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 27px)", color: "#f6efdd", textShadow: "0 1px 14px rgba(0,0,0,.85)", background: "rgba(8,7,6,.35)", backdropFilter: "blur(4px)", padding: "10px 22px", borderRadius: "999px" }}>{mixCaption}</div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "24px" }}>
@@ -845,7 +845,7 @@ export default function Home() {
             <input type="range" className="mrmix" min={0} max={100} value={mix} onChange={(e) => setMix(+e.target.value)} onMouseUp={() => setMix(mix < 50 ? 0 : 100)} onTouchEnd={() => setMix(mix < 50 ? 0 : 100)} aria-label="Meli a Rox" style={{ display: "block", flex: "1 1 auto", cursor: "ew-resize", minWidth: "120px" }} />
             <button onClick={() => setMix(100)} style={{ cursor: "pointer", fontSize: "13.5px", fontWeight: 600, fontStyle: "italic", letterSpacing: ".08em", padding: "13px 26px", borderRadius: "999px", background: mix >= 50 ? GOLD : "transparent", color: mix >= 50 ? "#171208" : "#ddd2b8", border: "1px solid " + (mix >= 50 ? "transparent" : "rgba(212,180,122,.35)"), transition: "all .3s", minHeight: "44px" }}>Rox</button>
           </div>
-          <p style={{ margin: "clamp(40px, 6vw, 60px) auto 0", textAlign: "center", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(30px, 4.6vw, 54px)", lineHeight: 1.2, color: "#f4edda" }}>
+          <p style={{ margin: "clamp(40px, 6vw, 60px) auto 0", textAlign: "center", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(30px, 4.6vw, 54px)", lineHeight: 1.2, color: "#f4edda" }}>
             {isEn ? (<>Meli is the artist.<br /><em style={{ color: "#e8cf9e" }}>Rox is the courage.</em></>) : (<>Meli es la artista.<br /><em style={{ color: "#e8cf9e" }}>Rox es el coraje.</em></>)}
           </p>
         </div>
@@ -854,8 +854,8 @@ export default function Home() {
       {/* EXPERIENCIAS */}
       <section id="experiencias" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: activeCat.tone, transition: "background 1s" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Experiencias", "Experiences")}</div>
-          <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "760px", textWrap: "pretty" })}>{t("Cada ocasión merece su propia energía.", "Every occasion deserves its own energy.")}</h2>
+          <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Experiencias", "Experiences")}</div>
+          <h2 style={CSS({ margin: "12px 0 0", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "760px", textWrap: "pretty" })}>{t("Cada ocasión merece su propia energía.", "Every occasion deserves its own energy.")}</h2>
           <p style={CSS({ margin: "18px 0 0", maxWidth: "640px", fontWeight: 300, fontSize: "16.5px", lineHeight: 1.75, color: "#cabfa5", textWrap: "pretty" })}>{t("Desde momentos íntimos hasta grandes escenarios, cada presentación se diseña alrededor de la emoción, el espacio y las personas que la vivirán.", "From intimate moments to grand stages, every performance is designed around the emotion, the space and the people who will live it.")}</p>
           <div style={CSS({ marginTop: "clamp(30px, 4vw, 44px)", display: isMobile ? "grid" : "flex", gridTemplateColumns: isMobile ? "1fr 1fr" : undefined, gap: "10px", flexWrap: "wrap", paddingBottom: "4px" })}>
             {CATS.map((c, i) => {
@@ -875,21 +875,21 @@ export default function Home() {
               )}
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 55%, rgba(11,10,8,.75))", pointerEvents: "none" }} />
               {activeCat.vid && !activeCat.vidSrc && (
-                <div style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "9px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "8px 12px", borderRadius: "999px", pointerEvents: "none" }}>
+                <div style={{ position: "absolute", top: "14px", right: "14px", display: "flex", alignItems: "center", gap: "9px", fontFamily: "var(--font-mono), monospace", fontSize: "10.5px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "8px 12px", borderRadius: "999px", pointerEvents: "none" }}>
                   <PlayIcon size={11} color="#ecd9ac" /><span>Video · 00:15</span>
                 </div>
               )}
               {!vidSound && (
                 <div style={{ position: "absolute", left: "18px", bottom: "16px", right: "18px", display: "flex", gap: "10px", flexWrap: "wrap", pointerEvents: "none" }}>
                   {(isEn ? activeCat.chEn : activeCat.chEs).map((ch) => (
-                    <span key={ch} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px", backdropFilter: "blur(4px)" }}>{ch}</span>
+                    <span key={ch} style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(11,10,8,.6)", border: "1px solid rgba(212,180,122,.3)", padding: "7px 12px", borderRadius: "999px", backdropFilter: "blur(4px)" }}>{ch}</span>
                   ))}
                 </div>
               )}
             </div>
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(4px, 2vw, 16px) 0" }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(34px, 4.8vw, 56px)", lineHeight: 1.02, color: "#f4edda" }}>{t(activeCat.es, activeCat.en)}</div>
-              <div style={CSS({ marginTop: "16px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(19px, 2.2vw, 24px)", lineHeight: 1.4, color: "#e8cf9e", textWrap: "pretty" })}>{t(activeCat.tEs, activeCat.tEn)}</div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: "clamp(34px, 4.8vw, 56px)", lineHeight: 1.02, color: "#f4edda" }}>{t(activeCat.es, activeCat.en)}</div>
+              <div style={CSS({ marginTop: "16px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "clamp(19px, 2.2vw, 24px)", lineHeight: 1.4, color: "#e8cf9e", textWrap: "pretty" })}>{t(activeCat.tEs, activeCat.tEn)}</div>
               <div style={{ width: "44px", height: "1px", background: "#d4b47a", margin: "22px 0" }} />
               <p style={CSS({ margin: 0, fontWeight: 300, fontSize: "16.5px", lineHeight: 1.8, color: "#cabfa5", maxWidth: "480px", textWrap: "pretty" })}>{t(activeCat.cEs, activeCat.cEn)}</p>
               <div style={{ marginTop: "30px", display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
@@ -909,8 +909,8 @@ export default function Home() {
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,10,8,.5), transparent 30%, rgba(11,10,8,.96) 82%)" }} />
           <div style={{ position: "absolute", left: 0, right: 0, bottom: "clamp(30px, 6vw, 64px)", padding: "0 clamp(20px, 5vw, 48px)" }}>
             <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#e3d5b0", textShadow: "0 1px 10px rgba(0,0,0,.8)" }}>{t("En vivo", "Live")}</div>
-              <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(38px, 6.4vw, 78px)", lineHeight: 1.04, color: "#f9f4e4", maxWidth: "820px", textWrap: "pretty", textShadow: "0 2px 30px rgba(0,0,0,.85)" })}>
+              <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#e3d5b0", textShadow: "0 1px 10px rgba(0,0,0,.8)" }}>{t("En vivo", "Live")}</div>
+              <h2 style={CSS({ margin: "12px 0 0", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(38px, 6.4vw, 78px)", lineHeight: 1.04, color: "#f9f4e4", maxWidth: "820px", textWrap: "pretty", textShadow: "0 2px 30px rgba(0,0,0,.85)" })}>
                 {isEn ? (<>She doesn&apos;t perform the stage.<br /><em style={{ color: "#e8cf9e" }}>She transforms it.</em></>) : (<>No interpreta el escenario.<br /><em style={{ color: "#e8cf9e" }}>Lo transforma.</em></>)}
               </h2>
             </div>
@@ -933,17 +933,17 @@ export default function Home() {
             {!activeLive.vidSrc && (
               <>
                 <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: "86px", height: "86px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.75)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac", pointerEvents: "none" }}><PlayIcon size={28} color="#ecd9ac" /></div>
-                <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
+                <div style={{ position: "absolute", right: "16px", bottom: "18px", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", color: "#eee3c2", background: "rgba(8,7,6,.6)", backdropFilter: "blur(4px)", padding: "7px 11px", borderRadius: "3px" }}>00:18</div>
               </>
             )}
             <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px", pointerEvents: "none" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{activeLive.name}</div>
-              <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(22px, 3vw, 32px)", color: "#f7f1e0", lineHeight: 1.2, textShadow: "0 1px 12px rgba(0,0,0,.8)" }}>{activeLive.cap}</div>
+              <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{activeLive.name}</div>
+              <div style={{ marginTop: "8px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(22px, 3vw, 32px)", color: "#f7f1e0", lineHeight: 1.2, textShadow: "0 1px 12px rgba(0,0,0,.8)" }}>{activeLive.cap}</div>
             </div>
           </div>
         </div>
         <div style={{ overflow: "hidden", borderTop: "1px solid rgba(212,180,122,.14)", borderBottom: "1px solid rgba(212,180,122,.14)", padding: "20px 0", whiteSpace: "nowrap" }}>
-          <div style={{ display: "inline-flex", gap: "52px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px", letterSpacing: ".26em", textTransform: "uppercase", color: "#cabfa5", animation: "mrDrift 32s linear infinite" }}>
+          <div style={{ display: "inline-flex", gap: "52px", fontFamily: "var(--font-mono), monospace", fontSize: "13px", letterSpacing: ".26em", textTransform: "uppercase", color: "#cabfa5", animation: "mrDrift 32s linear infinite" }}>
             <span>{t("Voz en vivo · Violín eléctrico · Afro House · Repertorio personalizado · Colaboraciones con DJs · Banda en vivo · Alas LED · Experiencias personalizadas · ", "Live vocals · Electric violin · Afro House · Custom repertoire · DJ collaborations · Full band · LED wings · Custom experiences · ")}</span>
             <span>{t("Voz en vivo · Violín eléctrico · Afro House · Repertorio personalizado · Colaboraciones con DJs · Banda en vivo · Alas LED · Experiencias personalizadas · ", "Live vocals · Electric violin · Afro House · Custom repertoire · DJ collaborations · Full band · LED wings · Custom experiences · ")}</span>
           </div>
@@ -953,13 +953,13 @@ export default function Home() {
       {/* MUSICA */}
       <section id="musica" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(138,106,63,.14), transparent 60%), #0a0908", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Música original", "Original music")}</div>
-          <h2 style={CSS({ margin: "12px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda", maxWidth: "700px", lineHeight: 1.12, textWrap: "pretty" })}>{t("De las cuerdas a las frecuencias.", "From strings to frequencies.")}</h2>
+          <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Música original", "Original music")}</div>
+          <h2 style={CSS({ margin: "12px 0 0", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda", maxWidth: "700px", lineHeight: 1.12, textWrap: "pretty" })}>{t("De las cuerdas a las frecuencias.", "From strings to frequencies.")}</h2>
           <div style={{ marginTop: "clamp(36px, 5vw, 60px)", border: "1px solid rgba(212,180,122,.26)", borderRadius: "4px", overflow: "hidden", background: "#0e0c09", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}>
             <div style={{ padding: "clamp(28px, 4vw, 48px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Lanzamiento destacado", "Featured release")}</div>
-              <div style={{ marginTop: "20px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(40px, 5.6vw, 72px)", lineHeight: 0.95, color: "#f7f1e0" }}>#1 <span style={{ fontSize: ".5em", fontStyle: "italic", color: "#e8cf9e", letterSpacing: ".02em" }}>en La X 103.9</span></div>
-              <div style={{ marginTop: "22px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(30px, 3.6vw, 44px)", fontWeight: 400, color: "#f4edda", lineHeight: 1 }}>Paradise 42</div>
+              <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Lanzamiento destacado", "Featured release")}</div>
+              <div style={{ marginTop: "20px", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(40px, 5.6vw, 72px)", lineHeight: 0.95, color: "#f7f1e0" }}>#1 <span style={{ fontSize: ".5em", fontStyle: "italic", color: "#e8cf9e", letterSpacing: ".02em" }}>en La X 103.9</span></div>
+              <div style={{ marginTop: "22px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(30px, 3.6vw, 44px)", fontWeight: 400, color: "#f4edda", lineHeight: 1 }}>Paradise 42</div>
               <div style={{ marginTop: "10px", fontSize: "14px", fontWeight: 500, letterSpacing: ".1em", textTransform: "uppercase", color: "#b6aa8f" }}>Mak Negron ft. Meli Rox · Exceder Records</div>
               <p style={CSS({ margin: "18px 0 0", fontWeight: 300, fontSize: "16px", lineHeight: 1.75, color: "#cabfa5", maxWidth: "440px", textWrap: "pretty" })}>{t("La colaboración que llegó al primer lugar de Las 20 de La X Medellín — la frecuencia de Meli Rox sonando en toda la ciudad.", "The collaboration that reached #1 on Las 20 de La X Medellín — the Meli Rox frequency playing across the city.")}</p>
               <div style={{ marginTop: "26px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -974,7 +974,7 @@ export default function Home() {
               <figure style={{ margin: 0, position: "absolute", right: "18px", bottom: "18px", width: "min(190px, 42%)", border: "1px solid rgba(232,207,158,.5)", borderRadius: "3px", overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,.6)", cursor: "zoom-in" }} onClick={() => setLb({ src: U + "lax_proof-1784055218158.jpeg", alt: "Paradise 42 — Puesto #1, Las 20 de La X" })}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={U + "lax_proof-1784055218158.jpeg"} alt="Paradise 42 — Puesto #1, Las 20 de La X" style={{ display: "block", width: "100%", height: "auto" }} />
-                <figcaption style={{ padding: "8px 10px", background: "rgba(11,10,8,.92)", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#e3d5b0" }}>{t("Anuncio oficial · La X", "Official proof · La X")}</figcaption>
+                <figcaption style={{ padding: "8px 10px", background: "rgba(11,10,8,.92)", fontFamily: "var(--font-mono), monospace", fontSize: "10.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#e3d5b0" }}>{t("Anuncio oficial · La X", "Official proof · La X")}</figcaption>
               </figure>
             </div>
           </div>
@@ -984,10 +984,10 @@ export default function Home() {
               return (
                 <div key={r.id} style={{ borderTop: "1px solid rgba(212,180,122,.14)", background: open ? "rgba(212,180,122,.07)" : "transparent", transition: "background .5s" }}>
                   <button onClick={() => setOpenRel(open ? null : r.id)} style={{ display: "flex", alignItems: "baseline", gap: "clamp(14px, 3vw, 30px)", width: "100%", textAlign: "left", padding: "20px 10px", background: "none", border: "none", cursor: "pointer", color: "#f2ecdf" }}>
-                    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", color: "#a99a7c", width: "30px", flex: "0 0 auto" }}>{"0" + (i + 1)}</span>
-                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 3.6vw, 40px)", fontWeight: 400, lineHeight: 1.05, flex: "1 1 auto", color: "inherit" }}>{r.title}</span>
+                    <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", color: "#a99a7c", width: "30px", flex: "0 0 auto" }}>{"0" + (i + 1)}</span>
+                    <span style={{ fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(26px, 3.6vw, 40px)", fontWeight: 400, lineHeight: 1.05, flex: "1 1 auto", color: "inherit" }}>{r.title}</span>
                     <span style={{ fontSize: "12.5px", fontWeight: 500, letterSpacing: ".12em", textTransform: "uppercase", color: r.hi ? "#e8cf9e" : "#a99a7c", flex: "0 1 auto", textAlign: "right" }}>{isEn ? r.metaEn : r.metaEs}</span>
-                    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "15px", color: "#d4b47a", flex: "0 0 auto", transform: `rotate(${open ? 45 : 0}deg)`, transition: "transform .3s", display: "inline-block" }}>＋</span>
+                    <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: "15px", color: "#d4b47a", flex: "0 0 auto", transform: `rotate(${open ? 45 : 0}deg)`, transition: "transform .3s", display: "inline-block" }}>＋</span>
                   </button>
                   {open && (
                     <div style={{ padding: "0 10px 26px 56px", display: "flex", gap: "26px", alignItems: "center", flexWrap: "wrap" }}>
@@ -1012,8 +1012,8 @@ export default function Home() {
         <img src={F + "DVR_0523.jpg"} alt="Meli Rox — cantautora y violinista en sesión" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 24%", opacity: 0.5, filter: "sepia(.4) saturate(.7) brightness(.7)" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,7,.8), rgba(10,8,7,.35) 40%, rgba(10,8,7,.92))" }} />
         <div style={{ position: "relative", maxWidth: "780px", margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#d9c9a4", animation: "mrPulse 4s ease-in-out infinite" }}>{t("Más allá del escenario", "Beyond the stage")}</div>
-          <h2 style={CSS({ margin: "16px 0 0", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(36px, 5.6vw, 64px)", lineHeight: 1.1, color: "#f7f1e0", textWrap: "pretty", textShadow: "0 2px 24px rgba(0,0,0,.7)" })}>{t("El sonido original de Meli Rox.", "The original sound of Meli Rox.")}</h2>
+          <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#d9c9a4", animation: "mrPulse 4s ease-in-out infinite" }}>{t("Más allá del escenario", "Beyond the stage")}</div>
+          <h2 style={CSS({ margin: "16px 0 0", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(36px, 5.6vw, 64px)", lineHeight: 1.1, color: "#f7f1e0", textWrap: "pretty", textShadow: "0 2px 24px rgba(0,0,0,.7)" })}>{t("El sonido original de Meli Rox.", "The original sound of Meli Rox.")}</h2>
           <div style={{ margin: "clamp(36px, 5vw, 52px) auto 0", maxWidth: "600px", background: "rgba(10,8,7,.55)", border: "1px solid rgba(212,180,122,.28)", borderRadius: "6px", padding: "clamp(22px, 3.4vw, 34px)", backdropFilter: "blur(8px)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "22px" }}>
               <button onClick={toggleAudio} aria-label={playing ? "Pausar adelanto" : "Escuchar adelanto"} style={{ flex: "0 0 auto", width: "76px", height: "76px", borderRadius: "50%", cursor: "pointer", background: GOLD, border: "none", color: "#171208", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 36px rgba(232,207,158,.3)" }}>{playing ? <PauseIcon size={24} color="#171208" /> : <PlayIcon size={24} color="#171208" />}</button>
@@ -1026,15 +1026,15 @@ export default function Home() {
                 <div style={{ position: "relative", height: "2px", background: "rgba(212,180,122,.3)", marginTop: "12px", borderRadius: "2px" }}>
                   <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: Math.round(prog * 100) + "%", background: "#ecd9ac", boxShadow: "0 0 12px rgba(232,207,158,.9)", borderRadius: "2px" }} />
                 </div>
-                <div style={{ marginTop: "10px", display: "flex", justifyContent: "space-between", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", color: "#a99a7c" }}>
+                <div style={{ marginTop: "10px", display: "flex", justifyContent: "space-between", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".16em", color: "#a99a7c" }}>
                   <span>{t("Adelanto", "Preview")}</span>
                   <span>{progLabel}</span>
                 </div>
               </div>
             </div>
-            <div style={CSS({ marginTop: "24px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(19px, 2.4vw, 25px)", color: "#f3ead6", lineHeight: 1.5, textWrap: "pretty" })}>{t("Canciones, colaboraciones y una identidad que existe más allá del escenario.", "Songs, collaborations and an identity that exists beyond the stage.")}</div>
+            <div style={CSS({ marginTop: "24px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "clamp(19px, 2.4vw, 25px)", color: "#f3ead6", lineHeight: 1.5, textWrap: "pretty" })}>{t("Canciones, colaboraciones y una identidad que existe más allá del escenario.", "Songs, collaborations and an identity that exists beyond the stage.")}</div>
             <div style={{ marginTop: "18px", display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Nueva canción · muy pronto", "New song · coming soon")}</span>
+              <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Nueva canción · muy pronto", "New song · coming soon")}</span>
               <a href={waNotify} target="_blank" style={{ textDecoration: "none", fontSize: "13px", fontWeight: 600, letterSpacing: ".08em", color: "#ecd9ac", borderBottom: "1px solid rgba(212,180,122,.5)", paddingBottom: "3px", display: "inline-flex", alignItems: "center", gap: "5px" }}>{t("Avísame cuando salga", "Notify me when it drops")}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ecd9ac" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7V16" /></svg></a>
             </div>
             <audio ref={audioRef} src={U + "audio_preview-1784054734635.mp3"} preload="none" onTimeUpdate={(e) => { const a = e.currentTarget; const cur = a.currentTime; setProg(Math.min(cur / PREVIEW_SECONDS, 1)); if (cur >= PREVIEW_SECONDS) { a.pause(); a.currentTime = 0; setPlaying(false); setProg(0); } }} onEnded={() => { setPlaying(false); setProg(0); }} style={{ display: "none" }} />
@@ -1045,19 +1045,19 @@ export default function Home() {
       {/* LOGROS */}
       <section style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "#0d0b09", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(32px, 4.8vw, 58px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "800px", textWrap: "pretty" })}>
+          <h2 style={CSS({ margin: 0, fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(32px, 4.8vw, 58px)", lineHeight: 1.12, color: "#f4edda", maxWidth: "800px", textWrap: "pretty" })}>
             {isEn ? (<>Born in Medellín. <em style={{ color: "#e8cf9e" }}>Heard beyond borders.</em></>) : (<>Nacida en Medellín. <em style={{ color: "#e8cf9e" }}>Escuchada más allá de las fronteras.</em></>)}
           </h2>
           <div style={{ marginTop: "clamp(36px, 5vw, 56px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "14px", alignItems: "stretch" }}>
             <div style={{ gridColumn: "span 1", display: "flex", flexDirection: "column", gap: "14px" }}>
               <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(26px, 3.6vw, 42px)", background: "radial-gradient(ellipse 100% 90% at 0% 0%, rgba(138,106,63,.18), transparent 65%), #0a0908", flex: "1 1 auto" }}>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(72px, 9vw, 120px)", lineHeight: 0.9, color: "#f1e2ba" }}>10+</div>
-                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Años en la música", "Years in music")}</div>
+                <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(72px, 9vw, 120px)", lineHeight: 0.9, color: "#f1e2ba" }}>10+</div>
+                <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Años en la música", "Years in music")}</div>
                 <p style={CSS({ margin: "16px 0 0", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5", textWrap: "pretty" })}>{t("Creando, interpretando y transformando escenarios — desde la Red de Escuelas de Música de Medellín.", "Creating, performing and transforming stages — from Medellín's Network of Music Schools.")}</p>
               </div>
               <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Escenarios del mundo", "Stages of the world")}</div>
-                <div style={{ marginTop: "14px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.55, color: "#f2ecdf" }}>Colombia · {t("Estados Unidos", "United States")} · Francia · Guatemala · España</div>
+                <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Escenarios del mundo", "Stages of the world")}</div>
+                <div style={{ marginTop: "14px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.55, color: "#f2ecdf" }}>Colombia · {t("Estados Unidos", "United States")} · Francia · Guatemala · España</div>
                 <p style={{ margin: "12px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>{t("Incluyendo temporadas de entretenimiento en cruceros internacionales.", "Including international cruise-ship entertainment seasons.")}</p>
               </div>
             </div>
@@ -1066,21 +1066,21 @@ export default function Home() {
               <img src={F + "IMG_2501.jpg"} alt="Meli Rox — violín eléctrico en festival" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 25%", filter: "saturate(.95) brightness(.85)" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 45%, rgba(10,9,8,.9))" }} />
               <div style={{ position: "absolute", left: "22px", right: "22px", bottom: "20px" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>Festival</div>
-                <div style={{ marginTop: "8px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(24px, 2.8vw, 32px)", color: "#f7f1e0", lineHeight: 1.2 }}>{t("En vivo en La Solar y el Medellín Music Lab.", "Live at La Solar and Medellín Music Lab.")}</div>
+                <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>Festival</div>
+                <div style={{ marginTop: "8px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(24px, 2.8vw, 32px)", color: "#f7f1e0", lineHeight: 1.2 }}>{t("En vivo en La Solar y el Medellín Music Lab.", "Live at La Solar and Medellín Music Lab.")}</div>
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
               <div style={{ border: "1px solid rgba(232,207,158,.4)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "linear-gradient(160deg, rgba(212,164,90,.16), rgba(10,9,8,0) 55%), #0a0908" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>Radio</div>
-                <div style={{ marginTop: "12px", fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(26px, 3vw, 36px)", lineHeight: 1.1, color: "#f1e2ba" }}>#1 <span style={{ fontSize: ".62em", fontStyle: "italic" }}>en La X 103.9</span></div>
+                <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>Radio</div>
+                <div style={{ marginTop: "12px", fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: "clamp(26px, 3vw, 36px)", lineHeight: 1.1, color: "#f1e2ba" }}>#1 <span style={{ fontSize: ".62em", fontStyle: "italic" }}>en La X 103.9</span></div>
                 <p style={{ margin: "10px 0 0", fontWeight: 300, fontSize: "15px", lineHeight: 1.7, color: "#cabfa5" }}>&quot;Paradise 42&quot; — Mak Negron ft. Meli Rox.</p>
               </div>
               <div style={{ border: "1px solid rgba(212,180,122,.24)", borderRadius: "4px", padding: "clamp(22px, 3vw, 32px)", background: "#0a0908", flex: "1 1 auto" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("En televisión", "On television")}</div>
-                <div style={{ margin: "12px 0 16px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.3, color: "#f2ecdf" }}>{t("Escúchala en vivo en televisión nacional.", "Watch her live on national television.")}</div>
+                <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("En televisión", "On television")}</div>
+                <div style={{ margin: "12px 0 16px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(21px, 2.4vw, 27px)", lineHeight: 1.3, color: "#f2ecdf" }}>{t("Escúchala en vivo en televisión nacional.", "Watch her live on national television.")}</div>
                 <YouTubeEmbed id="qIS-ePBF3ok" title="Meli Rox en vivo — Las Tres Gracias TV" />
-                <div style={{ marginTop: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
+                <div style={{ marginTop: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".14em", textTransform: "uppercase", color: "#8a7d63" }}>Las Tres Gracias TV</div>
               </div>
             </div>
           </div>
@@ -1090,8 +1090,8 @@ export default function Home() {
       {/* HISTORIA */}
       <section id="historia" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) clamp(20px, 5vw, 48px)", background: "linear-gradient(180deg, #0b0a08, #110e09 50%, #0b0a08)" }}>
         <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c", textAlign: "center" }}>{t("La historia", "The story")}</div>
-          <h2 style={{ margin: "12px 0 0", textAlign: "center", fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda", lineHeight: 1.12 }}>
+          <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c", textAlign: "center" }}>{t("La historia", "The story")}</div>
+          <h2 style={{ margin: "12px 0 0", textAlign: "center", fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda", lineHeight: 1.12 }}>
             {isEn ? (<>Viola. Voice. Violin. <em style={{ color: "#e8cf9e" }}>Meli Rox.</em></>) : (<>Viola. Voz. Violín. <em style={{ color: "#e8cf9e" }}>Meli Rox.</em></>)}
           </h2>
           <div style={{ position: "relative", marginTop: isMobile ? "28px" : "clamp(40px, 6vw, 64px)" }}>
@@ -1106,14 +1106,14 @@ export default function Home() {
                   </div>
                 </div>
                 <div style={{ flex: isMobile ? "0 0 auto" : "1 1 300px", minWidth: isMobile ? "0" : "260px", width: isMobile ? "100%" : undefined }}>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "13px", color: "#d4b47a" }}>{c.num}</div>
-                  <div style={{ marginTop: "10px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 3vw, 34px)", fontWeight: 500, color: "#f2ecdf" }}>{t(c.tEs, c.tEn)}</div>
+                  <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "13px", color: "#d4b47a" }}>{c.num}</div>
+                  <div style={{ marginTop: "10px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(26px, 3vw, 34px)", fontWeight: 500, color: "#f2ecdf" }}>{t(c.tEs, c.tEn)}</div>
                   <p style={CSS({ margin: "12px 0 0", fontWeight: 300, fontSize: "16px", lineHeight: 1.75, color: "#cabfa5", maxWidth: "400px", textWrap: "pretty" })}>{t(c.xEs, c.xEn)}</p>
                 </div>
               </div>
             ))}
           </div>
-          <p style={CSS({ margin: "clamp(36px, 5vw, 56px) auto 0", textAlign: "center", maxWidth: "720px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 300, fontSize: "clamp(24px, 3.4vw, 36px)", lineHeight: 1.45, color: "#f3ead6", textWrap: "pretty" })}>
+          <p style={CSS({ margin: "clamp(36px, 5vw, 56px) auto 0", textAlign: "center", maxWidth: "720px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontWeight: 300, fontSize: "clamp(24px, 3.4vw, 36px)", lineHeight: 1.45, color: "#f3ead6", textWrap: "pretty" })}>
             {isEn ? (<>&quot;Today, her voice and her violin speak one language: <em style={{ color: "#e8cf9e" }}>emotion, energy and freedom</em>.&quot;</>) : (<>«Hoy, su voz y su violín existen en un mismo lenguaje: <em style={{ color: "#e8cf9e" }}>emoción, energía y libertad</em>.»</>)}
           </p>
         </div>
@@ -1122,7 +1122,7 @@ export default function Home() {
       {/* GALERIA */}
       <section id="galeria" style={{ position: "relative", padding: "clamp(44px, 7.5vw, 110px) 0 clamp(48px, 6vw, 72px)", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px)", display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "20px", flexWrap: "wrap" }}>
-          <h2 style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda" }}>{t("Galería", "Gallery")}</h2>
+          <h2 style={{ margin: 0, fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: "clamp(34px, 5vw, 60px)", color: "#f4edda" }}>{t("Galería", "Gallery")}</h2>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {FDEFS.map((f) => {
               const on = f.id === filter;
@@ -1146,16 +1146,16 @@ export default function Home() {
                       <div style={{ position: "absolute", inset: 0, background: "rgba(8,7,6,.28)", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
                         <div style={{ width: "54px", height: "54px", borderRadius: "50%", border: "1px solid rgba(232,207,158,.8)", background: "rgba(8,7,6,.5)", backdropFilter: "blur(3px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ecd9ac" }}><PlayIcon size={18} color="#ecd9ac" /></div>
                       </div>
-                      <div style={{ position: "absolute", right: "10px", bottom: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".14em", color: "#eee3c2", background: "rgba(8,7,6,.65)", padding: "5px 8px", borderRadius: "3px", pointerEvents: "none" }}>{g.vid}</div>
+                      <div style={{ position: "absolute", right: "10px", bottom: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "10px", letterSpacing: ".14em", color: "#eee3c2", background: "rgba(8,7,6,.65)", padding: "5px 8px", borderRadius: "3px", pointerEvents: "none" }}>{g.vid}</div>
                     </>
                   )}
-                  <figcaption style={{ position: "absolute", left: "12px", bottom: "10px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#eee3c2", textShadow: "0 1px 8px rgba(0,0,0,.9)" }}>{t(g.es, g.en)}</figcaption>
+                  <figcaption style={{ position: "absolute", left: "12px", bottom: "10px", fontFamily: "var(--font-mono), monospace", fontSize: "10.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#eee3c2", textShadow: "0 1px 8px rgba(0,0,0,.9)" }}>{t(g.es, g.en)}</figcaption>
                 </figure>
               );
             })}
           </div>
         </div>
-        <div style={{ maxWidth: "1200px", margin: "8px auto 0", padding: "0 clamp(20px, 5vw, 48px)", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Desliza para explorar · toca para ampliar →", "Scroll to explore · tap to enlarge →")}</div>
+        <div style={{ maxWidth: "1200px", margin: "8px auto 0", padding: "0 clamp(20px, 5vw, 48px)", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Desliza para explorar · toca para ampliar →", "Scroll to explore · tap to enlarge →")}</div>
       </section>
 
       {/* SIGUE LA ENERGIA */}
@@ -1168,8 +1168,8 @@ export default function Home() {
               <img src={U + "MeliIGThumb.jpg"} alt="Meli Rox" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
             </a>
             <div style={{ flex: "1 1 auto", minWidth: "160px" }}>
-              <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "7px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(26px, 3.4vw, 34px)", color: "#f4edda", lineHeight: 1 }}>@meliroxoficial{/* eslint-disable-next-line @next/next/no-img-element */}<img src={U + "Instagramtickv3.png"} alt="Verificado" style={{ width: "0.66em", height: "0.66em", display: "inline-block" }} /></a>
-              <div style={{ marginTop: "5px", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Cantautora & Violinista · Medellín", "Singer-songwriter & Violinist · Medellín")}</div>
+              <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "7px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(26px, 3.4vw, 34px)", color: "#f4edda", lineHeight: 1 }}>@meliroxoficial{/* eslint-disable-next-line @next/next/no-img-element */}<img src={U + "Instagramtickv3.png"} alt="Verificado" style={{ width: "0.66em", height: "0.66em", display: "inline-block" }} /></a>
+              <div style={{ marginTop: "5px", fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".14em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Cantautora & Violinista · Medellín", "Singer-songwriter & Violinist · Medellín")}</div>
             </div>
             <a href="https://www.instagram.com/meliroxoficial/" target="_blank" style={{ textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".06em", color: "#171208", background: GOLD, padding: "12px 24px", borderRadius: "999px", whiteSpace: "nowrap" }}>{t("Seguir", "Follow")}</a>
           </div>
@@ -1177,7 +1177,7 @@ export default function Home() {
           <div style={{ marginTop: "clamp(20px, 3vw, 30px)", width: isMobile ? "auto" : "min(1600px, calc(100vw - 40px))", marginLeft: isMobile ? undefined : "50%", transform: isMobile ? undefined : "translateX(-50%)" }}>
             <InstagramStrip />
           </div>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Desliza para ver más →", "Swipe for more →")}</div>
+          <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Desliza para ver más →", "Swipe for more →")}</div>
 
           <div style={{ marginTop: "clamp(24px, 3.4vw, 36px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "14px" }}>
             {[
@@ -1189,8 +1189,8 @@ export default function Home() {
                 <img src={s.img} alt={"Meli Rox en " + s.label} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: s.pos, filter: "saturate(.85) brightness(.62)", transition: "transform .8s" }} />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 35%, rgba(10,9,8,.92))" }} />
                 <div style={{ position: "absolute", left: "20px", right: "20px", bottom: "18px" }}>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{s.label}</div>
-                  <div style={{ marginTop: "6px", fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", color: "#f7f1e0" }}>{s.title}</div>
+                  <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{s.label}</div>
+                  <div style={{ marginTop: "6px", fontFamily: "var(--font-cormorant), serif", fontSize: "24px", color: "#f7f1e0" }}>{s.title}</div>
                   <div style={{ marginTop: "6px", fontSize: "13px", fontWeight: 600, color: "#d4b47a" }}>{s.handle}</div>
                 </div>
               </a>
@@ -1205,18 +1205,18 @@ export default function Home() {
         <img src={F + "DVR_0490.jpg"} alt="Meli Rox — violinista en vivo en Medellín" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 20%", opacity: 0.38, filter: "sepia(.4) saturate(.72) brightness(.68)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 75% 65% at 50% 40%, transparent, #080706 88%)" }} />
         <div style={{ position: "relative", maxWidth: "940px", margin: "0 auto", textAlign: "center" }}>
-          <h2 style={CSS({ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: isMobile ? "clamp(34px, 8vw, 52px)" : "clamp(40px, 4.4vw, 72px)", lineHeight: 1.06, color: "#f9f4e4", whiteSpace: isMobile ? "normal" : "nowrap", textWrap: isMobile ? "pretty" : "nowrap", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>
+          <h2 style={CSS({ margin: 0, fontFamily: "var(--font-cormorant), serif", fontWeight: 300, fontSize: isMobile ? "clamp(34px, 8vw, 52px)" : "clamp(40px, 4.4vw, 72px)", lineHeight: 1.06, color: "#f9f4e4", whiteSpace: isMobile ? "normal" : "nowrap", textWrap: isMobile ? "pretty" : "nowrap", textShadow: "0 2px 30px rgba(0,0,0,.8)" })}>
             {isEn ? (<>Make the moment <em style={{ color: "#e8cf9e" }}>sound different.</em></>) : (<>Haz que el momento <em style={{ color: "#e8cf9e" }}>suene diferente.</em></>)}
           </h2>
           <div style={{ marginTop: "clamp(38px, 5vw, 56px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", textAlign: "left" }}>
             <div style={{ border: "1px solid rgba(232,207,158,.55)", borderRadius: "4px", padding: "clamp(26px, 3.6vw, 40px)", background: "linear-gradient(160deg, rgba(212,164,90,.16), rgba(13,11,9,0) 50%), rgba(13,11,9,.9)", backdropFilter: "blur(6px)" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{t("Eventos y celebraciones", "Events & celebrations")}</div>
-              <div style={{ marginTop: "12px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(23px, 2.6vw, 28px)", color: "#f4edda", lineHeight: 1.3 }}>{t("Bodas, fiestas de 15, eventos privados y corporativos.", "Weddings, quinceañeras, private and corporate events.")}</div>
+              <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#d9c9a4" }}>{t("Eventos y celebraciones", "Events & celebrations")}</div>
+              <div style={{ marginTop: "12px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(23px, 2.6vw, 28px)", color: "#f4edda", lineHeight: 1.3 }}>{t("Bodas, fiestas de 15, eventos privados y corporativos.", "Weddings, quinceañeras, private and corporate events.")}</div>
               <a href={waMain} target="_blank" style={{ marginTop: "24px", display: "inline-block", textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#171208", background: GOLD, padding: "15px 26px", borderRadius: "999px" }}>{t("Consultar disponibilidad", "Check availability")}</a>
             </div>
             <div style={{ border: "1px solid rgba(212,180,122,.28)", borderRadius: "4px", padding: "clamp(26px, 3.6vw, 40px)", background: "rgba(13,11,9,.85)", backdropFilter: "blur(6px)" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Artista y colaboraciones", "Artist & collaborations")}</div>
-              <div style={{ marginTop: "12px", fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(23px, 2.6vw, 28px)", color: "#f4edda", lineHeight: 1.3 }}>{t("Festivales, venues, DJs, productores, prensa y management.", "Festivals, venues, DJs, producers, press and management.")}</div>
+              <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11.5px", letterSpacing: ".24em", textTransform: "uppercase", color: "#a99a7c" }}>{t("Artista y colaboraciones", "Artist & collaborations")}</div>
+              <div style={{ marginTop: "12px", fontFamily: "var(--font-cormorant), serif", fontSize: "clamp(23px, 2.6vw, 28px)", color: "#f4edda", lineHeight: 1.3 }}>{t("Festivales, venues, DJs, productores, prensa y management.", "Festivals, venues, DJs, producers, press and management.")}</div>
               <div style={{ marginTop: "24px", display: "flex", gap: "14px", alignItems: "center", flexWrap: "wrap" }}>
                 <a href={waCollab} target="_blank" style={{ display: "inline-block", textDecoration: "none", fontSize: "13.5px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#ecd9ac", border: "1px solid rgba(212,180,122,.55)", padding: "15px 26px", borderRadius: "999px" }}>{t("Proponer colaboración", "Propose a collaboration")}</a>
                 <a href="mailto:meliroxmusic@gmail.com" style={{ fontSize: "14px", fontWeight: 500, color: "#ddd2b8", textDecoration: "none", borderBottom: "1px solid rgba(212,180,122,.4)", paddingBottom: "2px" }}>meliroxmusic@gmail.com</a>

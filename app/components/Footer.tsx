@@ -27,7 +27,7 @@ const SOCIALS: { name: string; href: string; path: string }[] = [
 ];
 
 const label: CSSProperties = {
-  fontFamily: "'IBM Plex Mono', monospace",
+  fontFamily: "var(--font-mono), monospace",
   fontSize: "11px",
   letterSpacing: ".26em",
   textTransform: "uppercase",
@@ -54,7 +54,7 @@ export default function Footer({ en = false }: { en?: boolean }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/uploads/meli-rox-logo-clean-print-transparent.png" alt="Meli Rox" loading="lazy" style={{ height: "84px", width: "auto", margin: "-20px 0 -14px -14px" }} />
             </Link>
-            <p style={{ margin: "4px 0 22px", fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "clamp(19px, 2.4vw, 24px)", lineHeight: 1.4, color: "#cdbf9f" }}>
+            <p style={{ margin: "4px 0 22px", fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: "clamp(19px, 2.4vw, 24px)", lineHeight: 1.4, color: "#cdbf9f" }}>
               {t("Voz, violín eléctrico y energía que transforma cualquier evento.", "Voice, electric violin and energy that transforms any event.")}
             </p>
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
@@ -85,7 +85,7 @@ export default function Footer({ en = false }: { en?: boolean }) {
         </div>
 
         {/* Bottom bar */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "14px", flexWrap: "wrap", marginTop: "clamp(38px, 5vw, 60px)", paddingTop: "22px", borderTop: "1px solid rgba(212,180,122,.1)", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".18em", textTransform: "uppercase", color: "#6f6450" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "14px", flexWrap: "wrap", marginTop: "clamp(38px, 5vw, 60px)", paddingTop: "22px", borderTop: "1px solid rgba(212,180,122,.1)", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".18em", textTransform: "uppercase", color: "#6f6450" }}>
           <span>© 2026 Meli Rox · Medellín, Colombia</span>
           <span>{t("Cantautora · Violinista · Artista en vivo", "Singer-songwriter · Violinist · Live artist")}</span>
         </div>

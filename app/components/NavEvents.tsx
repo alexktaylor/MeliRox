@@ -81,7 +81,7 @@ export default function NavEvents({
         <div style={{ height: "1px", background: "rgba(212,180,122,.14)", margin: "6px 10px" }} />
         <Link
           href={HUB_LINK.href}
-          style={{ display: "block", textDecoration: "none", color: "#ecd9ac", fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", padding: "10px 14px", borderRadius: "7px" }}
+          style={{ display: "block", textDecoration: "none", color: "#ecd9ac", fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".16em", textTransform: "uppercase", padding: "10px 14px", borderRadius: "7px" }}
           onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(212,180,122,.12)"; }}
           onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
         >

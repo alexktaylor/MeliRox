@@ -71,7 +71,7 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
             {(!show || !loaded[i]) && (
               <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", background: "#0e0c09", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", pointerEvents: "none" }}>
                 <div style={{ width: "26px", height: "26px", borderRadius: "50%", border: "2px solid rgba(212,180,122,.25)", borderTopColor: "#ecd9ac", animation: "ig-spin 0.8s linear infinite" }} />
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".24em", textTransform: "uppercase", color: "#8a7d63" }}>Instagram</div>
+                <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "10px", letterSpacing: ".24em", textTransform: "uppercase", color: "#8a7d63" }}>Instagram</div>
               </div>
             )}
             {show && (
