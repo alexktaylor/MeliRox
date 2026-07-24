@@ -37,6 +37,8 @@ input[type="range"].mrmix::-moz-range-thumb { width: 26px; height: 26px; border-
   .svc-rep-list { order: 1; }
 }
 
+@keyframes ig-spin { to { transform: rotate(360deg); } }
+
 /* Services grid: 1 col mobile, 2 tablet, all-in-one-row on desktop (no orphan) */
 .svc-services-grid { grid-template-columns: 1fr; }
 @media (min-width: 560px) {

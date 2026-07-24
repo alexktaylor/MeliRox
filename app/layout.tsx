@@ -152,6 +152,11 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* Speed up Instagram embeds */}
+        <link rel="preconnect" href="https://www.instagram.com" />
+        <link rel="dns-prefetch" href="https://www.instagram.com" />
+        <link rel="preconnect" href="https://static.cdninstagram.com" />
+        <link rel="dns-prefetch" href="https://scontent.cdninstagram.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Manrope:wght@200;300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
           rel="stylesheet"

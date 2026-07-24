@@ -17,6 +17,7 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
   const wrapRefs = useRef<(HTMLDivElement | null)[]>([]);
   const outerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [vw, setVw] = useState(1200);
+  const [loaded, setLoaded] = useState<boolean[]>(() => urls.map(() => false));
 
   useEffect(() => {
     setVw(window.innerWidth);
@@ -81,8 +82,10 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
       let pending = false;
       urls.forEach((_, i) => {
         if (cropped.has(i)) return;
-        if (applyCrop(i)) cropped.add(i);
-        else pending = true;
+        if (applyCrop(i)) {
+          cropped.add(i);
+          setLoaded((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))));
+        } else pending = true;
       });
       if (pending) process();
       if (cropped.size >= urls.length) clearInterval(poll);
@@ -101,7 +104,13 @@ export default function InstagramStrip({ urls = IG_POSTS }: { urls?: string[] })
     <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: isMobile ? "x mandatory" : "none", padding: "2px 0 14px", scrollbarWidth: "thin", scrollbarColor: "rgba(212,180,122,.4) transparent" }}>
       <div style={{ display: "flex", gap: gap + "px", width: "max-content", margin: isMobile ? 0 : "0 auto", alignItems: "flex-start", justifyContent: isMobile ? "flex-start" : "center" }}>
         {urls.map((u, i) => (
-          <div key={u} ref={(el) => { outerRefs.current[i] = el; }} style={{ flex: "0 0 auto", width: itemW + "px", minHeight: Math.round(IG_NATURAL_W * 1.15 * scale) + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
+          <div key={u} ref={(el) => { outerRefs.current[i] = el; }} style={{ position: "relative", flex: "0 0 auto", width: itemW + "px", minHeight: Math.round(IG_NATURAL_W * 1.15 * scale) + "px", scrollSnapAlign: isMobile ? "start" : "none" }}>
+            {!loaded[i] && (
+              <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", background: "#0e0c09", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", pointerEvents: "none" }}>
+                <div style={{ width: "26px", height: "26px", borderRadius: "50%", border: "2px solid rgba(212,180,122,.25)", borderTopColor: "#ecd9ac", animation: "ig-spin 0.8s linear infinite" }} />
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: ".24em", textTransform: "uppercase", color: "#8a7d63" }}>Instagram</div>
+              </div>
+            )}
             <div ref={(el) => { wrapRefs.current[i] = el; }} style={{ width: IG_NATURAL_W + "px", minHeight: Math.round(IG_NATURAL_W * 1.15) + "px", background: "#0e0c09", overflow: "hidden", borderRadius: "6px", border: "1px solid rgba(212,180,122,.2)", transform: `scale(${scale})`, transformOrigin: "top left" }}>
               <blockquote className="instagram-media" data-instgrm-permalink={u} data-instgrm-version="14" style={{ background: "#0a0908", border: 0, margin: 0, width: "100%", minWidth: 0 }} />
             </div>
