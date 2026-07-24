@@ -5,7 +5,7 @@ const U = "/uploads/";
 const PATH = "/violinista-medellin";
 
 export const metadata: Metadata = {
-  title: "Violinista Medellín — Meli Rox | Voz y Violín Eléctrico en Vivo",
+  title: "Violinista Medellín — Voz y Violín Eléctrico en Vivo",
   description:
     "Meli Rox, violinista eléctrica y cantante en Medellín. Música en vivo para bodas, fiestas de 15, eventos corporativos, conciertos y experiencias personalizadas. Más de 10 años y presencia en televisión.",
   alternates: { canonical: PATH },
