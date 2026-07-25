@@ -63,6 +63,20 @@ export default function Propuesta15() {
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
+    // Preferred: opaque code (?c=) generated in /editar — prices packed in thousands, base36.
+    const c = q.get("c");
+    if (c) {
+      const n = parseInt(c, 36);
+      if (isFinite(n) && n > 0) {
+        const ahoraK = n % 100000;
+        const antesK = Math.floor(n / 100000);
+        if (antesK > 0 && ahoraK > 0) {
+          setPrecio({ antes: antesK * 1000, ahora: ahoraK * 1000 });
+          return;
+        }
+      }
+    }
+    // Legacy fallback: plain params.
     const antes = parseInt(q.get("antes") || "", 10);
     const ahora = parseInt(q.get("ahora") || "", 10);
     if (antes > 0 || ahora > 0) {

@@ -20,11 +20,15 @@ export default function Editar() {
   const nAhora = parseInt(ahora.replace(/[^\d]/g, ""), 10);
 
   const link = useMemo(() => {
-    const params = new URLSearchParams();
-    if (nAntes > 0 && nAntes !== DEF_ANTES) params.set("antes", String(nAntes));
-    if (nAhora > 0 && nAhora !== DEF_AHORA) params.set("ahora", String(nAhora));
-    const q = params.toString();
-    return q ? `${BASE}?${q}` : BASE;
+    if (!(nAntes > 0) || !(nAhora > 0)) return BASE;
+    if (nAntes === DEF_ANTES && nAhora === DEF_AHORA) return BASE;
+    // Pack both prices (in thousands) into one opaque base36 code — the client
+    // just sees a tracking-style "?c=", never the numbers.
+    const antesK = Math.round(nAntes / 1000);
+    const ahoraK = Math.round(nAhora / 1000);
+    if (antesK <= 0 || ahoraK <= 0 || ahoraK >= 100000) return BASE;
+    const code = (antesK * 100000 + ahoraK).toString(36);
+    return `${BASE}?c=${code}`;
   }, [nAntes, nAhora]);
 
   const copy = async () => {
