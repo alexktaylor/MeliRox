@@ -46,12 +46,15 @@ function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onA
     const v = ref.current;
     if (!v) return;
     v.muted = true;
+    // Start fetching well before the section is visible so the muted preview is
+    // already autoplaying (no lingering thumbnail) by the time it scrolls in.
+    if (v.preload !== "auto") v.preload = "auto";
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) v.play().catch(() => {});
         else v.pause();
       },
-      { rootMargin: "300px 0px", threshold: 0.1 }
+      { rootMargin: "800px 0px", threshold: 0.01 }
     );
     io.observe(v);
     return () => io.disconnect();
