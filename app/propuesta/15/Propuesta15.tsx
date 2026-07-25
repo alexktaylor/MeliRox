@@ -27,8 +27,8 @@ function ShowVideo({ src, poster, label, sub }: { src: string; poster: string; l
     v.muted = true;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
-        else v.pause();
+        if (e.isIntersecting) { v.autoplay = true; v.play().catch(() => {}); }
+        else { v.autoplay = false; v.pause(); }
       },
       { rootMargin: "600px 0px", threshold: 0.01 }
     );
@@ -111,11 +111,9 @@ export default function Propuesta15() {
     const v = heroRef.current;
     if (!v) return;
     v.muted = true;
-    // Phones fetch the tiny 1MB loop; desktop the full bg version. Same pattern as
-    // the homepage hero (which autoplays on iOS): no autoPlay attr, JS drives play().
-    v.src = (window.innerWidth < 760 ? "/Vids/bg/alas15-mobile.mp4" : "/Vids/bg/alas15.mp4") + MV;
-    v.load();
-    v.play().catch(() => {});
+    // Phones swap to the tiny 1MB loop. Exactly the homepage-hero pattern (src already
+    // in the tag; only swap + IO-driven play) — that combo autoplays reliably on iOS.
+    if (window.innerWidth < 760) v.src = "/Vids/bg/alas15-mobile.mp4" + MV;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) v.play().catch(() => {});
@@ -141,7 +139,7 @@ export default function Propuesta15() {
       {/* Hero */}
       <section style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0 }}>
-          <video ref={(el) => { heroRef.current = el; primeMuted(el); }} poster={"/Vids/posters/alas15.jpg" + MV} muted loop playsInline preload="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(.96) brightness(.92)" }} />
+          <video ref={(el) => { heroRef.current = el; primeMuted(el); }} src={"/Vids/bg/alas15.mp4" + MV} poster={"/Vids/posters/alas15.jpg" + MV} autoPlay muted loop playsInline preload="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(.96) brightness(.92)" }} />
           <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "72%", background: "linear-gradient(180deg, transparent 0%, rgba(8,7,6,.3) 32%, rgba(8,7,6,.66) 56%, rgba(8,7,6,.92) 80%, #0b0a08 100%)" }} />
         </div>
         <div style={{ position: "relative", width: "min(1100px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 84px)" }}>
