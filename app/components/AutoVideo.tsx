@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
-// Background video that autoplays (muted, looped) ONLY while in view, and
-// lazy-loads its source so pages stay fast. `eager` starts it immediately
-// (for above-the-fold heroes).
+// Background video that autoplays (muted, looped) while in view. A still image sits
+// BEHIND it and is always visible, so there's never a black box during load, page
+// navigation, or iOS Low Power Mode (which blocks autoplay) — the video just fades
+// in on top once it's actually playing. `eager` starts it immediately (heroes).
 export default function AutoVideo({
   src,
   poster,
@@ -19,14 +20,17 @@ export default function AutoVideo({
   eager?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
     v.muted = true; // set in JS so iOS honours muted autoplay
+    // Phones load a tiny ~1MB version so playback starts fast on mobile.
+    const realSrc = window.innerWidth < 760 ? src.replace(".mp4", "-mobile.mp4") : src;
     const start = () => {
       if (!v.getAttribute("src")) {
-        v.setAttribute("src", src);
+        v.setAttribute("src", realSrc);
         v.load();
       }
       v.play().catch(() => {});
@@ -43,7 +47,7 @@ export default function AutoVideo({
     return () => io.disconnect();
   }, [src, eager]);
 
-  const style: CSSProperties = {
+  const layer: CSSProperties = {
     position: "absolute",
     inset: 0,
     width: "100%",
@@ -54,15 +58,19 @@ export default function AutoVideo({
   };
 
   return (
-    <video
-      ref={ref}
-      poster={poster}
-      muted
-      loop
-      playsInline
-      preload={eager ? "metadata" : "none"}
-      aria-hidden="true"
-      style={style}
-    />
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {poster && <img src={poster} alt="" aria-hidden="true" loading={eager ? "eager" : "lazy"} decoding="async" style={layer} />}
+      <video
+        ref={ref}
+        muted
+        loop
+        playsInline
+        preload={eager ? "metadata" : "none"}
+        aria-hidden="true"
+        onPlaying={() => setPlaying(true)}
+        style={{ ...layer, opacity: playing ? 1 : 0, transition: "opacity .5s ease" }}
+      />
+    </>
   );
 }
