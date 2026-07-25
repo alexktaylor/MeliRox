@@ -55,6 +55,13 @@ const cfg: ServiceConfig = {
     { t: "Recepción", d: "El primer baile y la fiesta con repertorio personalizado, banda en vivo o colaboraciones con DJs." },
   ],
   momentsCta: "Cotizar mi boda",
+  includes: [
+    { t: "Tu música, tu historia", d: "Canciones personalizadas para la entrada, los votos y el cóctel — violín, voz o ambos." },
+    { t: "Formato flexible", d: "Una hora continua o dos tandas de 30 minutos: ceremonia, cóctel o recepción." },
+    { t: "Micrófono profesional", d: "Micrófono inalámbrico profesional incluido — nos acoplamos al sonido del venue." },
+    { t: "Coordinación total", d: "Hablamos directo con tu wedding planner y el lugar — tú solo vives el momento." },
+  ],
+  includesNote: "Reserva con el 30% y tu fecha queda asegurada.",
   video: "/Vids/bodas.mp4",
   videoPoster: "/Vids/posters/bodas.jpg",
   galleryTitle: "Momentos reales.",

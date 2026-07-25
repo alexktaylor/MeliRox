@@ -67,6 +67,8 @@ export type ServiceConfig = {
   serviceType: string;
   serviceDesc: string;
   breadcrumbName: string;
+  includes?: { t: string; d: string }[];
+  includesNote?: string;
   packages?: { n: string; title: string; format: string; details: string[] }[];
   repertoire?: Song[];
   servicesGrid?: { href: string; label: string; sub: string; img: string; pos?: string }[];
@@ -233,6 +235,30 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
                 </Link>
               ))}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Qué incluye — the concrete deliverables every booking gets */}
+      {cfg.includes && (
+        <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+            <div style={{ ...eyebrow, textAlign: "center" }}>Qué incluye</div>
+            <h2 style={{ margin: "12px 0 clamp(34px, 4.5vw, 56px)", textAlign: "center", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 52px)", color: "#f4edda" }}>
+              Una experiencia <em style={{ fontStyle: "italic", background: GOLD, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>completa</em>.
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: "clamp(22px, 3vw, 36px)" }}>
+              {cfg.includes.map((it, i) => (
+                <div key={it.t} style={{ borderTop: "1px solid rgba(212,180,122,.4)", paddingTop: "18px" }}>
+                  <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "11px", letterSpacing: ".26em", color: "#8a7d63" }}>{String(i + 1).padStart(2, "0")}</div>
+                  <div style={{ marginTop: "10px", fontFamily: serif, fontStyle: "italic", fontWeight: 400, fontSize: "clamp(21px, 2.4vw, 26px)", color: "#f1e2ba", lineHeight: 1.2 }}>{it.t}</div>
+                  <p style={{ margin: "10px 0 0", fontWeight: 300, fontSize: "14.5px", lineHeight: 1.7, color: "#bcb096" }}>{it.d}</p>
+                </div>
+              ))}
+            </div>
+            {cfg.includesNote && (
+              <p style={{ margin: "clamp(26px, 3.4vw, 40px) 0 0", textAlign: "center", fontFamily: serif, fontStyle: "italic", fontWeight: 300, fontSize: "clamp(16px, 1.9vw, 19px)", color: "#a99a7c" }}>{cfg.includesNote}</p>
+            )}
           </div>
         </section>
       )}

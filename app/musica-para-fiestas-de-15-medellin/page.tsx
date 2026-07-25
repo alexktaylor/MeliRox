@@ -55,6 +55,13 @@ const cfg: ServiceConfig = {
     { t: "Canción personalizada", d: "El momento más emotivo — una canción elegida especialmente para la quinceañera y su familia." },
   ],
   momentsCta: "Cotizar mi fiesta de 15",
+  includes: [
+    { t: "Show personalizado", d: "La entrada, el vals y sus canciones favoritas — violín, voz o ambos, a su estilo." },
+    { t: "Formato flexible", d: "Una hora continua o dos tandas de 30 minutos, en los momentos clave de la fiesta." },
+    { t: "Micrófono profesional", d: "Micrófono inalámbrico profesional incluido — nos acoplamos al sonido del salón." },
+    { t: "Acompañamiento logístico", d: "Coordinación con el salón y la familia para que la sorpresa salga perfecta." },
+  ],
+  includesNote: "Cada quinceañera es única — armamos el show alrededor de ella.",
   video: "/Vids/quince.mp4",
   videoPoster: "/Vids/posters/quince.jpg",
   galleryTitle: "El show en vivo.",

@@ -56,6 +56,13 @@ const cfg: ServiceConfig = {
     { t: "Hoteles y compañías", d: "Formatos personalizados para eventos empresariales, cenas corporativas y celebraciones de fin de año." },
   ],
   momentsCta: "Cotizar mi evento",
+  includes: [
+    { t: "Show a la medida de tu marca", d: "Repertorio y puesta en escena alineados con el concepto de tu evento." },
+    { t: "Formato flexible", d: "Una hora continua o dos tandas de 30 minutos — apertura, gala o activación." },
+    { t: "Micrófono profesional", d: "Micrófono inalámbrico profesional incluido — coordinación con tu equipo técnico." },
+    { t: "Acompañamiento logístico", d: "Brief previo, cronograma y montaje coordinado con tu agencia o producción." },
+  ],
+  includesNote: "Propuesta formal por escrito para tu equipo — cotiza sin compromiso.",
   video: "/Vids/corporate.mp4",
   videoPoster: "/Vids/posters/corporate.jpg",
   galleryTitle: "En escena.",

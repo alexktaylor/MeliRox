@@ -56,6 +56,13 @@ const cfg: ServiceConfig = {
     { t: "Voz en vivo", d: "Cantante y violinista en una sola artista — una propuesta que la distingue en Medellín." },
   ],
   momentsCta: "Cotizar mi evento",
+  includes: [
+    { t: "Show personalizado", d: "Violín, voz o ambos — el repertorio se elige contigo, a la medida de tu evento." },
+    { t: "Formato flexible", d: "Una hora continua o dos tandas de 30 minutos, según el ritmo de tu evento." },
+    { t: "Micrófono profesional", d: "Micrófono inalámbrico profesional incluido — nos acoplamos al sonido del lugar." },
+    { t: "Acompañamiento logístico", d: "Coordinación previa con tu venue, planner o salón para que todo fluya." },
+  ],
+  includesNote: "Cada presentación se adapta a tu evento — cuéntanos tu idea y armamos la experiencia.",
   video: "/Vids/violin.mp4",
   videoPoster: "/Vids/posters/violin.jpg",
   galleryTitle: "En vivo.",

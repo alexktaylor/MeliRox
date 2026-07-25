@@ -55,6 +55,13 @@ const cfg: ServiceConfig = {
     { t: "Cenas exclusivas", d: "Voz y violín eléctrico para cenas privadas, con la elegancia y la calidez que el momento merece." },
   ],
   momentsCta: "Cotizar mi evento",
+  includes: [
+    { t: "Show personalizado", d: "El repertorio se construye contigo — desde lo íntimo y acústico hasta lo eléctrico." },
+    { t: "Formato flexible", d: "Una hora continua o dos tandas de 30 minutos, al ritmo de tu celebración." },
+    { t: "Micrófono profesional", d: "Micrófono inalámbrico profesional incluido — nos acoplamos al espacio." },
+    { t: "Acompañamiento logístico", d: "Coordinación discreta con el lugar — sorpresas y detalles quedan entre nosotros." },
+  ],
+  includesNote: "Cumpleaños, aniversarios, propuestas — cuéntanos la ocasión y la hacemos inolvidable.",
   video: "/Vids/privados.mp4",
   videoPoster: "/Vids/posters/privados.jpg",
   galleryTitle: "Momentos a la medida.",

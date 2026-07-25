@@ -55,6 +55,13 @@ const cfg: ServiceConfig = {
     { t: "Colaboraciones con DJs", d: "Formatos con DJs, productores y artistas invitados para festivales, clubes y activaciones." },
   ],
   momentsCta: "Consultar formato de show",
+  includes: [
+    { t: "Espectáculo completo", d: "Violín eléctrico, voz y una puesta en escena con vestuario y juego de luces." },
+    { t: "Formato flexible", d: "Una hora continua o dos tandas de 30 minutos — apertura, intervención o cierre." },
+    { t: "Micrófono profesional", d: "Micrófono inalámbrico profesional incluido — nos integramos a tu producción." },
+    { t: "Acompañamiento logístico", d: "Coordinación con producción, DJ o banda para una transición impecable." },
+  ],
+  includesNote: "Del lounge al festival — el show se adapta al tamaño de tu escenario.",
   video: "/Vids/conciertos.mp4",
   videoPoster: "/Vids/posters/conciertos.jpg",
   galleryTitle: "En vivo.",
