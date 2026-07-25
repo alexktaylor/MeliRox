@@ -88,6 +88,8 @@ export default function Propuesta15() {
     const v = heroRef.current;
     if (!v) return;
     v.muted = true;
+    // Phones get the tiny 1.5MB version so the hero starts instantly (same trick as the homepage hero)
+    if (window.innerWidth < 760) v.src = "/Vids/bg/alas15-mobile.mp4";
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) v.play().catch(() => {});
