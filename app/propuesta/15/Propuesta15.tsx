@@ -67,12 +67,27 @@ export default function Propuesta15() {
   // Prices can be overridden per-client via the link Meli generates in /propuesta/15/editar
   // (?antes=1500000&ahora=1200000). Defaults match her standard proposal.
   const [precio, setPrecio] = useState({ antes: 1500000, ahora: 1000000 });
+  const [nombre, setNombre] = useState<string | null>(null);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
-    // Preferred: opaque code (?c=) generated in /editar — prices packed in thousands, base36.
     const c = q.get("c");
     if (c) {
+      // Format 1: base64url "nombre|antesK|ahoraK" (personalised links from /editar).
+      try {
+        const raw = decodeURIComponent(escape(atob(c.replace(/-/g, "+").replace(/_/g, "/"))));
+        const parts = raw.split("|");
+        if (parts.length === 3) {
+          const antesK = parseInt(parts[1], 10);
+          const ahoraK = parseInt(parts[2], 10);
+          if (antesK > 0 && ahoraK > 0) {
+            if (parts[0]) setNombre(parts[0]);
+            setPrecio({ antes: antesK * 1000, ahora: ahoraK * 1000 });
+            return;
+          }
+        }
+      } catch {}
+      // Format 2: legacy base36 price-only code.
       const n = parseInt(c, 36);
       if (isFinite(n) && n > 0) {
         const ahoraK = n % 100000;
@@ -130,15 +145,19 @@ export default function Propuesta15() {
         </div>
         <div style={{ position: "relative", width: "min(1100px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 84px)" }}>
           <div style={{ height: "44px", width: "1px", margin: "0 0 14px", background: "linear-gradient(180deg, transparent, #e8cf9e)" }} />
-          <div style={eyebrow}>Propuesta musical · Fiesta de 15</div>
+          <div style={eyebrow}>{nombre ? `Propuesta musical · Los 15 de ${nombre}` : "Propuesta musical · Fiesta de 15"}</div>
           <h1 style={{ margin: "14px 0 0", fontFamily: serif, fontWeight: 300, fontSize: "clamp(38px, 7.5vw, 74px)", lineHeight: 1.08, color: "#f4edda", maxWidth: "700px" }}>
-            Una noche que ella recordará <em style={{ fontStyle: "italic", background: GOLD, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>toda la vida</em>.
+            {nombre ? (
+              <>Una noche que <em style={{ fontStyle: "italic", background: GOLD, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{nombre}</em> recordará toda la vida.</>
+            ) : (
+              <>Una noche que ella recordará <em style={{ fontStyle: "italic", background: GOLD, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>toda la vida</em>.</>
+            )}
           </h1>
           <p style={{ margin: "16px 0 0", maxWidth: "520px", fontWeight: 300, fontSize: "clamp(15.5px, 1.9vw, 18px)", lineHeight: 1.65, color: "#d9ccae" }}>
             Show en vivo de violín y voz con Meli Rox — la entrada, el vals y sus canciones favoritas, convertidos en un espectáculo.
           </p>
           <div style={{ marginTop: "26px" }}>
-            <a href={WA} target="_blank" style={waBtn}>Confirmar por WhatsApp</a>
+            <a href={WA} target="_blank" style={waBtn}>{nombre ? `Reservar los 15 de ${nombre}` : "Confirmar por WhatsApp"}</a>
           </div>
         </div>
       </section>
@@ -202,7 +221,7 @@ export default function Propuesta15() {
             </div>
           </div>
           <div style={{ marginTop: "clamp(28px, 4vw, 40px)" }}>
-            <a href={WA} target="_blank" style={waBtn}>Confirmar por WhatsApp</a>
+            <a href={WA} target="_blank" style={waBtn}>{nombre ? `Reservar los 15 de ${nombre}` : "Confirmar por WhatsApp"}</a>
           </div>
           <p style={{ margin: "18px 0 0", fontWeight: 300, fontSize: "13.5px", color: "#8a7d63" }}>Sujeto a disponibilidad de fecha · Medellín y alrededores</p>
         </div>

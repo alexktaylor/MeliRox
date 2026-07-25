@@ -12,24 +12,30 @@ const DEF_AHORA = 1000000;
 const fmt = (n: number) => "$" + (isFinite(n) && n > 0 ? n.toLocaleString("es-CO") : "—");
 
 export default function Editar() {
+  const [nombre, setNombre] = useState("");
   const [antes, setAntes] = useState(String(DEF_ANTES));
   const [ahora, setAhora] = useState(String(DEF_AHORA));
   const [copied, setCopied] = useState(false);
 
   const nAntes = parseInt(antes.replace(/[^\d]/g, ""), 10);
   const nAhora = parseInt(ahora.replace(/[^\d]/g, ""), 10);
+  const cleanNombre = nombre.trim().replace(/\|/g, "");
 
   const link = useMemo(() => {
-    if (!(nAntes > 0) || !(nAhora > 0)) return BASE;
+    const antesK = nAntes > 0 ? Math.round(nAntes / 1000) : Math.round(DEF_ANTES / 1000);
+    const ahoraK = nAhora > 0 ? Math.round(nAhora / 1000) : Math.round(DEF_AHORA / 1000);
+    // With a name: pack name+prices into one opaque base64url code.
+    if (cleanNombre) {
+      const raw = `${cleanNombre}|${antesK}|${ahoraK}`;
+      const code = btoa(unescape(encodeURIComponent(raw))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      return `${BASE}?c=${code}`;
+    }
+    // No name, default prices: clean link.
     if (nAntes === DEF_ANTES && nAhora === DEF_AHORA) return BASE;
-    // Pack both prices (in thousands) into one opaque base36 code — the client
-    // just sees a tracking-style "?c=", never the numbers.
-    const antesK = Math.round(nAntes / 1000);
-    const ahoraK = Math.round(nAhora / 1000);
+    if (!(nAntes > 0) || !(nAhora > 0)) return BASE;
     if (antesK <= 0 || ahoraK <= 0 || ahoraK >= 100000) return BASE;
-    const code = (antesK * 100000 + ahoraK).toString(36);
-    return `${BASE}?c=${code}`;
-  }, [nAntes, nAhora]);
+    return `${BASE}?c=${(antesK * 100000 + ahoraK).toString(36)}`;
+  }, [nAntes, nAhora, cleanNombre]);
 
   const copy = async () => {
     try {
@@ -57,6 +63,10 @@ export default function Editar() {
 
         <div style={{ display: "grid", gap: "18px" }}>
           <div>
+            <label style={label}>Nombre de la quinceañera (opcional)</label>
+            <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Valentina" style={input} />
+          </div>
+          <div>
             <label style={label}>Tarifa regular (tachada)</label>
             <input inputMode="numeric" value={antes} onChange={(e) => setAntes(e.target.value)} style={input} />
           </div>
@@ -68,6 +78,9 @@ export default function Editar() {
 
         {/* Live preview */}
         <div style={{ margin: "26px 0 0", border: "1px solid rgba(212,180,122,.3)", borderRadius: "10px", padding: "26px 22px", textAlign: "center", background: "radial-gradient(ellipse 120% 90% at 50% 0%, rgba(138,106,63,.16), transparent 60%), #0a0908" }}>
+          {cleanNombre && (
+            <div style={{ marginBottom: "10px", fontFamily: mono, fontSize: "10px", letterSpacing: ".26em", textTransform: "uppercase", color: "#a99a7c" }}>Los 15 de {cleanNombre}</div>
+          )}
           <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: "18px", color: "#8a7d63" }}>
             Tarifa regular <span style={{ textDecoration: "line-through", textDecorationColor: "rgba(212,180,122,.6)" }}>{fmt(nAntes)}</span>
           </div>
