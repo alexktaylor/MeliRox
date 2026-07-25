@@ -50,6 +50,8 @@ function CategoryVideo({ src, pos, onActivate }: { src: string; pos: string; onA
     const v = ref.current;
     if (!v) return;
     v.muted = true;
+    // Phones get a tiny ~1MB version (like the hero) so autoplay starts fast on mobile.
+    if (window.innerWidth < 760) v.src = src.replace(".mp4", "-m.mp4") + MV;
     // Start fetching well before the section is visible so the muted preview is
     // already autoplaying (no lingering thumbnail) by the time it scrolls in.
     if (v.preload !== "auto") v.preload = "auto";

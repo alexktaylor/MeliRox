@@ -23,8 +23,7 @@ export default function AutoVideo({
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    v.defaultMuted = true;
-    v.muted = true; // both set so iOS reliably honours muted autoplay
+    v.muted = true; // set in JS so iOS honours muted autoplay
     const start = () => {
       if (!v.getAttribute("src")) {
         v.setAttribute("src", src);
@@ -56,7 +55,7 @@ export default function AutoVideo({
 
   return (
     <video
-      ref={(el) => { ref.current = el; if (el) { el.defaultMuted = true; el.muted = true; } }}
+      ref={ref}
       poster={poster}
       muted
       loop

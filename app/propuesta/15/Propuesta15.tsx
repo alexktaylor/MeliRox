@@ -10,27 +10,27 @@ const WA = "https://wa.me/573045502154";
 
 const MV = "?v=0726";
 
-// iOS only allows muted autoplay when the `muted` ATTRIBUTE is truly in the DOM —
-// React sets it as a property, so we force it via defaultMuted in the ref callback.
-const primeMuted = (v: HTMLVideoElement | null) => {
-  if (v) { v.defaultMuted = true; v.muted = true; }
-};
-
-// Autoplay muted preview in view; tap unmutes the SAME clip (instant, no reload).
+// EXACT copy of the homepage CategoryVideo behaviour (which autoplays on iOS):
+// no muted/autoplay attributes in JSX — muted is set as a JS property in the effect,
+// and an IntersectionObserver drives play(). Tap unmutes the SAME clip (no reload).
 function ShowVideo({ src, poster, label, sub }: { src: string; poster: string; label: string; sub: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(false);
+  const base = src + MV;
+  const post = poster + MV;
 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
     v.muted = true;
+    if (window.innerWidth < 760) v.src = src.replace(".mp4", "-m.mp4") + MV;
+    if (v.preload !== "auto") v.preload = "auto";
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) { v.autoplay = true; v.play().catch(() => {}); }
-        else { v.autoplay = false; v.pause(); }
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
       },
-      { rootMargin: "600px 0px", threshold: 0.01 }
+      { rootMargin: "800px 0px", threshold: 0.01 }
     );
     io.observe(v);
     return () => io.disconnect();
@@ -47,7 +47,7 @@ function ShowVideo({ src, poster, label, sub }: { src: string; poster: string; l
   return (
     <div>
       <div style={{ position: "relative", aspectRatio: "9 / 16", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(212,180,122,.25)", background: "#080706" }}>
-        <video ref={(el) => { ref.current = el; primeMuted(el); }} src={src + MV} poster={poster + MV} muted playsInline preload="none" loop={!active} controls={active} onClick={activate} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", cursor: active ? "default" : "pointer" }} />
+        <video ref={ref} src={base} poster={post} playsInline preload="none" loop={!active} controls={active} onClick={activate} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", cursor: active ? "default" : "pointer" }} />
         {!active && (
           <div onClick={activate} style={{ position: "absolute", top: "12px", right: "12px", display: "flex", alignItems: "center", gap: "7px", background: "rgba(8,7,6,.62)", backdropFilter: "blur(4px)", border: "1px solid rgba(232,207,158,.55)", borderRadius: "999px", padding: "8px 13px", color: "#ecd9ac", fontFamily: mono, fontSize: "10px", letterSpacing: ".14em", textTransform: "uppercase", cursor: "pointer", zIndex: 2 }}>
             <svg width={12} height={12} viewBox="0 0 24 24" fill="#ecd9ac" aria-hidden="true"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z" /></svg>
@@ -111,12 +111,11 @@ export default function Propuesta15() {
     const v = heroRef.current;
     if (!v) return;
     v.muted = true;
-    // Phones swap to the tiny 1MB loop. Exactly the homepage-hero pattern (src already
-    // in the tag; only swap + IO-driven play) — that combo autoplays reliably on iOS.
     if (window.innerWidth < 760) v.src = "/Vids/bg/alas15-mobile.mp4" + MV;
+    const play = () => v.play().catch(() => {});
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
+        if (e.isIntersecting) play();
         else v.pause();
       },
       { threshold: 0.05 }
@@ -139,7 +138,7 @@ export default function Propuesta15() {
       {/* Hero */}
       <section style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0 }}>
-          <video ref={(el) => { heroRef.current = el; primeMuted(el); }} src={"/Vids/bg/alas15.mp4" + MV} poster={"/Vids/posters/alas15.jpg" + MV} autoPlay muted loop playsInline preload="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(.96) brightness(.92)" }} />
+          <video ref={heroRef} src={"/Vids/bg/alas15.mp4" + MV} poster={"/Vids/posters/alas15.jpg" + MV} muted loop playsInline preload="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", filter: "saturate(.96) brightness(.92)" }} />
           <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "72%", background: "linear-gradient(180deg, transparent 0%, rgba(8,7,6,.3) 32%, rgba(8,7,6,.66) 56%, rgba(8,7,6,.92) 80%, #0b0a08 100%)" }} />
         </div>
         <div style={{ position: "relative", width: "min(1100px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 84px)" }}>
