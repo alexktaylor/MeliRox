@@ -35,7 +35,7 @@ export default function MediaCarousel({ items }: { items: MediaItem[] }) {
       {lb && (
         <div onClick={() => setLb(null)} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(8,7,6,.96)", display: "flex", alignItems: "center", justifyContent: "center", padding: "clamp(16px, 4vw, 48px)", cursor: "zoom-out" }}>
           {lb.videoSrc ? (
-            <video src={lb.videoSrc} controls autoPlay playsInline onClick={(e) => e.stopPropagation()} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)", background: "#000" }} />
+            <video src={lb.videoSrc + "?v=0726b"} controls autoPlay playsInline onClick={(e) => e.stopPropagation()} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)", background: "#000" }} />
           ) : (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img src={lb.src} alt={lb.alt} style={{ maxWidth: "100%", maxHeight: "92vh", borderRadius: "4px", border: "1px solid rgba(212,180,122,.3)", boxShadow: "0 30px 90px rgba(0,0,0,.7)" }} />
