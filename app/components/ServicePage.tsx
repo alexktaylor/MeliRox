@@ -71,6 +71,9 @@ export type ServiceConfig = {
   includesNote?: string;
   packages?: { n: string; title: string; format: string; details: string[] }[];
   repertoire?: Song[];
+  repertoireEyebrow?: string;
+  repertoireTitle?: string;
+  repertoireNote?: string;
   servicesGrid?: { href: string; label: string; sub: string; img: string; pos?: string }[];
   servicesTitle?: string;
 };
@@ -302,7 +305,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
       {cfg.repertoire && (
         <section style={{ padding: "clamp(48px, 7vw, 100px) clamp(20px, 5vw, 48px)", background: "#0b0a08", borderTop: "1px solid rgba(212,180,122,.1)" }}>
           <div style={{ maxWidth: "760px", margin: "0 auto" }}>
-            <WeddingRepertoire songs={cfg.repertoire} />
+            <WeddingRepertoire songs={cfg.repertoire} eyebrow={cfg.repertoireEyebrow} title={cfg.repertoireTitle} note={cfg.repertoireNote} />
           </div>
         </section>
       )}

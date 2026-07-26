@@ -89,6 +89,9 @@ const cfg: ServiceConfig = {
   serviceType: "Serenata en vivo",
   serviceDesc: "Serenata de violín y voz en vivo en Medellín para propuestas de matrimonio, aniversarios, cumpleaños y sorpresas románticas.",
   breadcrumbName: "Serenata en Medellín",
+  repertoireEyebrow: "Repertorio · Serenatas",
+  repertoireTitle: "Elige su canción.",
+  repertoireNote: "Toca cualquier canción para escuchar un adelanto. Preparamos la que ustedes quieran — en violín, voz o ambos.",
   repertoire: [
     { title: "Perfect", artist: "Ed Sheeran", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c7/ba/bc/c7babc66-f598-aaa6-bcf6-307281795817/mzaf_16337361235117168274.plus.aac.p.m4a" },
     { title: "A Thousand Years", artist: "Christina Perri", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8e/3a/e7/8e3ae749-5e13-a9ca-fef6-61d615bc3087/mzaf_5415208554281396500.plus.aac.p.m4a" },

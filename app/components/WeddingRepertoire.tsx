@@ -4,7 +4,17 @@ import { useRef, useState } from "react";
 
 export type Song = { title: string; artist: string; preview: string };
 
-export default function WeddingRepertoire({ songs }: { songs: Song[] }) {
+export default function WeddingRepertoire({
+  songs,
+  eyebrow = "Repertorio · Ceremonia",
+  title = "Escucha la lista de bodas.",
+  note = "Toca cualquier canción para escuchar un adelanto. El repertorio es 100% personalizable para tu boda.",
+}: {
+  songs: Song[];
+  eyebrow?: string;
+  title?: string;
+  note?: string;
+}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(-1);
 
@@ -26,10 +36,10 @@ export default function WeddingRepertoire({ songs }: { songs: Song[] }) {
 
   return (
     <div>
-      <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>Repertorio · Ceremonia</div>
-      <h2 style={{ margin: "12px 0 0", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 48px)", color: "#f4edda", lineHeight: 1.12 }}>Escucha la lista de bodas.</h2>
+      <div style={{ fontFamily: "var(--font-mono), monospace", fontSize: "12px", letterSpacing: ".3em", textTransform: "uppercase", color: "#a99a7c" }}>{eyebrow}</div>
+      <h2 style={{ margin: "12px 0 0", fontFamily: serif, fontWeight: 300, fontSize: "clamp(30px, 4vw, 48px)", color: "#f4edda", lineHeight: 1.12 }}>{title}</h2>
       <p style={{ margin: "14px 0 clamp(24px, 3vw, 32px)", fontWeight: 300, fontSize: "16px", lineHeight: 1.7, color: "#cabfa5", maxWidth: "460px" }}>
-        Toca cualquier canción para escuchar un adelanto. El repertorio es 100% personalizable para tu boda.
+        {note}
       </p>
 
       <div style={{ border: "1px solid rgba(212,180,122,.2)", borderRadius: "6px", overflow: "hidden", background: "#0e0c09" }}>
