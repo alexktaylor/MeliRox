@@ -4,6 +4,7 @@ const SITE = "https://melirox.com";
 
 const SERVICE_PATHS = [
   "/violinista-medellin",
+  "/serenata",
   "/violinista-para-bodas-medellin",
   "/musica-para-fiestas-de-15-medellin",
   "/musica-eventos-corporativos-medellin",
