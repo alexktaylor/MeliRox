@@ -10,6 +10,7 @@ const WA =
 
 const SERVICES: { href: string; es: string; en: string }[] = [
   { href: "/violinista-medellin", es: "Violinista en Medellín", en: "Violinist in Medellín" },
+  { href: "/serenata", es: "Serenatas románticas", en: "Romantic serenades" },
   { href: "/violinista-para-bodas-medellin", es: "Violinista para bodas", en: "Violinist for weddings" },
   { href: "/musica-para-fiestas-de-15-medellin", es: "Música para fiestas de 15", en: "Music for quinceañeras" },
   { href: "/musica-eventos-corporativos-medellin", es: "Eventos corporativos", en: "Corporate events" },
