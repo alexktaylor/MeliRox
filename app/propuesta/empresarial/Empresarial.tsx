@@ -30,6 +30,7 @@ export default function Empresarial() {
     formato: "Trío de cuerdas — 2 violines y viola",
     lugar: "",
     ciudad: "Medellín",
+    intro: "agradecemos su interés. A continuación presentamos la propuesta para la presentación musical en vivo, a cargo de músicos profesionales con formación académica y amplia experiencia en escenarios y eventos.",
     descansos: "Sets de 45 minutos con descansos intermedios, coordinados con la organización del evento.",
     valor: "5000000",
     usarDescuento: false,
@@ -134,6 +135,11 @@ export default function Empresarial() {
         </div>
 
         <div style={{ marginTop: "13px" }}>
+          <label style={label}>Descripción / presentación <span style={{ textTransform: "none", letterSpacing: 0, color: "#8a7d63" }}>— va después de “Estimado(a) [cliente]:”</span></label>
+          <textarea value={f.intro} onChange={(e) => set("intro", e.target.value)} rows={4} style={{ ...input, fontFamily: "inherit", fontSize: "13.5px", resize: "vertical", lineHeight: 1.6 }} />
+        </div>
+
+        <div style={{ marginTop: "13px" }}>
           <label style={label}>Descansos / dinámica de la jornada</label>
           <textarea value={f.descansos} onChange={(e) => set("descansos", e.target.value)} rows={2} style={{ ...input, fontFamily: "inherit", fontSize: "13.5px", resize: "vertical" }} />
         </div>
@@ -215,8 +221,8 @@ export default function Empresarial() {
             <h2 style={{ margin: "0 0 12px", fontFamily: serif, fontWeight: 400, fontSize: "26px", color: "#000", lineHeight: 1.25 }}>
               Música en vivo{f.evento.trim() ? <> para <em style={{ fontStyle: "italic", color: GOLD }}>{f.evento}</em></> : null}
             </h2>
-            <p style={body}>
-              Estimado(a) {orBlank(f.cliente, 14)}{f.empresa.trim() ? ` — ${f.empresa}` : ""}: agradecemos su interés. A continuación presentamos la propuesta para la presentación musical en vivo, a cargo de músicos profesionales con formación académica y amplia experiencia en escenarios y eventos.
+            <p style={{ ...body, whiteSpace: "pre-wrap" }}>
+              <strong style={{ color: "#000", fontWeight: 600 }}>Estimado(a) {orBlank(f.cliente, 14)}{f.empresa.trim() ? ` — ${f.empresa}` : ""}:</strong> {f.intro}
             </p>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
