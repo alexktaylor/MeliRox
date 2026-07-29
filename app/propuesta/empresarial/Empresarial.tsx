@@ -214,7 +214,7 @@ export default function Empresarial() {
             }}
             style={{ cursor: pdfEstado === "generando" ? "wait" : "pointer", opacity: pdfEstado === "generando" ? 0.7 : 1, border: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "#171208", background: "linear-gradient(135deg,#ecd9ac,#b98f4e)", padding: "15px 26px", borderRadius: "999px" }}
           >
-            {pdfEstado === "generando" ? "Generando PDF…" : "Descargar PDF"}
+            {pdfEstado === "generando" ? "Generando PDF…" : "Descargar / Enviar PDF"}
           </button>
           <button onClick={() => window.print()} style={{ cursor: "pointer", background: "none", border: "1px solid rgba(212,180,122,.4)", color: "#ecd9ac", fontFamily: mono, fontSize: "11.5px", letterSpacing: ".12em", textTransform: "uppercase", padding: "15px 20px", borderRadius: "999px" }}>
             Imprimir
