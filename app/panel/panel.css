@@ -283,13 +283,12 @@
   .mp-selects select { flex: 0 0 auto; width: 168px; }
 }
 
+/* Son sólo 6 chips fijos, así que se acomodan en dos filas antes que esconder
+   "Confirmado" y "Perdido" fuera de la pantalla como hacía el scroll horizontal. */
 .chip-row {
-  display: flex; gap: 8px;
+  display: flex; flex-wrap: wrap; gap: 8px;
   padding: 14px 16px 6px;
-  overflow-x: auto; scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
 }
-.chip-row::-webkit-scrollbar { display: none; }
 .chip {
   flex: 0 0 auto;
   font: inherit; font-size: 0.85rem; font-weight: 600;
@@ -482,6 +481,38 @@
 }
 .form-sep::after {
   content: ""; flex: 1; height: 1px; background: var(--line);
+}
+
+/* selector de estado — los 5 estados a la vista, se marca con un toque */
+.estado-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.estado-pill {
+  flex: 1 1 auto;
+  font: inherit; font-size: 0.86rem; font-weight: 600;
+  color: var(--muted);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 11px 14px; min-height: 44px; cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.estado-pill:hover { color: var(--cream-2); border-color: var(--line-strong); }
+/* Activo: cada estado toma su propio color, el mismo de la pastilla en la tarjeta */
+.estado-pill.is-on { font-weight: 700; }
+.estado-pill--nuevo.is-on {
+  color: var(--hi); border-color: rgba(236, 217, 172, 0.5); background: rgba(236, 217, 172, 0.14);
+}
+.estado-pill--cotizado.is-on {
+  color: var(--gold); border-color: var(--gold); background: rgba(212, 180, 122, 0.14);
+}
+.estado-pill--quizas.is-on {
+  color: var(--warn); border-color: var(--warn); background: var(--warn-dim);
+}
+.estado-pill--confirmado.is-on {
+  color: var(--ok); border-color: var(--ok); background: var(--ok-dim);
+}
+.estado-pill--perdido.is-on {
+  color: var(--bad); border-color: var(--bad); background: var(--bad-dim);
 }
 
 .monto-input { position: relative; display: flex; align-items: center; }

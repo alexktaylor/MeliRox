@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import {
   type Lead,
+  type EstadoLead,
   ESTADOS,
   FUENTES,
   TIPOS_EVENTO,
@@ -139,13 +140,7 @@ export default function LeadSheet({
             />
           </Campo>
 
-          <Campo label="Estado">
-            <select name="estado" defaultValue={lead?.estado ?? "nuevo"}>
-              {ESTADOS.map((e) => (
-                <option key={e.value} value={e.value}>{e.label}</option>
-              ))}
-            </select>
-          </Campo>
+          <SelectorEstado inicial={lead?.estado ?? "nuevo"} />
 
           <Campo label="¿De dónde llegó?">
             <select name="fuente" defaultValue={lead?.fuente ?? "Google Ads"}>
@@ -249,6 +244,36 @@ export default function LeadSheet({
             </div>
           </div>
         </form>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Estado como botones a la vista en vez de un menú desplegable: los cinco estados
+ * —incluido Perdido— se ven de una y se marcan con un toque. En un desplegable
+ * "Perdido" quedaba escondido y no se encontraba.
+ */
+function SelectorEstado({ inicial }: { inicial: EstadoLead }) {
+  const [valor, setValor] = useState<EstadoLead>(inicial);
+  return (
+    <div className="fld fld--full">
+      <label>Estado</label>
+      {/* El valor viaja en un hidden porque el formulario se envía con FormData. */}
+      <input type="hidden" name="estado" value={valor} />
+      <div className="estado-pills" role="radiogroup" aria-label="Estado del lead">
+        {ESTADOS.map((e) => (
+          <button
+            key={e.value}
+            type="button"
+            role="radio"
+            aria-checked={valor === e.value}
+            className={`estado-pill estado-pill--${e.value}${valor === e.value ? " is-on" : ""}`}
+            onClick={() => setValor(e.value)}
+          >
+            {e.label}
+          </button>
+        ))}
       </div>
     </div>
   );
