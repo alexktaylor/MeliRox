@@ -70,7 +70,7 @@ export default function Empresarial() {
   const valor = parseInt(f.valor.replace(/[^\d]/g, ""), 10) || 0;
   const valorDesc = parseInt(f.valorDescuento.replace(/[^\d]/g, ""), 10) || 0;
   const finalVal = f.usarDescuento && valorDesc > 0 ? valorDesc : valor;
-  const grupo = musicos.length > 1 ? "el ensamble" : "la artista";
+  const deGrupo = musicos.length > 1 ? "del ensamble" : "de la artista";
   const pct = Math.min(100, Math.max(0, parseInt(f.reservaPct.replace(/[^\d]/g, ""), 10) || 0));
   const reserva = Math.round((finalVal * pct) / 100);
   const saldo = finalVal - reserva;
@@ -252,7 +252,7 @@ export default function Empresarial() {
             {f.mostrarHoras && dataRow("Horario", f.horaInicio.trim() || f.horaFin.trim() ? `${f.horaInicio.trim() || "—"} — ${f.horaFin.trim() || "—"}` : "Por confirmar")}
             {dataRow("Duración", f.duracion.trim() || "Por confirmar")}
             {dataRow("Lugar", f.lugar.trim() || "Por confirmar")}
-            {dataRow("Ciudad", f.ciudad.trim() || "Por confirmar")}
+            {f.lugar.trim().toLowerCase() !== f.ciudad.trim().toLowerCase() && dataRow("Ciudad", f.ciudad.trim() || "Por confirmar")}
           </div>
           {f.descansos.trim() && <p style={{ ...body, marginTop: "16px", fontStyle: "italic", color: "#5a5346" }}>{f.descansos}</p>}
         </div>
@@ -319,7 +319,7 @@ export default function Empresarial() {
             {dataRow("Saldo el día del evento", fmtCOP(saldo))}
           </div>
           <p style={{ ...body, marginTop: "14px", fontSize: "12.5px" }}>
-            La reserva asegura y bloquea la fecha en la agenda de {grupo}. El saldo se cancela el día del evento, antes de la presentación.
+            La reserva asegura y bloquea la fecha en la agenda {deGrupo}. El saldo se cancela el día del evento, antes de la presentación.
           </p>
         </div>
 
@@ -330,7 +330,7 @@ export default function Empresarial() {
             <li>El abono de reserva no es reembolsable, ya que bloquea la fecha para otros compromisos.</li>
             <li>El cliente garantiza acceso al lugar, punto de energía eléctrica y un espacio cubierto y adecuado para la presentación.</li>
             <li>Para jornadas extensas se acuerdan descansos y, si aplica, hidratación y alimentación para los músicos.</li>
-            <li>Cambios de fecha están sujetos a disponibilidad de {grupo}.</li>
+            <li>Cambios de fecha están sujetos a disponibilidad {deGrupo}.</li>
             <li>Esta propuesta es válida hasta la fecha indicada; después podrá requerir nueva cotización.</li>
           </ul>
           {f.notas.trim() && <p style={{ ...body, marginTop: "14px" }}><strong style={{ color: "#000" }}>Notas: </strong>{f.notas}</p>}
