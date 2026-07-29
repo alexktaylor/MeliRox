@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
 const GOLD = "#b98f4e";
 const serif = "var(--font-cormorant), serif";
@@ -24,15 +26,34 @@ export default function Contrato() {
     ciudad: "Medellín",
     valor: "",
     reservaPct: "30",
+    fechaFirma: "", // YYYY-MM-DD, defaults to today
   });
   const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }));
+
+  // Remember Meli's own details (name/cédula/deposit) between clients; default sign date = today.
+  useEffect(() => {
+    let saved: Record<string, string> = {};
+    try { saved = JSON.parse(localStorage.getItem("meli-contrato") || "{}"); } catch {}
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    setF((p) => ({ ...p, artistaNombre: saved.artistaNombre ?? p.artistaNombre, artistaCedula: saved.artistaCedula ?? p.artistaCedula, reservaPct: saved.reservaPct ?? p.reservaPct, fechaFirma: today }));
+  }, []);
+
+  // Persist just Meli's details as they change.
+  useEffect(() => {
+    try { localStorage.setItem("meli-contrato", JSON.stringify({ artistaNombre: f.artistaNombre, artistaCedula: f.artistaCedula, reservaPct: f.reservaPct })); } catch {}
+  }, [f.artistaNombre, f.artistaCedula, f.reservaPct]);
 
   const valor = parseInt(f.valor.replace(/[^\d]/g, ""), 10) || 0;
   const pct = Math.min(100, Math.max(0, parseInt(f.reservaPct.replace(/[^\d]/g, ""), 10) || 0));
   const reserva = Math.round((valor * pct) / 100);
   const saldo = valor - reserva;
 
-  const hoy = useMemo(() => "", []); // filled by hand at signing to avoid Date() in build
+  // Sign date parts (parsed manually to avoid timezone drift)
+  const [fy, fm, fd] = (f.fechaFirma || "").split("-").map((n) => parseInt(n, 10));
+  const firmaDia = fd ? String(fd) : "____";
+  const firmaMes = fm ? MESES[fm - 1] : "____________";
+  const firmaAnio = fy ? String(fy) : "20__";
 
   const input: React.CSSProperties = { width: "100%", boxSizing: "border-box", background: "#0a0908", border: "1px solid rgba(212,180,122,.35)", borderRadius: "7px", padding: "11px 12px", color: "#f4edda", fontFamily: mono, fontSize: "14px", outline: "none" };
   const label: React.CSSProperties = { fontFamily: mono, fontSize: "10px", letterSpacing: ".18em", textTransform: "uppercase", color: "#a99a7c", display: "block", marginBottom: "6px" };
@@ -74,6 +95,10 @@ export default function Contrato() {
           {field("Lugar / dirección", "lugar", "Ej: Cra 00 #00-00, o nombre del salón")}
           {field("Valor total (COP)", "valor", "Ej: 1000000", true)}
           {field("% de reserva", "reservaPct", "30", true)}
+          <div style={{ flex: "1 1 160px" }}>
+            <label style={label}>Fecha de firma</label>
+            <input type="date" value={f.fechaFirma} onChange={(e) => set("fechaFirma", e.target.value)} style={input} />
+          </div>
           {field("Nombre legal de la artista", "artistaNombre", "Meli Rox", true)}
           {field("Cédula de la artista", "artistaCedula", "(opcional)", true)}
         </div>
@@ -139,16 +164,20 @@ export default function Contrato() {
         </p>
 
         <p style={{ ...cl, marginTop: "22px" }}>
-          En constancia de lo anterior, las partes firman en {b(orBlank(f.ciudad, 12))}, a los {b("____")} días del mes de {b("____________")} de {b("20__")}.
+          En constancia de lo anterior, las partes firman en {b(orBlank(f.ciudad, 12))}, a los {b(firmaDia)} días del mes de {b(firmaMes)} de {b(firmaAnio)}.
         </p>
 
         {/* Signatures */}
-        <div style={{ display: "flex", gap: "40px", marginTop: "56px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "40px", marginTop: "48px", flexWrap: "wrap" }}>
           {[
-            { role: "LA ARTISTA", name: f.artistaNombre || "Meli Rox", ced: f.artistaCedula },
-            { role: "EL/LA CLIENTE", name: f.cliente, ced: f.cedula },
+            { role: "LA ARTISTA", name: f.artistaNombre || "Meli Rox", ced: f.artistaCedula, signed: true },
+            { role: "EL/LA CLIENTE", name: f.cliente, ced: f.cedula, signed: false },
           ].map((s) => (
             <div key={s.role} style={{ flex: "1 1 220px" }}>
+              {/* Signature sits on the line — Meli's is pre-signed in script */}
+              <div style={{ height: "52px", display: "flex", alignItems: "flex-end", paddingLeft: "6px", overflow: "hidden" }}>
+                {s.signed && <span style={{ fontFamily: "var(--font-signature), cursive", fontSize: "38px", lineHeight: 1, color: "#1c1a15", transform: "translateY(6px)" }}>{s.name}</span>}
+              </div>
               <div style={{ borderTop: "1px solid #1c1a15", paddingTop: "8px" }}>
                 <div style={{ fontFamily: mono, fontSize: "10px", letterSpacing: ".18em", textTransform: "uppercase", color: "#8a7d63" }}>{s.role}</div>
                 <div style={{ fontSize: "15px", fontWeight: 600, color: "#000", marginTop: "4px" }}>{orBlank(s.name, 20)}</div>
