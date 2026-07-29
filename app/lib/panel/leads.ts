@@ -70,6 +70,81 @@ export function estadoLabel(e: EstadoLead): string {
   return ESTADOS.find((x) => x.value === e)?.label ?? "Nuevo";
 }
 
+/* ============================================================
+   PLATA POR LEAD — total del proyecto, abono y saldo
+   ============================================================ */
+
+/**
+ * Total del proyecto: el valor cerrado si ya se acordó, si no el cotizado.
+ * Una sola fuente de verdad para la tarjeta, el orden y los totales del resumen.
+ */
+export function totalProyecto(l: Lead): number | null {
+  return l.valor_cerrado ?? l.valor;
+}
+
+/** Lo que el cliente todavía debe: total − abono. Nunca negativo. */
+export function faltaPorCobrar(l: Lead): number | null {
+  const total = totalProyecto(l);
+  if (total == null) return null;
+  return Math.max(0, total - (l.abono ?? 0));
+}
+
+/** ¿Vale la pena mostrar el desglose total / abonado / falta? */
+export function tieneAbono(l: Lead): boolean {
+  return (l.abono ?? 0) > 0;
+}
+
+/* ============================================================
+   ORDEN DE LA LISTA
+   ============================================================ */
+
+export type Orden =
+  | "recientes"
+  | "falta"
+  | "abono"
+  | "total"
+  | "evento";
+
+export const ORDENES: { value: Orden; label: string }[] = [
+  { value: "recientes", label: "Más recientes" },
+  { value: "evento", label: "Evento más próximo" },
+  { value: "falta", label: "Falta por cobrar" },
+  { value: "abono", label: "Abono recibido" },
+  { value: "total", label: "Valor más alto" },
+];
+
+/** Los nulos siempre al final, sin importar la dirección del orden. */
+function cmpNum(a: number | null, b: number | null, desc = true): number {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return desc ? b - a : a - b;
+}
+
+export function ordenarLeads(leads: Lead[], orden: Orden): Lead[] {
+  const copia = [...leads];
+  switch (orden) {
+    case "falta":
+      return copia.sort((a, b) => cmpNum(faltaPorCobrar(a), faltaPorCobrar(b)));
+    case "abono":
+      return copia.sort((a, b) => cmpNum(a.abono, b.abono));
+    case "total":
+      return copia.sort((a, b) => cmpNum(totalProyecto(a), totalProyecto(b)));
+    case "evento":
+      // Los eventos que ya pasaron van al final; entre los futuros, el más cercano primero.
+      return copia.sort((a, b) => {
+        const da = diasHasta(a.fecha_evento);
+        const db = diasHasta(b.fecha_evento);
+        const futuro = (d: number | null) => (d != null && d >= 0 ? 0 : 1);
+        if (futuro(da) !== futuro(db)) return futuro(da) - futuro(db);
+        return cmpNum(da, db, false);
+      });
+    default:
+      // El orden que ya trae la consulta: abiertos primero, luego por fecha de contacto.
+      return copia;
+  }
+}
+
 /** Convierte un texto de estado desconocido en uno válido. */
 export function normalizarEstado(raw: string): EstadoLead {
   return ESTADOS.some((e) => e.value === raw) ? (raw as EstadoLead) : "nuevo";

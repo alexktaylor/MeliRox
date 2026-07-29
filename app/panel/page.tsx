@@ -1,6 +1,11 @@
 import { exigirAuth } from "@/app/lib/panel/auth";
 import { getLeads, getGastoAds, dbConfigurada, type GastoAds } from "@/app/lib/panel/db";
-import { type Lead, diasHasta } from "@/app/lib/panel/leads";
+import {
+  type Lead,
+  diasHasta,
+  totalProyecto,
+  faltaPorCobrar,
+} from "@/app/lib/panel/leads";
 import Panel from "./Panel";
 
 export const dynamic = "force-dynamic";
@@ -51,11 +56,10 @@ function calcular(leads: Lead[], gasto: GastoAds): Resumen {
 
     if (l.estado === "confirmado") {
       // Si no alcanzó a escribir el valor cerrado, se asume el cotizado.
-      const cerrado = l.valor_cerrado ?? l.valor ?? 0;
-      totalConfirmado += cerrado;
+      totalConfirmado += totalProyecto(l) ?? 0;
       confirmadosCount++;
       abonosRecibidos += l.abono ?? 0;
-      saldoPorCobrar += Math.max(0, cerrado - (l.abono ?? 0));
+      saldoPorCobrar += faltaPorCobrar(l) ?? 0;
     } else if (l.estado === "perdido") {
       perdidosCount++;
     } else {
@@ -64,7 +68,7 @@ function calcular(leads: Lead[], gasto: GastoAds): Resumen {
     }
 
     if ((l.fuente ?? "").toLowerCase().includes("google")) leadsGoogle++;
-    if (l.google_win) ventasGoogle += l.valor_cerrado ?? l.valor ?? 0;
+    if (l.google_win) ventasGoogle += totalProyecto(l) ?? 0;
 
     // Próximo evento: el más cercano de aquí en adelante que no esté perdido.
     if (l.fecha_evento && l.estado !== "perdido") {

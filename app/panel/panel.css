@@ -270,9 +270,18 @@
 /* ============================================================
    BUSCADOR + CHIPS
    ============================================================ */
-.mp-toolbar { display: flex; gap: 10px; padding: 16px 16px 0; }
-.mp-search { flex: 1 1 auto; min-width: 0; }
-.mp-fuente { flex: 0 0 40%; max-width: 175px; }
+/* En el celular: buscador arriba a lo ancho, y debajo fuente + orden en dos mitades.
+   Tres controles en una sola fila quedan demasiado apretados en 393px. */
+.mp-toolbar { display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 0; }
+.mp-search { width: 100%; }
+.mp-selects { display: flex; gap: 10px; }
+.mp-selects select { flex: 1 1 0; min-width: 0; }
+@media (min-width: 620px) {
+  .mp-toolbar { flex-direction: row; align-items: center; }
+  .mp-search { flex: 1 1 auto; min-width: 0; }
+  .mp-selects { flex: 0 0 auto; }
+  .mp-selects select { flex: 0 0 auto; width: 168px; }
+}
 
 .chip-row {
   display: flex; gap: 8px;
@@ -359,9 +368,10 @@
   font-size: 9px; font-weight: 500; color: var(--muted);
   letter-spacing: 0.14em; text-transform: uppercase; margin-top: 3px;
 }
-.plata-cot { color: var(--cream); }
-.plata-cerr { color: var(--ok); }
-.plata-saldo { color: var(--warn); }
+.plata-total { color: var(--cream); }
+.plata-abono { color: var(--ok); }
+.plata-falta { color: var(--warn); }
+.plata-pago { color: var(--ok); }
 
 /* botón de WhatsApp — columna propia, toda la altura de la tarjeta */
 .lead-wa {

@@ -4,7 +4,13 @@ import { useMemo, useState, useTransition } from "react";
 import {
   type Lead,
   type EstadoLead,
+  type Orden,
   ESTADOS,
+  ORDENES,
+  ordenarLeads,
+  totalProyecto,
+  faltaPorCobrar,
+  tieneAbono,
   formatCOP,
   formatCOPCorto,
   formatFecha,
@@ -34,6 +40,7 @@ export default function Panel({
   const [busqueda, setBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState<FiltroEstado>("todos");
   const [filtroFuente, setFiltroFuente] = useState("todas");
+  const [orden, setOrden] = useState<Orden>("recientes");
   const [editando, setEditando] = useState<Lead | null>(null);
   const [creando, setCreando] = useState(false);
 
@@ -45,7 +52,7 @@ export default function Panel({
 
   const filtrados = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
-    return leads.filter((l) => {
+    const visibles = leads.filter((l) => {
       if (filtroEstado !== "todos" && l.estado !== filtroEstado) return false;
       if (filtroFuente !== "todas" && (l.fuente ?? "") !== filtroFuente) return false;
       if (!q) return true;
@@ -58,7 +65,8 @@ export default function Panel({
         .toLowerCase();
       return heno.includes(q);
     });
-  }, [leads, busqueda, filtroEstado, filtroFuente]);
+    return ordenarLeads(visibles, orden);
+  }, [leads, busqueda, filtroEstado, filtroFuente, orden]);
 
   const conteos = useMemo(() => {
     const c: Record<string, number> = { todos: leads.length };
@@ -123,17 +131,27 @@ export default function Panel({
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
-        <select
-          className="mp-fuente"
-          value={filtroFuente}
-          onChange={(e) => setFiltroFuente(e.target.value)}
-          aria-label="Filtrar por fuente"
-        >
-          <option value="todas">Toda fuente</option>
-          {fuentes.map((f) => (
-            <option key={f} value={f}>{f}</option>
-          ))}
-        </select>
+        <div className="mp-selects">
+          <select
+            value={filtroFuente}
+            onChange={(e) => setFiltroFuente(e.target.value)}
+            aria-label="Filtrar por fuente"
+          >
+            <option value="todas">Toda fuente</option>
+            {fuentes.map((f) => (
+              <option key={f} value={f}>{f}</option>
+            ))}
+          </select>
+          <select
+            value={orden}
+            onChange={(e) => setOrden(e.target.value as Orden)}
+            aria-label="Ordenar la lista"
+          >
+            {ORDENES.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="chip-row" role="tablist" aria-label="Filtrar por estado">
@@ -196,11 +214,10 @@ function TarjetaLead({ lead, onAbrir }: { lead: Lead; onAbrir: () => void }) {
   // El seguimiento se marca cuando es hoy o ya se pasó.
   const seguimientoVence = diasSeguimiento != null && diasSeguimiento <= 0;
 
-  const cerrado = lead.valor_cerrado ?? lead.valor;
-  const saldo =
-    lead.estado === "confirmado" && cerrado != null
-      ? Math.max(0, cerrado - (lead.abono ?? 0))
-      : null;
+  const total = totalProyecto(lead);
+  const falta = faltaPorCobrar(lead);
+  // Con abono se muestra el desglose completo; sin abono basta el total.
+  const desglose = tieneAbono(lead);
 
   return (
     <div className="lead-card">
@@ -235,23 +252,23 @@ function TarjetaLead({ lead, onAbrir }: { lead: Lead; onAbrir: () => void }) {
           )}
         </div>
 
-        {(lead.valor != null || cerrado != null) && (
+        {total != null && (
           <div className="lead-plata">
-            <span className="plata-cot">
-              {formatCOP(lead.valor)}
-              <em>Cotizado</em>
+            <span className="plata-total">
+              {formatCOP(total)}
+              <em>{lead.valor_cerrado != null ? "Total" : "Cotizado"}</em>
             </span>
-            {lead.estado === "confirmado" && cerrado != null && (
-              <span className="plata-cerr">
-                {formatCOP(cerrado)}
-                <em>Cerrado</em>
-              </span>
-            )}
-            {saldo != null && saldo > 0 && (
-              <span className="plata-saldo">
-                {formatCOP(saldo)}
-                <em>Falta</em>
-              </span>
+            {desglose && (
+              <>
+                <span className="plata-abono">
+                  {formatCOP(lead.abono)}
+                  <em>Abonado</em>
+                </span>
+                <span className={falta === 0 ? "plata-pago" : "plata-falta"}>
+                  {falta === 0 ? "Pagado" : formatCOP(falta)}
+                  <em>{falta === 0 ? "Completo" : "Falta"}</em>
+                </span>
+              </>
             )}
           </div>
         )}
