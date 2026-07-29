@@ -143,7 +143,11 @@ export default function LeadSheet({
           <SelectorEstado inicial={lead?.estado ?? "nuevo"} />
 
           <Campo label="¿De dónde llegó?">
-            <select name="fuente" defaultValue={lead?.fuente ?? "Google Ads"}>
+            {/* Sin valor por defecto: un <select> envía siempre lo que muestra, así que
+                preseleccionar "Google Ads" marcaba como Google leads que nunca lo fueron
+                y le inflaba la atribución a la campaña. */}
+            <select name="fuente" defaultValue={lead?.fuente ?? ""}>
+              <option value="">Sin especificar</option>
               {conOpcionActual(FUENTES, lead?.fuente).map((f) => (
                 <option key={f} value={f}>{f}</option>
               ))}
@@ -155,7 +159,11 @@ export default function LeadSheet({
           </div>
 
           <Campo label="Tipo de evento">
-            <select name="tipo_evento" defaultValue={lead?.tipo_evento ?? "Boda"}>
+            {/* Tampoco se preselecciona: el tipo de evento entra en el saludo de
+                WhatsApp, y por defecto "Boda" le escribía "sobre tu boda" a una
+                clienta de serenata. */}
+            <select name="tipo_evento" defaultValue={lead?.tipo_evento ?? ""}>
+              <option value="">Sin especificar</option>
               {conOpcionActual(TIPOS_EVENTO, lead?.tipo_evento).map((t) => (
                 <option key={t} value={t}>{t}</option>
               ))}
@@ -163,7 +171,8 @@ export default function LeadSheet({
           </Campo>
 
           <Campo label="Formato">
-            <select name="formato" defaultValue={lead?.formato ?? "Violín y voz"}>
+            <select name="formato" defaultValue={lead?.formato ?? ""}>
+              <option value="">Sin especificar</option>
               {conOpcionActual(FORMATOS, lead?.formato).map((f) => (
                 <option key={f} value={f}>{f}</option>
               ))}
@@ -177,7 +186,7 @@ export default function LeadSheet({
           <Campo label="Ciudad">
             <input
               name="ciudad"
-              defaultValue={lead?.ciudad ?? (esEdicion ? "" : "Medellín")}
+              defaultValue={lead?.ciudad ?? ""}
               placeholder="Medellín"
               autoCapitalize="words"
             />

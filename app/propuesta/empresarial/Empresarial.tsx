@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { descargarPdf } from "../../components/descargarPdf";
 
 const GOLD = "#b98f4e";
 const serif = "var(--font-cormorant), serif";
@@ -48,6 +49,7 @@ export default function Empresarial() {
     fechaPropuesta: "",
     notas: "",
   });
+  const [pdfEstado, setPdfEstado] = useState<"" | "generando" | "error">("");
   const [musicos, setMusicos] = useState<Musico[]>([
     { nombre: "Meli Rox", instrumento: "Violín", credencial: "Cantautora y violinista · +10 años en escena · Presencia en TV nacional" },
     { nombre: "", instrumento: "Violín", credencial: "Egresado(a) de la Universidad de Antioquia · +10 años de experiencia" },
@@ -199,16 +201,30 @@ export default function Empresarial() {
         </div>
 
         <div style={{ marginTop: "22px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
-          <button onClick={() => window.print()} style={{ cursor: "pointer", border: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "#171208", background: "linear-gradient(135deg,#ecd9ac,#b98f4e)", padding: "15px 26px", borderRadius: "999px" }}>
-            Imprimir / Guardar PDF
+          <button
+            disabled={pdfEstado === "generando"}
+            onClick={async () => {
+              setPdfEstado("generando");
+              try {
+                await descargarPdf(`Propuesta ${f.empresa.trim() || f.cliente.trim() || "Meli Rox"}`);
+                setPdfEstado("");
+              } catch {
+                setPdfEstado("error");
+              }
+            }}
+            style={{ cursor: pdfEstado === "generando" ? "wait" : "pointer", opacity: pdfEstado === "generando" ? 0.7 : 1, border: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "#171208", background: "linear-gradient(135deg,#ecd9ac,#b98f4e)", padding: "15px 26px", borderRadius: "999px" }}
+          >
+            {pdfEstado === "generando" ? "Generando PDF…" : "Descargar PDF"}
+          </button>
+          <button onClick={() => window.print()} style={{ cursor: "pointer", background: "none", border: "1px solid rgba(212,180,122,.4)", color: "#ecd9ac", fontFamily: mono, fontSize: "11.5px", letterSpacing: ".12em", textTransform: "uppercase", padding: "15px 20px", borderRadius: "999px" }}>
+            Imprimir
           </button>
         </div>
-        <div style={{ marginTop: "14px", background: "rgba(212,180,122,.08)", border: "1px solid rgba(212,180,122,.3)", borderRadius: "8px", padding: "14px 16px", fontSize: "13px", lineHeight: 1.7, color: "#d9ccae" }}>
-          <strong style={{ color: "#ecd9ac" }}>En el diálogo de impresión:</strong>
-          <div style={{ marginTop: "6px" }}>1. Destino: <strong>Guardar como PDF</strong></div>
-          <div>2. Abre <strong>Más ajustes</strong> y <strong>desactiva “Encabezados y pies de página”</strong> — así el PDF no muestra la fecha ni el enlace de esta página.</div>
-          <div style={{ marginTop: "6px", color: "#8a7d63", fontSize: "12px" }}>El navegador recuerda este ajuste, solo hay que hacerlo una vez.</div>
-        </div>
+        {pdfEstado === "error" && (
+          <div style={{ marginTop: "12px", background: "rgba(200,80,60,.12)", border: "1px solid rgba(200,80,60,.4)", borderRadius: "8px", padding: "12px 14px", fontSize: "13px", color: "#f0c9c0" }}>
+            No se pudo generar el PDF. Usa el botón <strong>Imprimir</strong> y elige “Guardar como PDF”.
+          </div>
+        )}
       </div>
 
       {/* ---------- THE DOCUMENT ---------- */}
