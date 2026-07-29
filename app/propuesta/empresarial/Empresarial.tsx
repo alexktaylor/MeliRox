@@ -202,7 +202,12 @@ export default function Empresarial() {
           <button onClick={() => window.print()} style={{ cursor: "pointer", border: "none", fontSize: "14px", fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "#171208", background: "linear-gradient(135deg,#ecd9ac,#b98f4e)", padding: "15px 26px", borderRadius: "999px" }}>
             Imprimir / Guardar PDF
           </button>
-          <span style={{ alignSelf: "center", fontSize: "12.5px", color: "#8a7d63" }}>En el diálogo de impresión elige “Guardar como PDF”.</span>
+        </div>
+        <div style={{ marginTop: "14px", background: "rgba(212,180,122,.08)", border: "1px solid rgba(212,180,122,.3)", borderRadius: "8px", padding: "14px 16px", fontSize: "13px", lineHeight: 1.7, color: "#d9ccae" }}>
+          <strong style={{ color: "#ecd9ac" }}>En el diálogo de impresión:</strong>
+          <div style={{ marginTop: "6px" }}>1. Destino: <strong>Guardar como PDF</strong></div>
+          <div>2. Abre <strong>Más ajustes</strong> y <strong>desactiva “Encabezados y pies de página”</strong> — así el PDF no muestra la fecha ni el enlace de esta página.</div>
+          <div style={{ marginTop: "6px", color: "#8a7d63", fontSize: "12px" }}>El navegador recuerda este ajuste, solo hay que hacerlo una vez.</div>
         </div>
       </div>
 
