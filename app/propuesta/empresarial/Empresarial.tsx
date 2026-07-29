@@ -15,6 +15,14 @@ const longDate = (iso: string) => {
   return y && m && d ? `${d} de ${MESES[m - 1]} de ${y}` : "";
 };
 
+// Datos de pago fijos de Meli
+const PAGO = {
+  banco: "Bancolombia",
+  tipo: "Ahorros",
+  numero: "31100043621",
+  titular: "Melissa Gaviria Correa",
+};
+
 type Musico = { nombre: string; instrumento: string; credencial: string };
 
 export default function Empresarial() {
@@ -50,13 +58,14 @@ export default function Empresarial() {
   const setM = (i: number, k: keyof Musico, v: string) =>
     setMusicos((p) => p.map((m, idx) => (idx === i ? { ...m, [k]: v } : m)));
 
-  // Default proposal date = today; validity = +15 days
+  // Default proposal date = today; validity = +15 days. Payment details persist locally.
   useEffect(() => {
     const d = new Date();
     const iso = (x: Date) => `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
     const v = new Date(d.getTime() + 15 * 86400000);
     setF((p) => ({ ...p, fechaPropuesta: iso(d), validoHasta: iso(v) }));
   }, []);
+
 
   const valor = parseInt(f.valor.replace(/[^\d]/g, ""), 10) || 0;
   const valorDesc = parseInt(f.valorDescuento.replace(/[^\d]/g, ""), 10) || 0;
@@ -320,6 +329,23 @@ export default function Empresarial() {
             <li>Esta propuesta es válida hasta la fecha indicada; después podrá requerir nueva cotización.</li>
           </ul>
           {f.notas.trim() && <p style={{ ...body, marginTop: "14px" }}><strong style={{ color: "#000" }}>Notas: </strong>{f.notas}</p>}
+        </div>
+
+        {/* Payment details — fijos */}
+        <div className="avoid-break" style={sec}>
+          <div style={h3}>Datos de pago</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "18px", flexWrap: "wrap" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/bancolombia.webp" alt="Bancolombia" style={{ height: "38px", width: "auto", flex: "0 0 auto" }} />
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "18px 14px", flex: "1 1 300px" }}>
+              {dataRow("Tipo de cuenta", PAGO.tipo)}
+              {dataRow("Número de cuenta", PAGO.numero)}
+              {dataRow("Titular", PAGO.titular)}
+            </div>
+          </div>
+          <p style={{ ...body, marginTop: "14px", fontSize: "12.5px" }}>
+            Por favor enviar el comprobante de la transferencia al WhatsApp +57 304 550 2154 para confirmar la reserva de la fecha.
+          </p>
         </div>
 
         {/* Sign-off */}
