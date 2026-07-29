@@ -1,0 +1,547 @@
+/* ============================================================
+   PANEL MELI ROX — app de leads. Pensado primero para el celular.
+   Paleta: negro cálido + dorado (la misma del sitio).
+   Tipos: Cormorant (display) · Manrope (UI) · IBM Plex Mono (etiquetas).
+   ============================================================ */
+
+.mp {
+  --bg:         #0b0a08;
+  --bg-2:       #12100c;
+  --panel:      #17130d;
+  --panel-2:    #1d1810;
+  --panel-hi:   #251e14;
+
+  --line:        rgba(212, 180, 122, 0.14);
+  --line-soft:   rgba(212, 180, 122, 0.07);
+  --line-strong: rgba(212, 180, 122, 0.28);
+
+  --cream:   #f4edda;
+  --cream-2: #ddd2b8;
+  --muted:   #a99a7c;
+  --muted-2: #7a6f58;
+
+  --gold:        #d4b47a;
+  --gold-bright: #e8cf9e;
+  --gold-deep:   #b98f4e;
+  --hi:          #ecd9ac;
+
+  --wa:      #25d366;
+  --wa-dim:  rgba(37, 211, 102, 0.13);
+  --ok:      #6fbf8d;
+  --ok-dim:  rgba(111, 191, 141, 0.14);
+  --warn:    #dcae52;
+  --warn-dim: rgba(220, 174, 82, 0.14);
+  --bad:     #cf7a63;
+  --bad-dim: rgba(207, 122, 99, 0.14);
+
+  --serif: var(--font-cormorant), Georgia, serif;
+  --mono:  var(--font-mono), ui-monospace, monospace;
+
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(212, 180, 122, 0.09), transparent 60%),
+    var(--bg);
+  color: var(--cream);
+  min-height: 100dvh;
+  padding: 0 0 calc(96px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+  /* Sin flash azul al tocar en iOS/Android */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mp *,
+.mp *::before,
+.mp *::after { box-sizing: border-box; }
+
+.mp h1, .mp h2, .mp h3 { font-family: var(--serif); margin: 0; font-weight: 500; }
+
+/* Etiqueta mono en mayúsculas — el gesto tipográfico del sitio de Meli */
+.mp .eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- campos ---------- */
+.mp input,
+.mp select,
+.mp textarea {
+  width: 100%;
+  font: inherit;
+  /* 16px mínimo: por debajo de eso Safari en iPhone hace zoom al enfocar */
+  font-size: 16px;
+  color: var(--cream);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 13px;
+  min-height: 46px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.mp textarea { resize: vertical; line-height: 1.5; min-height: 84px; }
+.mp input:focus,
+.mp select:focus,
+.mp textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 180, 122, 0.16);
+}
+.mp select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23d4b47a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+/* El icono nativo del date picker es casi invisible en oscuro */
+.mp input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.75) sepia(0.4) saturate(3) hue-rotate(3deg);
+  cursor: pointer;
+}
+
+/* ---------- botones ---------- */
+.mp .btn-solid {
+  font: inherit; font-size: 15px; font-weight: 650;
+  color: #100d07;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep));
+  border: none; border-radius: 12px;
+  padding: 14px 18px; min-height: 48px; cursor: pointer;
+  box-shadow: 0 8px 24px -8px rgba(212, 180, 122, 0.5);
+  transition: filter 0.15s, transform 0.05s;
+}
+.mp .btn-solid:hover { filter: brightness(1.06); }
+.mp .btn-solid:active { transform: translateY(1px); }
+.mp .btn-solid:disabled { opacity: 0.6; cursor: default; }
+.mp .btn-ghost {
+  font: inherit; font-size: 15px; font-weight: 600;
+  color: var(--cream-2); background: transparent;
+  border: 1px solid var(--line-strong); border-radius: 12px;
+  padding: 14px 18px; min-height: 48px; cursor: pointer;
+}
+.mp .btn-danger {
+  font: inherit; font-size: 15px; font-weight: 600;
+  color: var(--bad); background: var(--bad-dim);
+  border: 1px solid rgba(207, 122, 99, 0.35); border-radius: 12px;
+  padding: 14px 18px; min-height: 48px; cursor: pointer;
+}
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+.login-page { display: grid; place-items: center; padding: 24px; min-height: 100dvh; }
+.login-card {
+  width: 100%; max-width: 380px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 34px 26px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
+}
+.login-brand { text-align: center; margin-bottom: 26px; }
+.login-brand h1 { font-size: 1.7rem; margin: 14px 0 4px; letter-spacing: 0.01em; }
+.login-brand p { margin: 0; }
+.login-mark, .mp-mark {
+  display: inline-grid; place-items: center;
+  width: 54px; height: 54px; border-radius: 15px;
+  font-family: var(--serif); font-size: 1.25rem; font-weight: 600;
+  color: var(--gold-bright);
+  background: linear-gradient(160deg, var(--panel-hi), var(--bg-2));
+  border: 1px solid var(--line-strong);
+}
+.login-form { display: grid; gap: 14px; }
+.login-error {
+  margin: 0; color: var(--bad); background: var(--bad-dim);
+  border: 1px solid rgba(207, 122, 99, 0.3);
+  border-radius: 10px; padding: 10px 12px; font-size: 0.88rem; line-height: 1.45;
+}
+.login-foot { text-align: center; color: var(--muted-2); font-size: 0.78rem; margin: 18px 0 0; }
+
+.fld { display: grid; gap: 6px; min-width: 0; }
+.fld > label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* ============================================================
+   ENCABEZADO
+   ============================================================ */
+.mp-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background: rgba(11, 10, 8, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.mp-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.mp-mark { width: 42px; height: 42px; border-radius: 12px; font-size: 1rem; flex: 0 0 auto; }
+.mp-brand h1 { font-size: 1.2rem; line-height: 1.15; }
+.mp-salir {
+  font: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--cream-2); background: transparent;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  padding: 9px 15px; min-height: 40px; cursor: pointer; white-space: nowrap;
+}
+.mp-salir:hover { border-color: var(--gold); color: var(--gold-bright); }
+
+/* ============================================================
+   TARJETAS DE RESUMEN (scroll horizontal con snap en el celular)
+   ============================================================ */
+.stat-scroll {
+  display: flex; gap: 12px;
+  /* flex-start: cada tarjeta mide lo que mide su contenido, en vez de estirarse
+     todas a la altura de la más alta */
+  align-items: flex-start;
+  padding: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.stat-scroll::-webkit-scrollbar { display: none; }
+.stat-card {
+  scroll-snap-align: start; flex: 0 0 auto;
+  min-width: 152px;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 15px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.stat-value {
+  font-family: var(--serif); font-size: 1.6rem; font-weight: 600;
+  line-height: 1.05; letter-spacing: 0.01em;
+}
+.stat-label { font-size: 0.82rem; color: var(--cream-2); font-weight: 600; }
+.stat-hint { font-size: 0.72rem; color: var(--muted); }
+.stat-card--win {
+  border-color: rgba(111, 191, 141, 0.38);
+  background: linear-gradient(165deg, var(--ok-dim), var(--panel));
+}
+.stat-card--win .stat-value { color: var(--ok); }
+.stat-card--prox {
+  border-color: var(--line-strong);
+  background: linear-gradient(165deg, rgba(212, 180, 122, 0.1), var(--panel));
+}
+.stat-card--prox .stat-value { color: var(--gold-bright); font-size: 1.25rem; }
+
+/* ============================================================
+   FILA DE GOOGLE ADS — a lo ancho, siempre visible (se actualiza a diario)
+   ============================================================ */
+.ads-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px;
+  margin: 0 16px;
+  padding: 15px 16px;
+  background: linear-gradient(150deg, rgba(212, 180, 122, 0.12), var(--panel));
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+}
+.ads-cifras { display: flex; flex-direction: column; gap: 7px; min-width: 0; flex: 1 1 190px; }
+.ads-roi { display: flex; flex-direction: column; gap: 2px; }
+.ads-roi-val {
+  font-family: var(--serif); font-size: 1.7rem; font-weight: 600;
+  line-height: 1; color: var(--gold-bright);
+}
+.ads-detalle {
+  display: flex; flex-wrap: wrap; gap: 3px 14px;
+  font-size: 0.76rem; color: var(--muted);
+}
+.ads-detalle b { color: var(--cream-2); font-weight: 650; }
+.ads-detalle .pos b { color: var(--ok); }
+.ads-detalle .neg b { color: var(--bad); }
+
+.ads-form { display: flex; flex-direction: column; gap: 6px; flex: 1 1 190px; min-width: 0; }
+.ads-form-fila { display: flex; align-items: center; gap: 8px; }
+.ads-form-fila .monto-input { flex: 1 1 auto; min-width: 0; }
+.ads-form input { min-height: 44px; }
+.ads-form button {
+  font: inherit; font-size: 0.85rem; font-weight: 650;
+  color: var(--gold-bright); background: transparent;
+  border: 1px solid var(--line-strong); border-radius: 11px;
+  padding: 11px 14px; min-height: 44px; cursor: pointer; white-space: nowrap;
+}
+.ads-form button:hover { border-color: var(--gold); background: rgba(212, 180, 122, 0.08); }
+.ads-form button:disabled { opacity: 0.6; cursor: default; }
+.ads-sello { font-size: 0.7rem; color: var(--muted-2); }
+
+/* ============================================================
+   BUSCADOR + CHIPS
+   ============================================================ */
+.mp-toolbar { display: flex; gap: 10px; padding: 16px 16px 0; }
+.mp-search { flex: 1 1 auto; min-width: 0; }
+.mp-fuente { flex: 0 0 40%; max-width: 175px; }
+
+.chip-row {
+  display: flex; gap: 8px;
+  padding: 14px 16px 6px;
+  overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.chip-row::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto;
+  font: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--cream-2); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 14px; min-height: 40px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.chip-count {
+  font-size: 0.72rem; color: var(--muted);
+  background: var(--bg-2); border-radius: 999px; padding: 2px 7px;
+}
+.chip--active { border-color: var(--gold); color: var(--cream); }
+.chip--active.chip--confirmado { border-color: var(--ok); }
+.chip--active.chip--confirmado .chip-count { color: var(--ok); }
+.chip--active.chip--perdido { border-color: var(--bad); }
+.chip--active.chip--quizas { border-color: var(--warn); }
+
+/* ============================================================
+   TARJETAS DE LEAD
+   ============================================================ */
+.lead-list { display: grid; gap: 11px; padding: 10px 16px 0; }
+.vacio { color: var(--muted); text-align: center; padding: 44px 16px; line-height: 1.6; }
+
+/* La tarjeta es un div (no button) porque lleva el botón de WhatsApp dentro:
+   un button anidado en otro button es HTML inválido. */
+.lead-card {
+  position: relative;
+  display: flex; align-items: stretch; gap: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+}
+.lead-card:hover { border-color: var(--line-strong); background: var(--panel-2); }
+
+.lead-abrir {
+  flex: 1 1 auto; min-width: 0;
+  display: block; text-align: left;
+  font: inherit; color: inherit; cursor: pointer;
+  background: transparent; border: none;
+  padding: 14px 12px 14px 15px;
+  transition: transform 0.05s;
+}
+.lead-abrir:active { transform: scale(0.995); }
+
+.lead-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.lead-nombre {
+  font-weight: 650; font-size: 1.03rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lead-evento { color: var(--cream-2); font-size: 0.9rem; margin-top: 3px; }
+.lead-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 9px; }
+.tag {
+  font-size: 0.71rem; font-weight: 600; color: var(--muted);
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 6px; padding: 2px 8px;
+}
+.tag--google {
+  color: var(--gold-bright);
+  border-color: rgba(212, 180, 122, 0.32);
+  background: rgba(212, 180, 122, 0.1);
+}
+.tag--fecha { color: var(--hi); border-color: rgba(236, 217, 172, 0.28); }
+.tag--urgente { color: var(--warn); border-color: rgba(220, 174, 82, 0.35); background: var(--warn-dim); }
+.lead-plata {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 11px; padding-top: 11px;
+  border-top: 1px solid var(--line-soft);
+}
+.lead-plata > span { display: flex; flex-direction: column; font-weight: 700; font-size: 1.02rem; }
+.lead-plata em {
+  font-style: normal; font-family: var(--mono);
+  font-size: 9px; font-weight: 500; color: var(--muted);
+  letter-spacing: 0.14em; text-transform: uppercase; margin-top: 3px;
+}
+.plata-cot { color: var(--cream); }
+.plata-cerr { color: var(--ok); }
+.plata-saldo { color: var(--warn); }
+
+/* botón de WhatsApp — columna propia, toda la altura de la tarjeta */
+.lead-wa {
+  flex: 0 0 auto;
+  width: 60px;
+  display: grid; place-items: center; gap: 3px;
+  align-content: center;
+  color: var(--wa);
+  background: var(--wa-dim);
+  border: none;
+  border-left: 1px solid var(--line);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.lead-wa:hover { background: rgba(37, 211, 102, 0.2); }
+.lead-wa:active { background: rgba(37, 211, 102, 0.3); }
+.lead-wa svg { width: 23px; height: 23px; display: block; }
+.lead-wa span {
+  font-family: var(--mono); font-size: 8px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+/* sin número guardado: se ve apagado y no hace nada */
+.lead-wa--off {
+  color: var(--muted-2); background: transparent; cursor: default;
+}
+.lead-wa--off:hover { background: transparent; }
+
+/* pastilla de estado */
+.pill {
+  font-size: 0.71rem; font-weight: 700; border-radius: 999px;
+  padding: 3px 10px; white-space: nowrap; flex: 0 0 auto;
+}
+.pill--nuevo { color: var(--hi); background: rgba(236, 217, 172, 0.14); }
+.pill--cotizado { color: var(--gold); background: rgba(212, 180, 122, 0.14); }
+.pill--quizas { color: var(--warn); background: var(--warn-dim); }
+.pill--confirmado { color: var(--ok); background: var(--ok-dim); }
+.pill--perdido { color: var(--bad); background: var(--bad-dim); }
+
+/* ============================================================
+   BOTÓN FLOTANTE
+   ============================================================ */
+.fab {
+  position: fixed; z-index: 30;
+  right: 18px; bottom: calc(22px + env(safe-area-inset-bottom));
+  width: 60px; height: 60px; border-radius: 50%;
+  border: none; cursor: pointer;
+  color: #100d07;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep));
+  box-shadow: 0 10px 28px -6px rgba(212, 180, 122, 0.55);
+  display: grid; place-items: center;
+  transition: transform 0.08s, filter 0.15s;
+}
+.fab span { font-size: 2rem; line-height: 1; margin-top: -3px; }
+.fab:hover { filter: brightness(1.06); }
+.fab:active { transform: scale(0.94); }
+
+/* ============================================================
+   HOJA INFERIOR (formulario)
+   ============================================================ */
+.sheet-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(6, 5, 4, 0.66);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: mp-fade 0.15s ease;
+}
+@keyframes mp-fade { from { opacity: 0; } to { opacity: 1; } }
+.sheet {
+  width: 100%; max-width: 560px;
+  max-height: 92dvh; overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-bottom: none;
+  border-radius: 22px 22px 0 0;
+  padding: 8px 18px calc(26px + env(safe-area-inset-bottom));
+  animation: mp-subir 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes mp-subir { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-grab {
+  width: 42px; height: 4px; border-radius: 999px;
+  background: var(--line-strong); margin: 7px auto 12px;
+}
+.sheet-head {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 16px; padding: 4px 0 10px;
+  background: var(--panel);
+}
+.sheet-head h2 { font-size: 1.35rem; }
+.sheet-x {
+  font: inherit; font-size: 1rem; color: var(--muted);
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 50%; width: 36px; height: 36px; flex: 0 0 auto; cursor: pointer;
+}
+
+.lead-form { display: grid; grid-template-columns: 1fr; gap: 13px; }
+@media (min-width: 470px) {
+  .lead-form { grid-template-columns: 1fr 1fr; }
+  .fld--full, .toggle.full, .form-sep, .sheet-actions { grid-column: 1 / -1; }
+}
+.form-sep {
+  display: flex; align-items: center; gap: 10px;
+  margin: 6px 0 0;
+}
+.form-sep::after {
+  content: ""; flex: 1; height: 1px; background: var(--line);
+}
+
+.monto-input { position: relative; display: flex; align-items: center; }
+.monto-input > span {
+  position: absolute; left: 13px; color: var(--muted);
+  font-weight: 600; pointer-events: none;
+}
+.monto-input input { padding-left: 26px; }
+.monto-hint { font-size: 0.7rem; color: var(--muted-2); }
+
+.toggle {
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 12px; padding: 12px 13px; min-height: 48px;
+}
+.toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.toggle-track {
+  flex: 0 0 auto; width: 44px; height: 26px; border-radius: 999px;
+  background: var(--panel-hi); border: 1px solid var(--line-strong);
+  position: relative; transition: background 0.18s, border-color 0.18s;
+}
+.toggle-dot {
+  position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--muted);
+  transition: transform 0.18s, background 0.18s;
+}
+.toggle input:checked + .toggle-track {
+  background: rgba(212, 180, 122, 0.36); border-color: var(--gold);
+}
+.toggle input:checked + .toggle-track .toggle-dot {
+  transform: translateX(18px); background: var(--gold-bright);
+}
+.toggle-label { font-size: 0.9rem; font-weight: 600; color: var(--cream-2); }
+
+.sheet-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-top: 8px; flex-wrap: wrap;
+}
+.sheet-actions-right { display: flex; gap: 10px; margin-left: auto; }
+
+/* atajos: WhatsApp / llamar / contrato desde la ficha abierta */
+.sheet-atajos { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 4px; }
+.atajo {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 0.83rem; font-weight: 600; text-decoration: none;
+  color: var(--cream-2); background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 14px; min-height: 40px;
+}
+.atajo svg { width: 16px; height: 16px; }
+.atajo--wa { color: var(--wa); border-color: rgba(37, 211, 102, 0.32); background: var(--wa-dim); }
+
+/* ============================================================
+   AVISOS DE CONFIGURACIÓN
+   ============================================================ */
+.aviso-setup {
+  max-width: 540px; margin: 56px auto; padding: 28px 24px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+}
+.aviso-setup h1 { font-size: 1.5rem; margin-bottom: 12px; }
+.aviso-setup p { color: var(--cream-2); line-height: 1.65; }
+.aviso-setup ol { color: var(--cream-2); line-height: 1.8; padding-left: 20px; }
+.aviso-setup code {
+  background: var(--bg-2); padding: 2px 6px; border-radius: 5px;
+  font-family: var(--mono); font-size: 0.85em; color: var(--gold-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mp *, .sheet, .sheet-backdrop, .g-punto {
+    animation-duration: 0.01s !important;
+    transition-duration: 0.01s !important;
+  }
+}
