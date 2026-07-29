@@ -17,7 +17,7 @@ const longDate = (iso: string) => {
 
 type Musico = { nombre: string; instrumento: string; credencial: string };
 
-export default function Ensamble() {
+export default function Empresarial() {
   const [f, setF] = useState({
     cliente: "",
     empresa: "",
@@ -60,6 +60,7 @@ export default function Ensamble() {
   const valor = parseInt(f.valor.replace(/[^\d]/g, ""), 10) || 0;
   const valorDesc = parseInt(f.valorDescuento.replace(/[^\d]/g, ""), 10) || 0;
   const finalVal = f.usarDescuento && valorDesc > 0 ? valorDesc : valor;
+  const grupo = musicos.length > 1 ? "el ensamble" : "la artista";
   const pct = Math.min(100, Math.max(0, parseInt(f.reservaPct.replace(/[^\d]/g, ""), 10) || 0));
   const reserva = Math.round((finalVal * pct) / 100);
   const saldo = finalVal - reserva;
@@ -108,7 +109,7 @@ export default function Ensamble() {
       <div className="no-print" style={{ maxWidth: "860px", margin: "0 auto 28px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/uploads/meli-rox-logo-clean-print-transparent.webp" alt="Meli Rox" style={{ height: "56px", width: "auto", margin: "-12px 0 2px -8px" }} />
-        <h1 style={{ margin: "6px 0 4px", fontFamily: serif, fontWeight: 300, fontSize: "clamp(26px,5vw,36px)", color: "#f4edda" }}>Propuesta de <em style={{ fontStyle: "italic", color: "#ecd9ac" }}>ensamble</em></h1>
+        <h1 style={{ margin: "6px 0 4px", fontFamily: serif, fontWeight: 300, fontSize: "clamp(26px,5vw,36px)", color: "#f4edda" }}>Propuesta <em style={{ fontStyle: "italic", color: "#ecd9ac" }}>empresarial</em></h1>
         <p style={{ margin: "0 0 22px", fontWeight: 300, fontSize: "14px", color: "#a99a7c" }}>Llena los datos, revisa el documento abajo y toca <strong style={{ color: "#ecd9ac" }}>Imprimir / Guardar PDF</strong> para enviarlo.</p>
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: "13px" }}>
@@ -199,7 +200,7 @@ export default function Ensamble() {
             <div style={{ fontFamily: mono, fontSize: "9.5px", letterSpacing: ".26em", textTransform: "uppercase", color: "#8a7d63", marginTop: "5px" }}>Música en vivo · Medellín</div>
           </div>
           <div style={{ textAlign: "right", fontSize: "12px", color: "#5a5346", lineHeight: 1.7 }}>
-            <div style={{ fontFamily: mono, fontSize: "9.5px", letterSpacing: ".2em", textTransform: "uppercase", color: GOLD }}>Propuesta de servicios musicales</div>
+            <div style={{ fontFamily: mono, fontSize: "9.5px", letterSpacing: ".2em", textTransform: "uppercase", color: GOLD }}>Propuesta empresarial · Servicios musicales</div>
             {(f.empresa.trim() || f.cliente.trim()) && (
               <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#000", marginTop: "6px" }}>Preparada para {f.empresa.trim() || f.cliente.trim()}</div>
             )}
@@ -212,10 +213,10 @@ export default function Ensamble() {
         <div style={{ display: "flex", gap: "26px", marginTop: "28px", flexWrap: "wrap", alignItems: "flex-start" }}>
           <div style={{ flex: "1 1 320px" }}>
             <h2 style={{ margin: "0 0 12px", fontFamily: serif, fontWeight: 400, fontSize: "26px", color: "#000", lineHeight: 1.25 }}>
-              Ensamble de cuerdas en vivo{f.evento.trim() ? <> para <em style={{ fontStyle: "italic", color: GOLD }}>{f.evento}</em></> : null}
+              Música en vivo{f.evento.trim() ? <> para <em style={{ fontStyle: "italic", color: GOLD }}>{f.evento}</em></> : null}
             </h2>
             <p style={body}>
-              Estimado(a) {orBlank(f.cliente, 14)}{f.empresa.trim() ? ` — ${f.empresa}` : ""}: agradecemos su interés. A continuación presentamos la propuesta para la presentación musical en vivo, a cargo de un ensamble de músicos profesionales con formación académica y amplia experiencia en escenarios y eventos.
+              Estimado(a) {orBlank(f.cliente, 14)}{f.empresa.trim() ? ` — ${f.empresa}` : ""}: agradecemos su interés. A continuación presentamos la propuesta para la presentación musical en vivo, a cargo de músicos profesionales con formación académica y amplia experiencia en escenarios y eventos.
             </p>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -289,7 +290,7 @@ export default function Ensamble() {
             <div>
               <div style={{ fontFamily: serif, fontSize: "44px", lineHeight: 1, color: "#000", fontWeight: 500 }}>{fmtCOP(finalVal)}</div>
               <div style={{ fontFamily: mono, fontSize: "9.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "#8a7d63", marginTop: "5px" }}>
-                COP · Total por el ensamble ({musicos.length} músicos) · {orBlank(f.duracion, 6)}
+                COP · Total {musicos.length > 1 ? `por el ensamble (${musicos.length} músicos)` : "por la presentación"} · {f.duracion.trim() || "duración a confirmar"}
               </div>
             </div>
           </div>
@@ -298,7 +299,7 @@ export default function Ensamble() {
             {dataRow("Saldo el día del evento", fmtCOP(saldo))}
           </div>
           <p style={{ ...body, marginTop: "14px", fontSize: "12.5px" }}>
-            La reserva asegura y bloquea la fecha en la agenda del ensamble. El saldo se cancela el día del evento, antes de la presentación.
+            La reserva asegura y bloquea la fecha en la agenda de {grupo}. El saldo se cancela el día del evento, antes de la presentación.
           </p>
         </div>
 
@@ -307,9 +308,9 @@ export default function Ensamble() {
           <div style={h3}>Condiciones</div>
           <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "12.5px", lineHeight: 1.8, color: "#3a352c" }}>
             <li>El abono de reserva no es reembolsable, ya que bloquea la fecha para otros compromisos.</li>
-            <li>El cliente garantiza acceso al lugar, punto de energía eléctrica y un espacio cubierto y adecuado para el ensamble.</li>
+            <li>El cliente garantiza acceso al lugar, punto de energía eléctrica y un espacio cubierto y adecuado para la presentación.</li>
             <li>Para jornadas extensas se acuerdan descansos y, si aplica, hidratación y alimentación para los músicos.</li>
-            <li>Cambios de fecha están sujetos a disponibilidad del ensamble.</li>
+            <li>Cambios de fecha están sujetos a disponibilidad de {grupo}.</li>
             <li>Esta propuesta es válida hasta la fecha indicada; después podrá requerir nueva cotización.</li>
           </ul>
           {f.notas.trim() && <p style={{ ...body, marginTop: "14px" }}><strong style={{ color: "#000" }}>Notas: </strong>{f.notas}</p>}
