@@ -117,10 +117,23 @@ export function formatFecha(iso: string | null | undefined): string {
   return `${d} ${MESES_CORTOS[m - 1]} ${y}`;
 }
 
+/**
+ * Zona horaria fija de Colombia. Todo lo relativo a "hoy" se calcula acá y no con
+ * la hora local de quien renderiza: el servidor de Vercel corre en UTC y el
+ * navegador de Meli en Medellín, y si cada uno contara los días a su manera React
+ * marcaría un error de hidratación (y "faltan N días" podría cambiar solo).
+ */
+const TZ = "America/Bogota";
+
+/** 'YYYY-MM-DD' de hoy en Colombia — igual en el servidor y en el navegador. */
 export function hoyISO(): string {
-  const d = new Date();
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  // en-CA formatea como YYYY-MM-DD, que es justo lo que necesita <input type="date">.
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
 }
 
 /**
@@ -131,10 +144,22 @@ export function diasHasta(iso: string | null | undefined): number | null {
   if (!iso) return null;
   const [y, m, d] = iso.split("-").map(Number);
   if (!y || !m || !d) return null;
-  const objetivo = Date.UTC(y, m - 1, d);
-  const ahora = new Date();
-  const hoy = Date.UTC(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
-  return Math.round((objetivo - hoy) / 86_400_000);
+  const [hy, hm, hd] = hoyISO().split("-").map(Number);
+  return Math.round((Date.UTC(y, m - 1, d) - Date.UTC(hy, hm - 1, hd)) / 86_400_000);
+}
+
+/** "15 jul, 4:12 p. m." en hora de Colombia — para el sello de "última vez". */
+export function formatSello(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString("es-CO", {
+    timeZone: TZ,
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 /** "Faltan 12 días" · "Mañana" · "Hoy" · "Hace 3 días" */

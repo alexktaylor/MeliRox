@@ -11,6 +11,7 @@ import {
   estadoLabel,
   diasHasta,
   textoCuenta,
+  formatSello,
   waLink,
   saludoWA,
   agruparDigitos,
@@ -394,24 +395,12 @@ function FilaGoogle({ resumen }: { resumen: Resumen }) {
           {guardado
             ? "✓ Guardado"
             : resumen.gastoActualizado
-              ? `Última vez: ${formatFechaCorta(resumen.gastoActualizado)}`
+              ? `Última vez: ${formatSello(resumen.gastoActualizado)}`
               : "Escríbelo como lo muestra Google"}
         </span>
       </form>
     </section>
   );
-}
-
-/** "15 jul, 3:40 p. m." a partir de un timestamptz — sólo para el sello de guardado. */
-function formatFechaCorta(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleString("es-CO", {
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-  });
 }
 
 function Chip({
