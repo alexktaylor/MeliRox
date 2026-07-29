@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { exigirAuth } from "@/app/lib/panel/auth";
 import { Great_Vibes } from "next/font/google";
 import Contrato from "./Contrato";
 
@@ -11,7 +12,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function Page() {
+export const dynamic = "force-dynamic";
+
+// Herramienta privada: exige la sesión del panel. Antes cualquiera con la URL
+// podía abrirla.
+export default async function Page() {
+  await exigirAuth();
   return (
     <div className={signature.variable}>
       <Contrato />

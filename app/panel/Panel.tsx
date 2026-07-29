@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import Link from "next/link";
 import {
   type Lead,
   type EstadoLead,
@@ -85,9 +86,14 @@ export default function Panel({
             <span className="eyebrow">Meli Rox</span>
           </div>
         </div>
-        <form action={salir}>
-          <button type="submit" className="mp-salir">Salir</button>
-        </form>
+        <div className="mp-acciones">
+          <Link href="/panel/herramientas" className="mp-salir mp-herramientas">
+            Herramientas
+          </Link>
+          <form action={salir}>
+            <button type="submit" className="mp-salir">Salir</button>
+          </form>
+        </div>
       </header>
 
       <section className="stat-scroll" aria-label="Resumen">

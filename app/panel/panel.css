@@ -186,6 +186,98 @@
   padding: 9px 15px; min-height: 40px; cursor: pointer; white-space: nowrap;
 }
 .mp-salir:hover { border-color: var(--gold); color: var(--gold-bright); }
+.mp-acciones { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.mp-herramientas {
+  display: inline-flex; align-items: center;
+  text-decoration: none; color: var(--gold-bright);
+  border-color: rgba(212, 180, 122, 0.4);
+}
+/* En pantallas angostas el texto completo empuja el título: se acorta el padding. */
+@media (max-width: 400px) {
+  .mp-herramientas { padding: 9px 11px; }
+  .mp-brand h1 { font-size: 1.08rem; }
+}
+
+/* flecha de volver */
+.mp-volver {
+  display: inline-grid; place-items: center; flex: 0 0 auto;
+  width: 42px; height: 42px; border-radius: 12px;
+  color: var(--gold-bright);
+  background: linear-gradient(160deg, var(--panel-hi), var(--bg-2));
+  border: 1px solid var(--line-strong);
+}
+.mp-volver svg { width: 20px; height: 20px; }
+.mp-volver:hover { border-color: var(--gold); }
+
+/* ============================================================
+   HERRAMIENTAS
+   ============================================================ */
+.hr-seccion { padding: 20px 16px 4px; }
+.hr-titulo { font-size: 1.3rem; margin-bottom: 4px; }
+.hr-sub { color: var(--muted); font-size: 0.85rem; line-height: 1.5; margin: 0 0 14px; }
+.hr-lista { display: grid; gap: 11px; margin-top: 14px; }
+
+.hr-card {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px;
+  text-decoration: none; color: inherit;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  transition: border-color 0.15s, background 0.15s, transform 0.05s;
+}
+.hr-card:hover { border-color: var(--line-strong); background: var(--panel-2); }
+.hr-card:active { transform: scale(0.995); }
+.hr-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+}
+.hr-card-nombre { font-family: var(--serif); font-size: 1.22rem; font-weight: 600; }
+.hr-card-para { font-size: 0.85rem; color: var(--gold); font-weight: 600; }
+.hr-card-nota { font-size: 0.83rem; color: var(--muted); line-height: 1.5; margin-top: 5px; }
+
+.hr-badge {
+  flex: 0 0 auto;
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  border-radius: 999px; padding: 5px 10px; white-space: nowrap;
+}
+.hr-badge--link { color: var(--ok); background: var(--ok-dim); border: 1px solid rgba(111, 191, 141, 0.3); }
+.hr-badge--pdf { color: var(--gold-bright); background: rgba(212, 180, 122, 0.13); border: 1px solid var(--line-strong); }
+
+.hr-links { display: grid; gap: 9px; }
+.hr-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 13px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  /* Los items de grid nacen con min-width:auto y se niegan a encogerse por debajo
+     de su contenido: sin esto las URLs largas empujaban el botón "Copiar" fuera
+     de la pantalla. */
+  min-width: 0;
+}
+.hr-link-nombre {
+  flex: 1 1 auto; min-width: 0; overflow: hidden;
+  display: flex; flex-direction: column; gap: 2px;
+  text-decoration: none; color: var(--cream);
+  font-size: 0.94rem; font-weight: 600;
+}
+.hr-link-nombre > span,
+.hr-link-nombre { overflow-wrap: anywhere; }
+.hr-link-url {
+  font-family: var(--mono); font-size: 0.68rem; color: var(--muted-2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hr-copiar {
+  flex: 0 0 auto;
+  font: inherit; font-size: 0.8rem; font-weight: 650;
+  color: var(--gold-bright); background: transparent;
+  border: 1px solid var(--line-strong); border-radius: 10px;
+  padding: 10px 13px; min-height: 42px; cursor: pointer; white-space: nowrap;
+}
+.hr-copiar:hover { border-color: var(--gold); background: rgba(212, 180, 122, 0.08); }
+.hr-copiar.is-ok { color: var(--ok); border-color: var(--ok); background: var(--ok-dim); }
 
 /* ============================================================
    TARJETAS DE RESUMEN (scroll horizontal con snap en el celular)
