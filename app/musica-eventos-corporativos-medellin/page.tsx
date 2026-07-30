@@ -46,9 +46,9 @@ const cfg: ServiceConfig = {
   statementEm: "empieza por lo que se escucha.",
   statementBody:
     "Con más de una década en escenarios de Colombia y el exterior, Meli Rox aporta elegancia, energía y producción de alto impacto a galas, lanzamientos y premiaciones — una experiencia musical a la altura de tu marca.",
-  momentsImg: U + "IMG_5220.JPG.webp",
-  momentsVideo: "/Vids/bg/violin.mp4",
-  momentsPos: "50% 28%",
+  momentsImg: "/Vids/posters/corporate.jpg",
+  momentsVideo: "/Vids/bg/corporate.mp4",
+  momentsPos: "50% 38%",
   momentsTitle: "Producción a la altura de tu marca.",
   moments: [
     { t: "Galas y premiaciones", d: "Voz y violín eléctrico para momentos de alto perfil, con la elegancia y el impacto que la ocasión exige." },
