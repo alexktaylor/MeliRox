@@ -22,7 +22,10 @@ export default function LeadTracker() {
       const gtag = (window as unknown as { gtag?: Gtag }).gtag;
       gtag?.("event", "generate_lead", {
         method,
-        page_location: location.pathname,
+        // Nombre propio: `page_location` es un parámetro reservado de GA4 (la URL
+        // completa, que GA4 ya recoge solo). Al pisarlo con una ruta suelta se
+        // ensuciaba la dimensión de página justo en los eventos que importan.
+        lead_page: location.pathname,
       });
     };
     document.addEventListener("click", onClick, { capture: true });
