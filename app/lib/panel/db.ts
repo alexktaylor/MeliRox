@@ -89,6 +89,7 @@ interface FilaLead {
   estado: string;
   google_win: boolean;
   notas: string | null;
+  created_at?: string | Date | null;
 }
 
 // numeric de Postgres llega como string por el driver — se convierte acá.
@@ -114,6 +115,7 @@ function mapear(r: FilaLead): Lead {
     estado: normalizarEstado(r.estado),
     google_win: r.google_win,
     notas: r.notas,
+    created_at: r.created_at ? new Date(r.created_at).toISOString() : undefined,
   };
 }
 

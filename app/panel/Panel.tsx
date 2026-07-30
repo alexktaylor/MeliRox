@@ -15,6 +15,8 @@ import {
   formatCOP,
   formatCOPCorto,
   formatFecha,
+  fechaColombia,
+  hoyISO,
   estadoLabel,
   diasHasta,
   textoCuenta,
@@ -224,10 +226,17 @@ function TarjetaLead({ lead, onAbrir }: { lead: Lead; onAbrir: () => void }) {
   const falta = faltaPorCobrar(lead);
   // Con abono se muestra el desglose completo; sin abono basta el total.
   const desglose = tieneAbono(lead);
+  // Cuándo se agregó el lead al panel (created_at real; si falta, la fecha de contacto).
+  const agregado = fechaColombia(lead.created_at) ?? lead.fecha_contacto;
 
   return (
     <div className="lead-card">
       <button className="lead-abrir" onClick={onAbrir}>
+        {agregado && (
+          <div className="lead-agregado">
+            {agregado === hoyISO() ? "Agregado hoy" : `Agregado ${formatFecha(agregado)}`}
+          </div>
+        )}
         <div className="lead-top">
           <span className="lead-nombre">{lead.nombre}</span>
           <span className={`pill pill--${lead.estado}`}>{estadoLabel(lead.estado)}</span>

@@ -429,6 +429,14 @@
 }
 .lead-abrir:active { transform: scale(0.995); }
 
+.lead-agregado {
+  font-family: var(--font-mono, monospace);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #8a7d63;
+  margin-bottom: 6px;
+}
 .lead-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .lead-nombre {
   font-weight: 650; font-size: 1.03rem;

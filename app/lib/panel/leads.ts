@@ -212,6 +212,22 @@ export function hoyISO(): string {
 }
 
 /**
+ * 'YYYY-MM-DD' en Colombia a partir de un timestamp (created_at llega en UTC).
+ * Sin esto, un lead agregado a las 8pm en Medellín aparecería con la fecha de mañana.
+ */
+export function fechaColombia(ts: string | null | undefined): string | null {
+  if (!ts) return null;
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return null;
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
+/**
  * Días desde hoy hasta una fecha ISO. Negativo = ya pasó.
  * Compara sólo la parte de fecha, así que no depende de la hora del día.
  */
