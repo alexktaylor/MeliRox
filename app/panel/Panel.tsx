@@ -226,8 +226,10 @@ function TarjetaLead({ lead, onAbrir }: { lead: Lead; onAbrir: () => void }) {
   const falta = faltaPorCobrar(lead);
   // Con abono se muestra el desglose completo; sin abono basta el total.
   const desglose = tieneAbono(lead);
-  // Cuándo se agregó el lead al panel (created_at real; si falta, la fecha de contacto).
-  const agregado = fechaColombia(lead.created_at) ?? lead.fecha_contacto;
+  // Fecha de contacto: se autocompleta con hoy al crear el lead, pero es editable
+  // (sirve para backdatear leads que llegaron antes de registrarlos). Si por algo
+  // falta, caemos al created_at real de la base.
+  const agregado = lead.fecha_contacto ?? fechaColombia(lead.created_at);
 
   return (
     <div className="lead-card">
