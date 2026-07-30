@@ -29,6 +29,9 @@ input[type="range"].mrmix::-moz-range-thumb { width: 26px; height: 26px; border-
 /* Service-page hero: near full-fold like the home hero (taller on mobile where the video shines) */
 .svc-hero { min-height: 88vh; min-height: 88svh; }
 @media (max-width: 760px) { .svc-hero { min-height: 92vh; min-height: 92svh; } }
+.svc-hero-content { padding: 0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 90px); }
+/* En móvil el bloque se baja: se ve más video arriba y el texto no tapa a Meli. */
+@media (max-width: 760px) { .svc-hero-content { padding-bottom: 30px; } }
 .svc-hero-fade { background: linear-gradient(180deg, rgba(8,7,6,.55) 0%, rgba(8,7,6,.15) 24%, rgba(8,7,6,.5) 52%, rgba(8,7,6,.8) 74%, rgba(8,7,6,.97) 100%); }
 @media (max-width: 760px) {
   /* lighter through the top ~half so Meli stays visible; dark only where the text sits */

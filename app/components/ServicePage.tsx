@@ -152,7 +152,7 @@ export default function ServicePage({ cfg }: { cfg: ServiceConfig }) {
           <img src={cfg.heroImg} alt={cfg.serviceName} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: cfg.heroPos, filter: "saturate(.9) brightness(.72)" }} />
         )}
         <div className="svc-hero-fade" style={{ position: "absolute", inset: 0 }} />
-        <div style={{ position: "relative", width: "min(1200px, 100%)", margin: "0 auto", padding: "0 clamp(20px, 5vw, 48px) clamp(48px, 8vh, 90px)" }}>
+        <div className="svc-hero-content" style={{ position: "relative", width: "min(1200px, 100%)", margin: "0 auto" }}>
           <div style={{ ...eyebrow, color: "#e3d5b0" }}>{cfg.eyebrow}</div>
           <h1 style={{ margin: "14px 0 0", fontFamily: serif, fontWeight: 300, fontSize: "clamp(40px, 6.5vw, 82px)", lineHeight: 1.04, color: "#f9f4e4", maxWidth: "860px", textShadow: "0 2px 30px rgba(0,0,0,.7)" }}>
             {cfg.h1Pre}<em style={{ color: "#e8cf9e" }}>{cfg.h1Em}</em>
