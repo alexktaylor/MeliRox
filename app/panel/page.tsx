@@ -29,6 +29,7 @@ export interface Resumen {
   eventosProximos: number;
   /** Ventas atribuidas a Google Ads y retorno sobre el gasto. */
   ventasGoogle: number;
+  cierresGoogle: number;
   leadsGoogle: number;
   gastoAds: number;
   gastoActualizado: string | null;
@@ -47,6 +48,7 @@ function calcular(leads: Lead[], gasto: GastoAds): Resumen {
   let saldoPorCobrar = 0;
   let ventasGoogle = 0;
   let leadsGoogle = 0;
+  let cierresGoogle = 0;
   let eventosProximos = 0;
 
   let proximo: Resumen["proximo"] = null;
@@ -58,6 +60,11 @@ function calcular(leads: Lead[], gasto: GastoAds): Resumen {
       // Si no alcanzó a escribir el valor cerrado, se asume el cotizado.
       totalConfirmado += totalProyecto(l) ?? 0;
       confirmadosCount++;
+      // El retorno de Google sólo cuenta ventas CERRADAS que vinieron de Google.
+      if (l.google_win) {
+        ventasGoogle += totalProyecto(l) ?? 0;
+        cierresGoogle++;
+      }
       abonosRecibidos += l.abono ?? 0;
       saldoPorCobrar += faltaPorCobrar(l) ?? 0;
     } else if (l.estado === "perdido") {
@@ -68,7 +75,6 @@ function calcular(leads: Lead[], gasto: GastoAds): Resumen {
     }
 
     if ((l.fuente ?? "").toLowerCase().includes("google")) leadsGoogle++;
-    if (l.google_win) ventasGoogle += totalProyecto(l) ?? 0;
 
     // Próximo evento: el más cercano de aquí en adelante que no esté perdido.
     if (l.fecha_evento && l.estado !== "perdido") {
@@ -97,6 +103,7 @@ function calcular(leads: Lead[], gasto: GastoAds): Resumen {
     proximo,
     eventosProximos,
     ventasGoogle,
+    cierresGoogle,
     leadsGoogle,
     gastoAds: gasto.total,
     gastoActualizado: gasto.actualizado,

@@ -387,6 +387,7 @@ function FilaGoogle({ resumen }: { resumen: Resumen }) {
             Neto <b>{formatCOPCorto(resumen.neto)}</b>
           </span>
           <span>
+            <b>{resumen.cierresGoogle}</b> {resumen.cierresGoogle === 1 ? "venta" : "ventas"} de{" "}
             <b>{resumen.leadsGoogle}</b> leads
           </span>
         </div>
