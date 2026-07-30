@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Cormorant_Garamond, Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import LeadTracker from "./components/LeadTracker";
+import Analytics from "./components/Analytics";
 
 // Self-hosted fonts: non-render-blocking + size-matched fallbacks (no layout shift)
 const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600"], style: ["normal", "italic"], variable: "--font-cormorant", display: "swap" });
@@ -159,14 +158,7 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         {children}
-        <LeadTracker />
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        <Script id="ga-init" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`}
-        </Script>
+        <Analytics gaId={GA_ID} />
       </body>
     </html>
   );
